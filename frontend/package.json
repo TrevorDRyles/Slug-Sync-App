@@ -1,8 +1,8 @@
 {
-  "name": "cse186-assignment8-frontend",
+  "name": "slug-sync-frontend",
   "type": "module",
   "version": "3.0.0",
-  "description": "CSE186 Assignment 8 - Frontend",
+  "description": "Slug Sync - Frontend",
   "author": "David Harrison <dcharris@ucsc.edu>",
   "license": "UNLICENSED",
   "repository": "none",

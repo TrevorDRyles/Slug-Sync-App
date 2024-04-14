@@ -1,7 +1,7 @@
 {
-  "name": "cse186-assignment8-e2etest",
+  "name": "slug-sync-e2etest",
   "version": "1.0.0",
-  "description": "CSE186 Assignment 8 - End to End Test",
+  "description": "Slug sync - End to End Test",
   "author": "David Harrison <dcharris@ucsc.edu>",
   "license": "UNLICENSED",
   "repository": "none",

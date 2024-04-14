@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   postgres:
-    container_name: cse186-assignment8-backend
+    container_name: slug-sync-backend
     image: postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
