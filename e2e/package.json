@@ -31,7 +31,8 @@
       "indent": [
         "warn",
         2
-      ]
+      ],
+      "no-trailing-spaces": "off"
     }
   },
   "scripts": {
