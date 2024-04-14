@@ -1,3 +1,7 @@
 package-lock.json
 node_modules/
 coverage
+backend/api/data/secrets.json
+backend/.env
+e2e/.env
+frontend/dist/
