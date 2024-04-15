@@ -7,7 +7,7 @@
 # the express written permission of the copyright holder.
 #
 ----- DO NOT CHANGE ANYTHING IN THIS FILE ------
-
+*/
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 CREATE DATABASE test;
