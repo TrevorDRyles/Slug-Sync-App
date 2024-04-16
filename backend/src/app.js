@@ -5,7 +5,7 @@ const swaggerUi = require('swagger-ui-express');
 const fs = require('fs');
 const path = require('path');
 const OpenApiValidator = require('express-openapi-validator');
-
+const goal = require('./goal.js');
 
 const app = express();
 app.use(cors());
@@ -28,6 +28,9 @@ app.use(
     validateResponses: true,
   }),
 );
+
+app.post('/v0/goal', goal.createGoal);
+
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

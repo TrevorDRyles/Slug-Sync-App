@@ -9,8 +9,9 @@ export default defineConfig({
     // eslint()
   ],
   test: {
+    globals: true,
     environment: 'jsdom',
-    setupFiles: './setupTests.js',
+    setupFiles: ['./setupTests.js', './vitest.setup.mjs'],
     coverage: {
       exclude: [ 'src/data/*', 'src/__tests__/*', 'src/main.jsx', '.eslintrc.cjs' ]
     }
