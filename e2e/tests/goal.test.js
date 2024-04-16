@@ -66,7 +66,7 @@ beforeEach(async () => {
     console.log('Browser log:', msg.text());
   });
   await page.setViewport({
-    width: 800,
+    width: 1980,
     height: 1080,
   });
 });
@@ -78,61 +78,32 @@ afterEach(async () => {
   await browser.close();
 });
 
-// copied above from starter code
-
-const EMAIL = 'molly@books.com';
-const PASSWORD = 'mollymember';
-
 /**
  * checkWorkspacesShow
  * @return {Promise<void>}
  */
-async function login() {
-  await page.goto('http://localhost:3000/login');
-  console.log('login: 1');
-  const email = await page.waitForSelector('input[type="text"][id="email"]');
-  await email.type(EMAIL);
-  console.log('login: 2');
-  const password = await page.waitForSelector(
-    'input[type="password"][name="password"]');
-  await password.type(PASSWORD);
-  console.log('login: 3');
-  const submit = await page.waitForSelector('[type="submit"]');
-  console.log(submit);
-  // https://stackoverflow.com/questions/70398134/puppeteer-trigger-click-of-button-not-working
-  console.log('login: 4');
+async function createGoal() {
+  // https://chat.openai.com/share/67880247-ed5d-4614-af95-1b17ae8a6d05
+  await page.goto('http://localhost:3000/createGoal');
+  const title = await page.waitForSelector('input[id="title"]');
+  await title.type("Goal Title");
+  const description = await page.waitForSelector('textarea[id="description"]');
+  await description.type("Goal Description");
+  await page.waitForSelector('#recurrence');
+  // await page.waitForSelector('[data-mantine-select="true"]');
+  await page.click('#recurrence');
+  for (let i = 0; i < 2; i++) {
+    await page.keyboard.press('ArrowDown'); // Move down in the dropdown
+  }
+  await page.keyboard.press('Enter'); // Select the option
+  // const selectedValue = await page.$eval('#recurrence', (select) => select.value);
   await page.$eval(`[type="submit"]`, (element) =>
     element.click(),
   );
-  console.log('login: 4.5');
   await page.waitForNavigation();
-  console.log('login: 5');
-  // await page.waitForSelector('#welcome');
-  // console.log('login: 6');
-  // const content = await page.evaluate((el) =>
-  // el.textContent.trim(), element);
-  // console.log('login: 7');
-  // expect(content).toContain('Welcome to slack');
-}
-/**
- * checkWorkspacesShow
- * @return {Promise<void>}
- */
-async function logout() {
-  const logout = await page.waitForSelector('#logout');
-  console.log(logout);
-  // await logout.click();
-  await page.$eval(`#logout`, (element) =>
-    element.click(),
-  );
-  await page.waitForSelector('#signIn');
-  const content = await page.$eval('#signIn', (el) => el.textContent.trim());
-  expect(content).toBe('Sign in');
 }
 
-
-test('login logout', async () => {
-  await login();
-  await logout();
+test('Create goal', async () => {
+  await createGoal();
 });
 

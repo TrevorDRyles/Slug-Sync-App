@@ -4,4 +4,8 @@ coverage
 backend/api/data/secrets.json
 backend/.env
 e2e/.env
-frontend/dist/
+frontend/dist
+frontend/dist/*
+.idea/**
+.idea
+dataSource.xml

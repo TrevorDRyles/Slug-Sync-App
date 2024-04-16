@@ -26,10 +26,10 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
-    "@testing-library/dom": "*",
-    "@testing-library/jest-dom": "*",
-    "@testing-library/react": "*",
-    "@testing-library/user-event": "*",
+    "@testing-library/dom": "^10.0.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^15.0.2",
+    "@testing-library/user-event": "^14.5.2",
     "@types/css-modules": "^1.0.5",
     "@vitejs/plugin-react": "*",
     "@vitest/coverage-v8": "*",
@@ -39,7 +39,7 @@
     "eslint-plugin-react": "*",
     "eslint-plugin-react-hooks": "*",
     "eslint-plugin-react-refresh": "*",
-    "jsdom": "*",
+    "jsdom": "^24.0.0",
     "msw": "^2.2.13",
     "postcss": "^8.4.38",
     "postcss-loader": "^8.1.1",
@@ -47,7 +47,7 @@
     "postcss-simple-vars": "^7.0.1",
     "vite": "*",
     "vite-plugin-eslint": "*",
-    "vitest": "*"
+    "vitest": "^1.5.0"
   },
   "scripts": {
     "build": "vite build",
