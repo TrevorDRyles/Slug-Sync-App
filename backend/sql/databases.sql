@@ -6,8 +6,8 @@
 # You may not use, distribute, publish, or modify this code without
 # the express written permission of the copyright holder.
 #
------ DO NOT CHANGE ANYTHING IN THIS FILE ------
 */
+----- DO NOT CHANGE ANYTHING IN THIS FILE ------
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 

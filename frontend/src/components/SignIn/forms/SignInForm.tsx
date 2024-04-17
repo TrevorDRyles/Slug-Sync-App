@@ -16,6 +16,41 @@ import {
 import { GoogleButton } from './GoogleButton';
 import { TwitterButton } from './TwitterButton';
 
+type SignInFormData = {
+  name: string;
+  email: string;
+  password: string;
+  terms: boolean;
+}
+
+const handleSubmit = (data: SignInFormData, type: string, toggle: () => void) => {
+  if (type === 'register') {
+    fetch(`http://localhost:3010/v0/signup`, {
+      method: 'post',
+      body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        password: data.password
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+        .then((res) => {
+          if (!res.ok) {
+            throw res;
+          }
+        })
+        .then(() => {
+          alert('Sign in successful, please log in')
+          toggle()
+        })
+        .catch((err) => {
+          alert('Error signing up, please try again')
+        })
+  }
+}
+
 export default function SignInForm(props: PaperProps) {
   const [type, toggle] = useToggle(['login', 'register']);
   const form = useForm({
@@ -45,7 +80,7 @@ export default function SignInForm(props: PaperProps) {
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle)})}>
         <Stack>
           {type === 'register' && (
             <TextInput

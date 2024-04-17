@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const userdb = require('./userdb');
 const secrets = require('../api/data/secrets');
 const {Pool} = require('pg');
+const db = require('./db')
 
 const pool = new Pool({
   host: 'localhost',
@@ -33,6 +33,19 @@ exports.login = async (req, res) => {
     res.status(401).send('Invalid credentials');
   }
 };
+
+exports.signup = async(req, res) => {
+  // const {name, email, password} = req.body
+  // console.log(req.body)
+  // const data = {
+  //   name: name,
+  //   email: email,
+  //   password: password
+  // }
+  // console.log(data)
+  await db.postSignup(req.body)
+  res.status(201).send();
+}
 
 // check endpoint referenced from authenticated books example
 exports.check = (req, res, next) => {

@@ -5,6 +5,5 @@ DROP TABLE IF EXISTS "user";
 
 DROP TABLE IF EXISTS goal;
 
-CREATE TABLE "user"(id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(), "user" jsonb);
-
+CREATE TABLE "user" (id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(), data jsonb);
 CREATE TABLE goal(id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(), "goal" jsonb)

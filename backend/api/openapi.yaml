@@ -9,6 +9,7 @@ servers:
   - url: http://localhost:3010/v0
 
 paths:
+
   /goal:
     post:
       tags:
@@ -34,12 +35,22 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateGoal'
+
+  /signup:
+    post:
+      description: User SignUp
+      requestBody:
+        description: User form fields
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpForm'
+      responses:
+        201:
+          description: Successfully creates User
+
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
   schemas:
     Error:
       type: object
@@ -53,6 +64,7 @@ components:
         message:
           type: string
           description: error message
+
     CreateGoal:
       type: object
       required:
@@ -73,6 +85,7 @@ components:
         title: "title"
         description: "description"
         recurrence: "1"
+
     GoalWithId:
       type: object
       required:
@@ -98,3 +111,26 @@ components:
         title: "title"
         description: "description"
         recurrence: "1"
+
+    SignUpForm:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+          pattern: '^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
+        password:
+          type: string
+      required:
+        - name
+        - email
+        - password
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
