@@ -4,6 +4,7 @@ import Home from "./components/Home.jsx";
 import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import CreateGoal from "./components/Goal/CreateGoal.jsx";
+import ViewGoal from "./components/Goal/ViewGoal.jsx";
 
 /**
  * App
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/login" default element={<SignIn />} />
           <Route path="/createGoal" default element={<CreateGoal />} />
+          <Route path="/goal/:id" default element={<ViewGoal />} />
           <Route path="/" default element={<Home />} />
         </Routes>
       </BrowserRouter>

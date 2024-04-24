@@ -10,8 +10,8 @@
     "eslint": "*",
     "eslint-config-google": "*",
     "express": "*",
-    "jest": "*",
-    "puppeteer": "*",
+    "jest": "^29.7.0",
+    "puppeteer": "^22.7.0",
     "puppeteer-core": "*",
     "supertest": "*"
   },
