@@ -34,6 +34,7 @@ app.post('/v0/signup', auth.signup)
 
 app.post('/v0/goal', goal.createGoal);
 
+app.get('/v0/goal/:id', goal.viewGoal);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

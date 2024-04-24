@@ -26,9 +26,10 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.24.1",
     "@testing-library/dom": "^10.0.0",
     "@testing-library/jest-dom": "^6.4.2",
-    "@testing-library/react": "^15.0.2",
+    "@testing-library/react": "^15.0.4",
     "@testing-library/user-event": "^14.5.2",
     "@types/css-modules": "^1.0.5",
     "@vitejs/plugin-react": "*",
@@ -39,12 +40,14 @@
     "eslint-plugin-react": "*",
     "eslint-plugin-react-hooks": "*",
     "eslint-plugin-react-refresh": "*",
+    "jest": "^29.7.0",
     "jsdom": "^24.0.0",
-    "msw": "^2.2.13",
+    "msw": "^2.2.14",
     "postcss": "^8.4.38",
     "postcss-loader": "^8.1.1",
     "postcss-preset-mantine": "^1.14.4",
     "postcss-simple-vars": "^7.0.1",
+    "puppeteer": "^22.7.0",
     "vite": "*",
     "vite-plugin-eslint": "*",
     "vitest": "^1.5.0"

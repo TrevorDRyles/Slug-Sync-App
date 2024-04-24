@@ -90,13 +90,11 @@ async function createGoal() {
   const description = await page.waitForSelector('textarea[id="description"]');
   await description.type("Goal Description");
   await page.waitForSelector('#recurrence');
-  // await page.waitForSelector('[data-mantine-select="true"]');
   await page.click('#recurrence');
   for (let i = 0; i < 2; i++) {
     await page.keyboard.press('ArrowDown'); // Move down in the dropdown
   }
   await page.keyboard.press('Enter'); // Select the option
-  // const selectedValue = await page.$eval('#recurrence', (select) => select.value);
   await page.$eval(`[type="submit"]`, (element) =>
     element.click(),
   );
@@ -106,4 +104,3 @@ async function createGoal() {
 test('Create goal', async () => {
   await createGoal();
 });
-

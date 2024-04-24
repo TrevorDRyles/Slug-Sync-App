@@ -9,7 +9,6 @@ servers:
   - url: http://localhost:3010/v0
 
 paths:
-
   /goal:
     post:
       tags:
@@ -50,6 +49,33 @@ paths:
         201:
           description: Successfully creates User
 
+  /goal/{id}:
+    get:
+      tags:
+        - get goal
+      summary: get goal
+      parameters:
+        - name: id
+          in: path
+          description: Id of goal
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalWithId'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Error:
@@ -64,7 +90,6 @@ components:
         message:
           type: string
           description: error message
-
     CreateGoal:
       type: object
       required:
@@ -85,7 +110,6 @@ components:
         title: "title"
         description: "description"
         recurrence: "1"
-
     GoalWithId:
       type: object
       required:
