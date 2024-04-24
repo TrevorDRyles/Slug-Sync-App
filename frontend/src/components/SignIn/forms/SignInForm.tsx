@@ -42,11 +42,37 @@ const handleSubmit = (data: SignInFormData, type: string, toggle: () => void) =>
           }
         })
         .then(() => {
-          alert('Sign in successful, please log in')
+          alert('Signup successful, please log in')
           toggle()
         })
         .catch((err) => {
           alert('Error signing up, please try again')
+        })
+  }
+  else if (type === 'login') {
+    fetch(`http://localhost:3010/v0/login`, {
+      method: 'post',
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+        .then((res) => {
+          if (!res.ok) {
+            throw res;
+          }
+          return res.json();
+        })
+        .then((json) => {
+          // console.log(json);
+          localStorage.setItem('user', JSON.stringify(json));
+          alert('Sign in successful. TODO: redirect to homepage')
+        })
+        .catch((err) => {
+          alert('Error signing in, please try again')
         })
   }
 }

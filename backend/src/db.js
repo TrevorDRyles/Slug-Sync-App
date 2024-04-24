@@ -34,3 +34,22 @@ exports.postSignup = async (data) => {
     console.error('Error signing up user:', err)
   }
 }
+
+// Returns a user list in the following JSON format:
+// users = [{name, email, password, userID}, ...]
+exports.selectAllUsers = async (data) => {
+  const query = `
+    SELECT "id", "data" from "user";
+  `
+  const result = await pool.query(query)
+  const userData = result.rows;
+
+  // todo: there's probably a smarter way to map this?
+  const users = []
+  for (let i=0; i< userData.length; i++){
+    const currentUser = userData[i]["data"];
+    currentUser["id"] = userData[i]["id"];
+    users.push(userData[i]["data"]);
+  }
+  return users;
+}

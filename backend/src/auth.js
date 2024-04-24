@@ -15,20 +15,30 @@ const pool = new Pool({
 // login endpoint referenced from authenticated books example
 exports.login = async (req, res) => {
   const {email, password} = req.body;
-  const users = await userdb.selectAllUsers();
-  const user = users.find((user) => {
-    return user.user.email === email &&
-            bcrypt.compareSync(password, user.user.password);
-  });
+  const users = await db.selectAllUsers();
+  let user = false;
+  console.log("Printing all users:\n", users);
+  for (let i=0; i< users.length; i++){
+    if (users[i]["email"] === email) {
+      const passwordMatch = bcrypt.compareSync(password, users[i]["password"]);
+      if (!passwordMatch){
+        user = {
+          "id" : users[i]["id"],
+          "name" : users[i]["name"],
+          "email" : users[i]["email"],
+        }
+      }
+    }
+  }
+
   if (user) {
     const accessToken = jwt.sign(
-      {email: user.user.email},
+      user,
       secrets.accessToken, {
         expiresIn: '30m',
         algorithm: 'HS256',
       });
-    res.status(200).json({id: user.id, email: user.user.email,
-      accessToken: accessToken, name: user.user.name});
+    res.status(200).json({token: accessToken});
   } else {
     res.status(401).send('Invalid credentials');
   }

@@ -49,6 +49,24 @@ paths:
       responses:
         201:
           description: Successfully creates User
+  
+  /login:
+    post:
+      description: User login
+      requestBody:
+        description: Form fields for login
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginForm'
+      responses:
+        200:
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
 
 components:
   schemas:
@@ -128,6 +146,28 @@ components:
         - name
         - email
         - password
+
+    LoginForm:
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          pattern: '^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$'
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+        - token
 
   securitySchemes:
     bearerAuth:
