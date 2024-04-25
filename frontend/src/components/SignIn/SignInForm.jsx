@@ -34,7 +34,7 @@ const handleSubmit = (data, type, toggle) => {
           }
         })
         .then(() => {
-          alert('Signup successful, please log in')
+          alert(`${upperFirst(type)} successful, please log in`)
           toggle()
         })
         .catch((err) => {

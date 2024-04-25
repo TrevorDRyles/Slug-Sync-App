@@ -1,4 +1,4 @@
-import SignIn from './components/SignIn/SignIn.tsx'
+import SignIn from './components/SignIn/SignIn.jsx'
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import Home from "./components/Home.jsx";
 import { MantineProvider } from '@mantine/core';

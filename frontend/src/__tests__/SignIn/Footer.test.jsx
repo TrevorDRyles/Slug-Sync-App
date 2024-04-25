@@ -2,7 +2,7 @@ import { it, beforeAll, afterAll } from 'vitest';
 import {screen} from '@testing-library/react';
 import { render } from "@/__tests__/render";
 import { setupServer } from 'msw/node';
-import { Footer } from '@/components/SignIn/Footer';
+import { Footer } from '@/components/SignIn/Footer.jsx';
 
 const server = setupServer();
 

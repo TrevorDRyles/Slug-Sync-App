@@ -2,7 +2,7 @@ import { it, beforeAll, afterAll } from 'vitest';
 import {screen} from '@testing-library/react';
 import { render } from "@/__tests__/render";
 import { setupServer } from 'msw/node';
-import Header from '@/components/SignIn/Header';
+import Header from '@/components/SignIn/Header.jsx';
 
 const URL = 'http://localhost:3010/v0/goal';
 

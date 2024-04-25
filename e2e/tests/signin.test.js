@@ -79,6 +79,8 @@ afterEach(async () => {
   await browser.close();
 });
 
+// this test can only be run once to succeed because it
+// creates data and duplicates can't be created without error conflict
 test('Successful Registration', async () => {
   await page.goto('http://localhost:3000/login');
   await page.waitForFunction(
@@ -101,7 +103,7 @@ test('Successful Registration', async () => {
   await page.waitForFunction(
     'document.querySelector("body").innerText.includes("Register")',
   );
-  await handleDialog(page, 'Sign in successful, please log in');
+  await handleDialog(page, 'Register successful, please log in');
 });
 
 test('Deplicate Registration', async () => {
