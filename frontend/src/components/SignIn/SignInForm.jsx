@@ -13,6 +13,7 @@ import {
   Stack,
 } from '@mantine/core';
 import {useNavigate} from "react-router-dom";
+import PropTypes from "prop-types";
 
 const handleSubmit = (data, type, toggle) => {
   if (type === 'register') {

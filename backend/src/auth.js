@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const secrets = require('../api/data/secrets');
 const {Pool} = require('pg');
 const db = require('./db');
 
@@ -43,7 +42,7 @@ exports.check = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(' ')[1];
-    jwt.verify(token, secrets.accessToken, (err, user) => {
+    jwt.verify(token, process.env.MASTER_SECRET, (err, user) => {
       if (err) {
         return res.sendStatus(403);
       }
