@@ -67,3 +67,25 @@ test('POST /v0/goal creates goal', async () => {
   expect(goal.status).toBe(400);
 });
 
+test('GET /v0/goal/:id returns goal data from the database', async () => {
+  const goal = await request.post('/v0/goal')
+    .send({
+      title: 'title',
+      description: 'description',
+      recurrence: '1',
+    });
+
+  const res = await supertest(server).get('/v0/goal/' + goal.body.id);
+
+  expect(res.status).toBe(200);
+  expect(res.body.id).toBe(goal.body.id);
+  expect(res.body.title).toBe(goal.body.title);
+  expect(res.body.description).toBe(goal.body.description);
+  expect(res.body.recurrence).toBe(goal.body.recurrence);
+});
+
+test('GET goal returns NOT FOUND', async () => {
+  const randomId = crypto.randomUUID();
+  await request.get('/v0/goal/' + randomId)
+    .expect(404);
+});

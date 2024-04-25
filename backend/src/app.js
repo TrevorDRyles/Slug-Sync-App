@@ -5,7 +5,7 @@ const swaggerUi = require('swagger-ui-express');
 const fs = require('fs');
 const path = require('path');
 const OpenApiValidator = require('express-openapi-validator');
-const auth = require('./auth')
+const auth = require('./auth');
 const goal = require('./goal.js');
 
 const app = express();
@@ -30,12 +30,13 @@ app.use(
   }),
 );
 
-app.post('/v0/signup', auth.signup)
+app.post('/v0/signup', auth.signup);
 
 app.post('/v0/login', auth.login)
 
 app.post('/v0/goal', goal.createGoal);
 
+app.get('/v0/goal/:id', goal.viewGoal);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

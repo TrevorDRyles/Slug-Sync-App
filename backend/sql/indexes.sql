@@ -3,3 +3,4 @@
 --
 
 -- Index Your Tables Here (Optional) --
+CREATE UNIQUE INDEX ON "user" ((data->>'email'))
