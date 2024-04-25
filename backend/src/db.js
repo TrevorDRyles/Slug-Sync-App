@@ -34,3 +34,34 @@ exports.postSignup = async (data) => {
     return err;
   }
 };
+
+// referenced from cse 186 code trevor ryles
+exports.selectAllUsers = async () => {
+  const select = 'SELECT * FROM "user"';
+  const query = {
+    text: select,
+  };
+  const {rows} = await pool.query(query);
+  return rows;
+};
+// referenced from cse 186 code trevor ryles
+exports.getMemberByPasswordAndEmail = async (password, email) => {
+  const selectQuery = `SELECT *
+                       FROM "user"
+                       where data ->> 'password' = crypt($1, 'cs')
+                         AND data ->> 'email' = $2`;
+  const query = {
+    text: selectQuery,
+    values: [password, email],
+  };
+
+  const result = await pool.query(query);
+  return result.rows.map((row) => ({
+    id: row.id,
+    name: row.data.name,
+    email: row.data.email,
+    roles: row.data.roles,
+    avatarURL: row.data.avatarURL,
+  }));
+}
+

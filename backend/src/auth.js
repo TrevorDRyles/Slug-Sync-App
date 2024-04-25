@@ -1,6 +1,4 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const secrets = require('../api/data/secrets');
 const {Pool} = require('pg');
 const db = require('./db');
 
@@ -12,27 +10,27 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD,
 });
 
-// login endpoint referenced from authenticated books example
+// referenced from cse 186 code trevor ryles
 exports.login = async (req, res) => {
   const {email, password} = req.body;
-  const users = await userdb.selectAllUsers();
-  const user = users.find((user) => {
-    return user.user.email === email &&
-            bcrypt.compareSync(password, user.user.password);
-  });
+  const users = await db.getMemberByPasswordAndEmail(
+    password, email);
+  if (users.length === 0) {
+    return res.status(401).send('Invalid credentials');
+  }
+  const user = users[0];
   if (user) {
     const accessToken = jwt.sign(
-      {email: user.user.email},
-      secrets.accessToken, {
+      {email: user.email, name: user.name, roles: user.roles},
+      `${process.env.MASTER_SECRET}`, {
         expiresIn: '30m',
         algorithm: 'HS256',
-      });
-    res.status(200).json({id: user.id, email: user.user.email,
-      accessToken: accessToken, name: user.user.name});
-  } else {
-    res.status(401).send('Invalid credentials');
+      },
+    );
+    res.status(200).json({token: accessToken});
   }
 };
+
 
 exports.signup = async (req, res) => {
   const err = await db.postSignup(req.body);
@@ -44,7 +42,7 @@ exports.check = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(' ')[1];
-    jwt.verify(token, secrets.accessToken, (err, user) => {
+    jwt.verify(token, process.env.MASTER_SECRET, (err, user) => {
       if (err) {
         return res.sendStatus(403);
       }

@@ -32,6 +32,8 @@ app.use(
 
 app.post('/v0/signup', auth.signup);
 
+app.post('/v0/login', auth.login)
+
 app.post('/v0/goal', goal.createGoal);
 
 app.get('/v0/goal/:id', goal.viewGoal);

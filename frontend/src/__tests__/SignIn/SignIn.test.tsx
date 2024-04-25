@@ -1,7 +1,7 @@
 import { it, } from 'vitest';
 import {fireEvent, screen} from '@testing-library/react';
 import { render } from "@/__tests__/render";
-import SignIn from '@/components/SignIn/SignIn'
+import SignIn from '@/components/SignIn/SignIn.jsx'
 
 it('Renders all components', async() => {
   render(<SignIn />)
