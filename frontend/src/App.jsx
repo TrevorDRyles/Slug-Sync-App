@@ -5,11 +5,19 @@ import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import CreateGoal from "./components/Goal/CreateGoal.jsx";
 import ViewGoal from "./components/Goal/ViewGoal.jsx";
+import { useState } from 'react';
 
-
+/**
+ * App
+ * @return {object} JSX
+ */
 function App() {
+
+  const [isLight, setIsLight] = useState(false);
+
+
   return (
-  <MantineProvider theme={{height: '100vh'}}>
+  <MantineProvider theme={{height: '100vh'}} defaultColorScheme='light'>
       <BrowserRouter>
         <Routes>
           <Route path="/login" default element={<SignIn />} />
