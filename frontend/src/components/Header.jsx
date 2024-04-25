@@ -50,13 +50,13 @@ const headerItems = [
     icon: IconPencilPlus,
     title: 'Create Goal',
     description: 'Create a goal to track your progress!',
-    link: '/login',
+    link: '/createGoal',
   },
   {
     icon: IconZoomScan,
     title: 'View Goals',
     description: 'View your goals',
-    link: '/login',
+    link: '/goals',
   },
 ];
 
@@ -95,7 +95,7 @@ export default function Header({ toggleSidebar}) {
           <Burger aria-label="Burger1" style={{marginRight: "146px"}} opened={drawerOpened} onClick={toggleSidebar}/>
 
           <Group h="100%" gap={0} visibleFrom="sm">
-            <a href="/login" className={classes.link}>
+            <a href="/" className={classes.link}>
               Home
             </a>
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
@@ -142,7 +142,7 @@ export default function Header({ toggleSidebar}) {
                 </div> */}
               </HoverCard.Dropdown>
             </HoverCard>
-            <a href="/login" className={classes.link}>
+            <a className={classes.link}>
               Search
             </a>
           </Group>

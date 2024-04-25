@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
 import {TextInput, Paper, Button, Textarea, Select, Divider} from '@mantine/core';
 import {useNavigate} from "react-router-dom";
-import styles from './CreateGoal.module.css';
+import styles from './Goal.module.css';
 
+// add days for recurrence
 let days = [{label: '1 day', value: `${1}`}];
 for(let i = 2; i <= 31; i++) {
   days.push({label: `${i} days`, value: `${i}`});
@@ -43,7 +44,7 @@ function CreateGoal() {
       })
       .then((json) => {
         console.log('create goal response: ' + JSON.stringify(json));
-        history('/');
+        history(`/goal/${json.id}`);
       })
       .catch((err) => {
         console.log('Error creating goal: ' + err);

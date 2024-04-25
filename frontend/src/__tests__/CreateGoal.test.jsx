@@ -2,7 +2,7 @@ import { it, beforeAll, afterAll } from 'vitest';
 import {fireEvent, waitFor, screen} from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import CreateGoal from "../components/Goal/CreateGoal.jsx";
+import CreateGoal from "../components/Goal/Create.jsx";
 import {BrowserRouter} from "react-router-dom";
 import { render } from "./render";
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Paper, Text, Divider, Button} from '@mantine/core';
 import { useParams } from 'react-router-dom';
-import './ViewGoal.css';
+import styles from './Goal.module.css';
+import Header from "@/components/Header.jsx";
 
 const ViewGoal = () => {
   const { id } = useParams();
@@ -54,12 +55,14 @@ const ViewGoal = () => {
   }, [id]);
 
   return (
-    <div className="container">
-      <div className="column goal-column">
+    <>
+      <Header/>
+    <div className={styles.goalContainer}>
+      <div className={`${styles.column} ${styles.goalColumn}`}>
         {goalData ? (
           <>
-            <Paper className="goal-paper">
-              <Text className="goal-text">{goalData.title}</Text>
+            <Paper className={styles.goalPaper}>
+              <Text className={styles.goalText}>{goalData.title}</Text>
               <Divider my="sm" />
               <Text>{goalData.description}</Text>
               {goalData.recurrence > 1 ? (
@@ -68,7 +71,7 @@ const ViewGoal = () => {
                 <Text style={{ color: 'grey' }}>Recurring every day</Text>
               )}
               <Divider my="sm" />
-              <Button className ="goal-complete">
+              <Button className ={styles.goalComplete}>
                 Complete for today!
               </Button>
             </Paper>
@@ -77,15 +80,16 @@ const ViewGoal = () => {
           <div>Loading...</div>
         )}
       </div>
-      <div className="column members-column">
-        <Paper className="members-paper">
-          <Text className="members-text">Members</Text>
+      <div className={`${styles.column} ${styles.membersColumn}`}>
+        <Paper className={styles.membersPaper}>
+          <Text className={styles.membersText}>Members</Text>
           {/* {members.map((member) => (
             <div key={member.id}>{member.name}</div>
           ))} */}
         </Paper>
       </div>
     </div>
+    </>
   );
 };
 
