@@ -1,10 +1,10 @@
 import { it, beforeAll, afterAll } from 'vitest';
-import { fireEvent, waitFor, screen } from '@testing-library/react';
+import { waitFor, screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import ViewGoal from "../components/Goal/ViewGoal.jsx";
 import { BrowserRouter } from "react-router-dom";
-import { render } from "./render.jsx";
+import { render } from "./render";
 
 const server = setupServer();
 
@@ -84,13 +84,13 @@ it('Loads view goal with error', async () => {
         return res(ctx.json([]), ctx.status(200));
       })
     );
-  
+
     render(
       <BrowserRouter>
         <ViewGoal />
       </BrowserRouter>
     );
-  
+
     // Check if the loading indicator is shown while the request is pending
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 });

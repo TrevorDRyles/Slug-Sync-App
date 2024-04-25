@@ -86,9 +86,9 @@ async function createGoal() {
   // https://chat.openai.com/share/67880247-ed5d-4614-af95-1b17ae8a6d05
   await page.goto('http://localhost:3000/createGoal');
   const title = await page.waitForSelector('input[id="title"]');
-  await title.type("Goal Title");
+  await title.type('Goal Title');
   const description = await page.waitForSelector('textarea[id="description"]');
-  await description.type("Goal Description");
+  await description.type('Goal Description');
   await page.waitForSelector('#recurrence');
   await page.click('#recurrence');
   for (let i = 0; i < 2; i++) {

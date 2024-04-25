@@ -73,7 +73,7 @@ test('GET /v0/goal/:id returns goal data from the database', async () => {
       title: 'title',
       description: 'description',
       recurrence: '1',
-    })
+    });
 
   const res = await supertest(server).get('/v0/goal/' + goal.body.id);
 
@@ -84,8 +84,8 @@ test('GET /v0/goal/:id returns goal data from the database', async () => {
   expect(res.body.recurrence).toBe(goal.body.recurrence);
 });
 
-test('GET goal returns NOT FOUND', async() => {
-  const randomId = crypto.randomUUID()
+test('GET goal returns NOT FOUND', async () => {
+  const randomId = crypto.randomUUID();
   await request.get('/v0/goal/' + randomId)
-    .expect(404)
-})
+    .expect(404);
+});

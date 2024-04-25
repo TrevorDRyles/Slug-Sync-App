@@ -1,5 +1,8 @@
-import { Box, Paper } from '@mantine/core'
-import SignInForm from './forms/SignInForm'
+import {Box} from '@mantine/core'
+import SignInForm from './SignInForm'
+import {Footer} from './Footer'
+import Header from './Header';
+import { useToggle } from '@mantine/hooks';
 
 /**
  * This import is to seperate css styles from one another
@@ -12,9 +15,17 @@ import SignInForm from './forms/SignInForm'
 import classes from './SignIn.module.css'
 
 export default function SignIn() {
+
+  const [type, toggle] = useToggle(['login', 'register']);
+
+
   return (
-    <Box className={classes.formWrapper}>
-      <SignInForm /> 
+    <Box className={classes.wrapper}>
+      <Header content={type} />
+      <Box className={classes.formWrapper}>
+        <SignInForm type={type} toggle={toggle}/>
+      </Box>
+      <Footer />
     </Box>
   )
 }

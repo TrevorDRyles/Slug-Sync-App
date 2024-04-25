@@ -2,10 +2,9 @@ import { it, beforeAll, afterAll } from 'vitest';
 import {fireEvent, waitFor, screen} from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-
 import CreateGoal from "../components/Goal/CreateGoal.jsx";
 import {BrowserRouter} from "react-router-dom";
-import { render } from "./render.jsx";
+import { render } from "./render";
 
 const URL = 'http://localhost:3010/v0/goal';
 
@@ -33,7 +32,7 @@ it('Loads create goal', async () => {
     screen.findByText('Title', {exact: false});
   });
   await waitFor(() => {
-    screen.findByText('Description', {exact: false});
+    screen.findByText('Description');
   });
   await waitFor(() => {
     screen.findByText('Recurrence (every x days)', {exact: false});
@@ -82,7 +81,7 @@ it('Loads create goal with error', async () => {
     screen.findByText('Title', {exact: false});
   });
   await waitFor(() => {
-    screen.findByText('Description', {exact: false});
+    screen.findByText('Description');
   });
   await waitFor(() => {
     screen.findByText('Recurrence (every x days)', {exact: false});
