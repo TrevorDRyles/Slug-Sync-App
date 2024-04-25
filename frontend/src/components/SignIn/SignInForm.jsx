@@ -7,21 +7,14 @@ import {
   Text,
   Paper,
   Group,
-  PaperProps,
   Button,
   Divider,
-  Checkbox,
   Anchor,
   Stack,
 } from '@mantine/core';
-type SignInFormData = {
-  name: string;
-  email: string;
-  password: string;
-  terms: boolean;
-}
+import {useNavigate} from "react-router-dom";
 
-const handleSubmit = (data: SignInFormData, type: string, toggle: () => void) => {
+const handleSubmit = (data, type, toggle) => {
   if (type === 'register') {
     fetch(`http://localhost:3010/v0/signup`, {
       method: 'post',
@@ -47,16 +40,17 @@ const handleSubmit = (data: SignInFormData, type: string, toggle: () => void) =>
           alert('Error signing up, please try again')
         })
   }
+  // referenced from cse 186 code trevor ryles
   else if (type === 'login') {
-    fetch(`http://localhost:3010/v0/login`, {
-      method: 'post',
+    fetch('http://localhost:3010/v0/login', {
+      method: 'POST',
       body: JSON.stringify({
         email: data.email,
         password: data.password
       }),
       headers: {
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     })
         .then((res) => {
           if (!res.ok) {
@@ -65,17 +59,19 @@ const handleSubmit = (data: SignInFormData, type: string, toggle: () => void) =>
           return res.json();
         })
         .then((json) => {
-          // console.log(json);
           localStorage.setItem('user', JSON.stringify(json));
-          alert('Sign in successful. TODO: redirect to homepage')
+          // setInterval(() => {
+          //     localStorage.clear()
+          // }, 30 * 60 * 1000);
+          window.location.href = '/';
         })
         .catch((err) => {
           alert('Error signing in, please try again')
-        })
+        });
   }
 }
 
-export default function SignInForm({type, toggle, ...props}: {type: string, toggle: () => void} & PaperProps) {
+export default function SignInForm({type, toggle, ...props}) {
   const form = useForm({
     initialValues: {
       email: '',
@@ -99,7 +95,7 @@ export default function SignInForm({type, toggle, ...props}: {type: string, togg
       </Center>
 
       <Divider labelPosition="center" my="lg" />
-      
+
 
       <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle)})}>
         <Stack>
@@ -154,3 +150,9 @@ export default function SignInForm({type, toggle, ...props}: {type: string, togg
     </Paper>
   );
 }
+
+SignInForm.propTypes = {
+  type: PropTypes.oneOf(['signin', 'signup']).isRequired,
+  toggle: PropTypes.func.isRequired,
+  signInUser: PropTypes.func.isRequired
+};

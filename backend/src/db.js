@@ -35,21 +35,33 @@ exports.postSignup = async (data) => {
   }
 };
 
-// Returns a user list in the following JSON format:
-// users = [{name, email, password, userID}, ...]
-exports.selectAllUsers = async (data) => {
-  const query = `
-    SELECT "id", "data" from "user";
-  `
-  const result = await pool.query(query)
-  const userData = result.rows;
-
-  // todo: there's probably a smarter way to map this?
-  const users = []
-  for (let i=0; i< userData.length; i++){
-    const currentUser = userData[i]["data"];
-    currentUser["id"] = userData[i]["id"];
-    users.push(userData[i]["data"]);
-  }
-  return users;
+// referenced from cse 186 code trevor ryles
+exports.selectAllUsers = async () => {
+  const select = 'SELECT * FROM "user"';
+  const query = {
+    text: select,
+  };
+  const {rows} = await pool.query(query);
+  return rows;
 };
+// referenced from cse 186 code trevor ryles
+exports.getMemberByPasswordAndEmail = async (password, email) => {
+  const selectQuery = `SELECT *
+                       FROM "user"
+                       where data ->> 'password' = crypt($1, 'cs')
+                         AND data ->> 'email' = $2`;
+  const query = {
+    text: selectQuery,
+    values: [password, email],
+  };
+
+  const result = await pool.query(query);
+  return result.rows.map((row) => ({
+    id: row.id,
+    name: row.data.name,
+    email: row.data.email,
+    roles: row.data.roles,
+    avatarURL: row.data.avatarURL,
+  }));
+}
+
