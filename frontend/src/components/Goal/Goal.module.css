@@ -1,0 +1,112 @@
+.container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-top: 50px;
+  padding: 100px 50px 100px 50px;
+  background-color: lightblue;
+}
+
+.goalContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-top: 50px;
+  padding: 100px 50px;
+  background-color: white;
+}
+
+.column {
+  width: 45%;
+}
+
+.goalColumn {
+  text-align: center;
+}
+
+.membersColumn {
+  text-align: right;
+  margin-top: 20px;
+  max-width: 300px;
+}
+
+.goalPaper {
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.goalText, .membersText {
+  text-align: center;
+  font-size: 24px;
+}
+.membersPaper {
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  max-width: 300px;
+  margin-bottom: 10px; /* This was in .members-text in the original CSS */
+}
+
+.topContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
+.secondToTopContainer {
+  background-color: lightblue;
+  width: 50%;
+  max-width: 1000px;
+  padding: 20px;
+  margin: auto;
+}
+
+.goalsContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.goalsGoalContainer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+
+.goal{
+  width: 100%;
+  margin: 0 auto;
+}
+
+.link{
+  text-decoration: none;
+  color: #007bff;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+.goalsMembersText {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 24px;
+}
+
+
+/*.membersPaper {*/
+/*  padding: 20px;*/
+/*  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);*/
+/*  border-radius: 8px;*/
+/*  max-width: 300px;*/
+/*}*/
+
+/*.membersText {*/
+/*  margin-bottom: 10px;*/
+/*  text-align: center;*/
+/*  font-size: 24px;*/
+/*}*/

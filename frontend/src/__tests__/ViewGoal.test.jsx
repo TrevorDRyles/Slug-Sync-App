@@ -2,7 +2,7 @@ import { it, beforeAll, afterAll } from 'vitest';
 import { waitFor, screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import ViewGoal from "../components/Goal/ViewGoal.jsx";
+import ViewGoal from "../components/Goal/View.jsx";
 import { BrowserRouter } from "react-router-dom";
 import { render } from "./render";
 

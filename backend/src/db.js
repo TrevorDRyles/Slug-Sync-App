@@ -63,5 +63,5 @@ exports.getMemberByPasswordAndEmail = async (password, email) => {
     roles: row.data.roles,
     avatarURL: row.data.avatarURL,
   }));
-}
+};
 
