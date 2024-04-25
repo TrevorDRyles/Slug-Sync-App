@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
   for (let i=0; i< users.length; i++){
     if (users[i]["email"] === email) {
       const passwordMatch = bcrypt.compareSync(password, users[i]["password"]);
-      if (!passwordMatch){
+      if (passwordMatch){
         user = {
           "id" : users[i]["id"],
           "name" : users[i]["name"],
