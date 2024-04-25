@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import { TextInput, Paper, Button, Textarea, Select } from '@mantine/core';
+import {TextInput, Paper, Button, Textarea, Select, Divider} from '@mantine/core';
 import {useNavigate} from "react-router-dom";
+import styles from './CreateGoal.module.css';
 
 let days = [{label: '1 day', value: `${1}`}];
 for(let i = 2; i <= 31; i++) {
@@ -10,10 +11,6 @@ for(let i = 2; i <= 31; i++) {
 // https://chat.openai.com/share/4da161a6-46be-448b-a884-107b5c2d63c2
 function CreateGoal() {
   const history = useNavigate();
-
-
-  const [recurrence, setRecurrence] = useState('');
-
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -54,46 +51,49 @@ function CreateGoal() {
   };
 
   return (
-    <Paper padding="lg" shadow="xs" style={{ maxWidth: 400, margin: '0 auto' }}>
-      <h1>Create Goal</h1>
-      <form onSubmit={handleSubmit}>
-        <TextInput
-          label="Title"
-          placeholder="Enter text for Field 1"
-          value={formData.title}
-          onChange={(e) => handleChange('title', e.target.value)}
-          required
-          style={{ marginBottom: 15 }}
-          id={"title"}
-          data-testid={"title"}
-        />
-        <Textarea
-          label="Description"
-          description="Input description"
-          placeholder=""
-          onChange={(e) => handleChange('description', e.target.value)}
-          required
-          style={{ marginBottom: 15 }}
-          value={formData.description}
-          id={"description"}
-          data-testid={"description"}
-        />
-        <Select
-          data={days}
-          label="Recurrence (every x days)"
-          placeholder="1 day"
-          value={formData.recurrence}
-          onChange={(e) => handleChange('recurrence', e)}
-          required
-          style={{ marginBottom: 15 }}
-          id={"recurrence"}
-          data-testid={"recurrence"}
-        />
-        <Button data-testid="submit" type="submit" variant="outline" color="blue">
-          Submit
-        </Button>
-      </form>
-    </Paper>
+    <div className={styles.container}>
+      <div className={`${styles.column} ${styles.goalColumn}`}>
+        <Paper padding="lg" shadow="xs" className={styles.goalPaper} style={{ maxWidth: 400, margin: '0 auto' }}>
+          <div className={styles.goalText}>Create Goal</div>
+          <form onSubmit={handleSubmit}>
+            <TextInput
+              label="Title"
+              placeholder="Enter title"
+              value={formData.title}
+              onChange={(e) => handleChange('title', e.target.value)}
+              required
+              style={{ marginBottom: 15 }}
+              id={"title"}
+              data-testid={"title"}
+            />
+            <Textarea
+              label="Description"
+              placeholder="Enter description"
+              onChange={(e) => handleChange('description', e.target.value)}
+              required
+              style={{ marginBottom: 15 }}
+              value={formData.description}
+              id={"description"}
+              data-testid={"description"}
+            />
+            <Select
+              data={days}
+              label="Recurrence (every x days)"
+              placeholder="1 day"
+              value={formData.recurrence}
+              onChange={(e) => handleChange('recurrence', e)}
+              required
+              style={{ marginBottom: 15 }}
+              id={"recurrence"}
+              data-testid={"recurrence"}
+            />
+            <Button data-testid="submit" type="submit" variant="outline" color="blue">
+              Submit
+            </Button>
+          </form>
+        </Paper>
+      </div>
+    </div>
   );
 }
 
