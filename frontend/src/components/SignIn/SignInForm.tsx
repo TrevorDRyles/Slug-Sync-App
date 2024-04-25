@@ -1,5 +1,6 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
+import { upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
+import { Center} from '@mantine/core';
 import {
   TextInput,
   PasswordInput,
@@ -13,9 +14,6 @@ import {
   Anchor,
   Stack,
 } from '@mantine/core';
-import { GoogleButton } from './GoogleButton';
-import { TwitterButton } from './TwitterButton';
-
 type SignInFormData = {
   name: string;
   email: string;
@@ -51,8 +49,7 @@ const handleSubmit = (data: SignInFormData, type: string, toggle: () => void) =>
   }
 }
 
-export default function SignInForm(props: PaperProps) {
-  const [type, toggle] = useToggle(['login', 'register']);
+export default function SignInForm({type, toggle, ...props}: {type: string, toggle: () => void} & PaperProps) {
   const form = useForm({
     initialValues: {
       email: '',
@@ -69,16 +66,14 @@ export default function SignInForm(props: PaperProps) {
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} style={{minWidth: '500px'}}>
-      <Text size="lg" fw={500}>
-        Welcome to Mantine, {type} with
-      </Text>
+      <Center>
+        <Text size="lg" fw={500}>
+          Welcome to SlugSync
+        </Text>
+      </Center>
 
-      <Group grow mb="md" mt="md">
-        <GoogleButton radius="xl">Google</GoogleButton>
-        <TwitterButton radius="xl">Twitter</TwitterButton>
-      </Group>
-
-      <Divider label="Or continue with email" labelPosition="center" my="lg" />
+      <Divider labelPosition="center" my="lg" />
+      
 
       <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle)})}>
         <Stack>
@@ -89,6 +84,8 @@ export default function SignInForm(props: PaperProps) {
               value={form.values.name}
               onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
               radius="md"
+              id='name'
+              aria-label='Name Input'
             />
           )}
 
@@ -100,6 +97,8 @@ export default function SignInForm(props: PaperProps) {
             onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
             error={form.errors.email && 'Invalid email'}
             radius="md"
+            aria-label="Email Input"
+            id='email'
           />
 
           <PasswordInput
@@ -110,24 +109,18 @@ export default function SignInForm(props: PaperProps) {
             onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
             error={form.errors.password && 'Password should include at least 6 characters'}
             radius="md"
+            aria-label="Password Input"
+            id='password'
           />
-
-          {type === 'register' && (
-            <Checkbox
-              label="I accept terms and conditions"
-              checked={form.values.terms}
-              onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-            />
-          )}
         </Stack>
 
         <Group justify="space-between" mt="xl">
-          <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
+          <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs" aria-label='Switch Signin'>
             {type === 'register'
               ? 'Already have an account? Login'
               : "Don't have an account? Register"}
           </Anchor>
-          <Button type="submit" radius="xl">
+          <Button type="submit" radius="xl" aria-label="Submit Signin Button">
             {upperFirst(type)}
           </Button>
         </Group>

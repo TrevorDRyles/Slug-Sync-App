@@ -11,6 +11,7 @@ const puppeteer = require('puppeteer');
 const http = require('http');
 const path = require('path');
 const express = require('express');
+const {handleDialog} = require('./helpers');
 
 require('dotenv').config();
 const app = require('../../backend/src/app');
@@ -78,60 +79,52 @@ afterEach(async () => {
   await browser.close();
 });
 
-// copied above from starter code
+test('Successful Registration', async () => {
+  await page.goto('http://localhost:3000/login');
+  await page.waitForFunction(
+    `document.querySelector("body").innerText.includes(
+    "Don't have an account? Register")`,
+  );
+  page.click('aria/Switch Signin');
+  await page.waitForFunction(
+    `document.querySelector("body").innerText.includes(
+    "Already have an account? Login")`,
+  );
+  const nameInput = await page.$('#name');
+  await nameInput.type('Test name');
+  const passwordInput = await page.$('#password');
+  await passwordInput.type('12345678');
+  const emailInput = await page.$('#email');
+  await emailInput.type('test@gmail.com');
+  await page.click('aria/Submit Signin Button');
 
-// const EMAIL = 'molly@books.com';
-// const PASSWORD = 'mollymember';
-
-/**
- * checkWorkspacesShow
- * @return {Promise<void>}
- */
-// async function login() {
-//   await page.goto('http://localhost:3000/login');
-//   console.log('login: 1');
-//   const email = await page.waitForSelector('input[type="text"][id="email"]');
-//   await email.type(EMAIL);
-//   console.log('login: 2');
-//   const password = await page.waitForSelector(
-//     'input[type="password"][name="password"]');
-//   await password.type(PASSWORD);
-//   console.log('login: 3');
-//   const submit = await page.waitForSelector('[type="submit"]');
-//   console.log(submit);
-//   // https://stackoverflow.com/questions/70398134/puppeteer-trigger-click-of-button-not-working
-//   console.log('login: 4');
-//   await page.$eval(`[type="submit"]`, (element) =>
-//     element.click(),
-//   );
-//   console.log('login: 4.5');
-//   await page.waitForNavigation();
-//   console.log('login: 5');
-//   // await page.waitForSelector('#welcome');
-//   // console.log('login: 6');
-//   // const content = await page.evaluate((el) =>
-//   // el.textContent.trim(), element);
-//   // console.log('login: 7');
-//   // expect(content).toContain('Welcome to slack');
-// }
-// /**
-//  * checkWorkspacesShow
-//  * @return {Promise<void>}
-//  */
-// async function logout() {
-//   const logout = await page.waitForSelector('#logout');
-//   console.log(logout);
-//   // await logout.click();
-//   await page.$eval(`#logout`, (element) =>
-//     element.click(),
-//   );
-//   await page.waitForSelector('#signIn');
-//   const content = await page.$eval('#signIn', (el) => el.textContent.trim());
-//   expect(content).toBe('Sign in');
-// }
-
-
-test('login logout', async () => {
-
+  await page.waitForFunction(
+    'document.querySelector("body").innerText.includes("Register")',
+  );
+  await handleDialog(page, 'Sign in successful, please log in');
 });
 
+test('Deplicate Registration', async () => {
+  await page.goto('http://localhost:3000/login');
+  await page.waitForFunction(
+    `document.querySelector("body").innerText.includes(
+    "Don't have an account? Register")`,
+  );
+  page.click('aria/Switch Signin');
+  await page.waitForFunction(
+    `document.querySelector("body").innerText.includes(
+    "Already have an account? Login")`,
+  );
+  const nameInput = await page.$('#name');
+  await nameInput.type('Test name');
+  const passwordInput = await page.$('#password');
+  await passwordInput.type('12345678');
+  const emailInput = await page.$('#email');
+  await emailInput.type('test@gmail.com');
+  await page.click('aria/Submit Signin Button');
+
+  await page.waitForFunction(
+    'document.querySelector("body").innerText.includes("Register")',
+  );
+  await handleDialog(page, 'Error signing up, please try again');
+});

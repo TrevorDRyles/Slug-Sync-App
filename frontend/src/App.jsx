@@ -6,13 +6,10 @@ import '@mantine/core/styles.css';
 import CreateGoal from "./components/Goal/CreateGoal.jsx";
 import ViewGoal from "./components/Goal/ViewGoal.jsx";
 
-/**
- * App
- * @return {object} JSX
- */
+
 function App() {
   return (
-  <MantineProvider>
+  <MantineProvider theme={{height: '100vh'}}>
       <BrowserRouter>
         <Routes>
           <Route path="/login" default element={<SignIn />} />
