@@ -81,6 +81,7 @@ afterEach(async () => {
 
 // this test can only be run once to succeed because it
 // creates data and duplicates can't be created without error conflict
+// TODO cleanup after this test when the delete endpoint is implemented
 test('Successful Registration', async () => {
   await page.goto('http://localhost:3000/login');
   await page.waitForFunction(
