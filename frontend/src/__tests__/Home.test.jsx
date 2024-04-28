@@ -25,15 +25,15 @@ it('Loads home', async () => {
     screen.getByText('Home', {exact: false});
     fireEvent.click(screen.getByText('Home', {exact: false}));
 
-    screen.getByText('Search', {exact: false});
-    fireEvent.click(screen.getByText('Search', {exact: false}));
+    // screen.getByText('Search', {exact: false});
+    // fireEvent.click(screen.getByText('Search', {exact: false}));
 
     screen.getByText('Log in', {exact: false});
     fireEvent.click(screen.getByText('Log in', {exact: false}));
 
     screen.getByText('Sign up', {exact: false});
     fireEvent.click(screen.getByText('Sign up', {exact: false}));
-    screen.getByText('Main Content');
+    screen.getAllByText('Slug Sync', {exact: false});
 
 });
 

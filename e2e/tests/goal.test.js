@@ -66,8 +66,8 @@ beforeEach(async () => {
     console.log('Browser log:', msg.text());
   });
   await page.setViewport({
-    width: 1980,
-    height: 1080,
+    width: 1080,
+    height: 780,
   });
 });
 
@@ -79,19 +79,24 @@ afterEach(async () => {
 });
 
 /**
- * checkWorkspacesShow
+ * createGoal
+ * @param {string} title
+ * @param {string} description
+ * @param {string} arrowsDownOnRecurrence
  * @return {Promise<void>}
  */
-async function createGoal() {
+async function createGoal(title, description, arrowsDownOnRecurrence) {
   // https://chat.openai.com/share/67880247-ed5d-4614-af95-1b17ae8a6d05
   await page.goto('http://localhost:3000/createGoal');
-  const title = await page.waitForSelector('input[id="title"]');
-  await title.type('Goal Title');
-  const description = await page.waitForSelector('textarea[id="description"]');
-  await description.type('Goal Description');
+  const titleInput = await page
+    .waitForSelector('input[id="title"]');
+  await titleInput.type(title);
+  const descriptionInput = await page
+    .waitForSelector('textarea[id="description"]');
+  await descriptionInput.type(description);
   await page.waitForSelector('#recurrence');
   await page.click('#recurrence');
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < arrowsDownOnRecurrence; i++) {
     await page.keyboard.press('ArrowDown'); // Move down in the dropdown
   }
   await page.keyboard.press('Enter'); // Select the option
@@ -102,5 +107,86 @@ async function createGoal() {
 }
 
 test('Create goal', async () => {
-  await createGoal();
+  await createGoal('GoalTitle', 'GoalDescription', 2);
+});
+
+/**
+ * clickFirstGoal
+ * @return {Promise<void>}
+ */
+async function clickFirstGoal() {
+  await page.waitForSelector('[aria-label^="goal-link-"]');
+
+  await page.evaluate(() => {
+    const goalLink = document.querySelector('[aria-label^="goal-link-"]');
+    if (goalLink) {
+      goalLink.click();
+    }
+  });
+}
+
+/**
+ * expectViewGoalPageContents
+ * @return {Promise<void>}
+ */
+async function expectViewGoalPageContents() {
+  await page.waitForSelector('[aria-label^="goal-title-"]');
+  const goalTitle = await page.evaluate(() => {
+    const goalLink = document.querySelector('[aria-label^="goal-title-"]');
+    return goalLink.innerText; // or any other property you want to retrieve
+  });
+  expect(goalTitle).toBeDefined();
+}
+
+/**
+ * typeIntoSearchAndExpectFilter
+ * @return {Promise<void>}
+ */
+async function typeIntoSearchAndExpectFilter() {
+  // wait for goals to appear
+  await page.waitForFunction(() => {
+    const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
+    return elements.length >= 5;
+  }, {});
+  const searchInput = await page
+    .waitForSelector('input[id="search-filter-goals"]');
+  await searchInput.type('GoalTitle1');
+
+  // wait for goals to appear post filter
+  // i don't know why this is needed to pass the test
+  await page.waitForFunction(() => {
+    const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
+    return elements.length >= 5;
+  }, {});
+
+  // wait for selected goals to appear
+  await page.waitForFunction((label, count) => {
+    const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
+    let matchedCount = 0;
+    elements.forEach((element) => {
+      if (element.textContent.includes(label)) {
+        matchedCount++;
+      }
+    });
+    return matchedCount >= count;
+  }, {}, 'GoalTitle1', 5);
+}
+
+test('Index page for goal', async () => {
+  // Create sample goal data
+  for (let i = 20; i <= 1; i++) {
+    await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
+  }
+  await page.goto('http://localhost:3000/goals');
+  await clickFirstGoal();
+  await expectViewGoalPageContents();
+});
+
+test('Filtering goals by search', async () => {
+  // Create sample goal data
+  for (let i = 1; i <= 20; i++) {
+    await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
+  }
+  await page.goto('http://localhost:3000/goals');
+  await typeIntoSearchAndExpectFilter();
 });

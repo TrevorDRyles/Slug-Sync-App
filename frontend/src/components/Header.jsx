@@ -142,9 +142,9 @@ export default function Header({ toggleSidebar}) {
                 </div> */}
               </HoverCard.Dropdown>
             </HoverCard>
-            <a className={classes.link}>
-              Search
-            </a>
+            {/*<a className={classes.link}>*/}
+            {/*  Search*/}
+            {/*</a>*/}
           </Group>
 
           <Group visibleFrom="sm">

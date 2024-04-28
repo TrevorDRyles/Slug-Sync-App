@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import {TextInput, Paper, Button, Textarea, Select, Divider} from '@mantine/core';
 import {useNavigate} from "react-router-dom";
 import styles from './Goal.module.css';
+import {useDisclosure} from "@mantine/hooks";
+import Header from "@/components/Header.jsx";
+import Sidebar from "@/components/Sidebar.jsx";
 
 // add days for recurrence
 let days = [{label: '1 day', value: `${1}`}];
@@ -12,6 +15,7 @@ for(let i = 2; i <= 31; i++) {
 // https://chat.openai.com/share/4da161a6-46be-448b-a884-107b5c2d63c2
 function CreateGoal() {
   const history = useNavigate();
+  const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -52,9 +56,11 @@ function CreateGoal() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={`${styles.column} ${styles.goalColumn}`}>
-        <Paper padding="lg" shadow="xs" className={styles.goalPaper} style={{ maxWidth: 400, margin: '0 auto' }}>
+    <>
+      <Header toggleSidebar={toggleSidebar}/>
+      <div className={styles.container}>
+        <div className={`${styles.column} ${styles.goalColumn}`}>
+        <Paper padding="lg" shadow="xs" className={styles.goalPaper} style={{ maxHeight: 900, maxWidth: 900, margin: '0 auto' }}>
           <div className={styles.goalText}>Create Goal</div>
           <form onSubmit={handleSubmit}>
             <TextInput
@@ -94,7 +100,9 @@ function CreateGoal() {
           </form>
         </Paper>
       </div>
-    </div>
+      </div>
+      <Sidebar sidebarOpened={sidebarOpened}/>
+    </>
   );
 }
 

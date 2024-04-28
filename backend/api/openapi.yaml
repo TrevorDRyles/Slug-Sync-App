@@ -34,45 +34,45 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateGoal'
-#    get:
-#      tags:
-#        - get goals
-#      summary: get goals
-#      parameters:
-#        - name: page
-#          in: query
-#          description: Page number
-#          required: true
-#          schema:
-#            additionalProperties: false
-#            type: integer
-#        - name: size
-#          in: query
-#          description: Number of goals per page
-#          required: false
-#          schema:
-#            additionalProperties: false
-#            type: integer
-#        - name: search
-#          in: query
-#          description: Search term
-#          schema:
-#            additionalProperties: false
-#            type: string
-#            nullable: true
-#      responses:
-#        200:
-#          description: Successful
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/Goals'
-#        default:
-#          description: unexpected error
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - get goals
+      summary: get goals
+      parameters:
+        - name: page
+          in: query
+          description: Page number
+          required: true
+          schema:
+            additionalProperties: false
+            type: integer
+        - name: size
+          in: query
+          description: Number of goals per page
+          required: false
+          schema:
+            additionalProperties: false
+            type: number
+        - name: search
+          in: query
+          description: Search term
+          schema:
+            additionalProperties: false
+            type: string
+            nullable: true
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goals'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /signup:
     post:
       description: User SignUp
@@ -86,7 +86,7 @@ paths:
       responses:
         201:
           description: Successfully creates User
-  
+
   /login:
     post:
       description: User login

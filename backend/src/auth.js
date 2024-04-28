@@ -38,6 +38,7 @@ exports.signup = async (req, res) => {
 };
 
 // check endpoint referenced from authenticated books example
+// TODO refactor handlers db access into the db module
 exports.check = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {

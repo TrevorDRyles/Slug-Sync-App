@@ -13,6 +13,11 @@ beforeAll(() => {
   return db.reset();
 });
 
+
+afterEach(async () => {
+  await db.reset();
+});
+
 afterAll((done) => {
   server.close(done);
   db.shutdown();
@@ -88,4 +93,77 @@ test('GET goal returns NOT FOUND', async () => {
   const randomId = crypto.randomUUID();
   await request.get('/v0/goal/' + randomId)
     .expect(404);
+});
+
+test('GET /v0/goal with valid page, size, and search term ' +
+  'returns goal data ', async () => {
+  // create sample goal data
+  const promises = [];
+  for (let i = 1; i <= 10; i++) {
+    promises.push(request.post('/v0/goal')
+      .send({
+        title: 'newtitle' + i,
+        description: 'newdescription' + i,
+        recurrence: '' + i,
+      }));
+  }
+  await Promise.all(promises);
+
+  const res = await supertest(server)
+    .get('/v0/goal?size=100&page=1&search=title');
+  expect(res.status).toBe(200);
+  expect(res.body.length).toBe(10);
+  for (let i = 1; i <= 10; i++) {
+    const expectedObject = {
+      title: 'newtitle' + i,
+      description: 'newdescription' + i,
+      recurrence: '' + i,
+    };
+    // find matching object if it exists
+    const matchingObject = res.body.find((obj) => {
+      return (
+        obj.title === expectedObject.title &&
+        obj.description === expectedObject.description &&
+        obj.recurrence === expectedObject.recurrence
+      );
+    });
+
+    expect(matchingObject).toBeDefined();
+  }
+});
+
+test('GET /v0/goal with undefined size and search term' +
+  'returns goal data ', async () => {
+  // create sample goal data
+  const promises = [];
+  for (let i = 1; i <= 20; i++) {
+    promises.push(request.post('/v0/goal')
+      .send({
+        title: 'newtitle' + i,
+        description: 'newdescription' + i,
+        recurrence: '' + i,
+      }));
+  }
+  await Promise.all(promises);
+
+  const res = await supertest(server)
+    .get('/v0/goal?page=1');
+  expect(res.status).toBe(200);
+  expect(res.body.length).toBe(20);
+  for (let i = 1; i <= 20; i++) {
+    const expectedObject = {
+      title: 'newtitle' + i,
+      description: 'newdescription' + i,
+      recurrence: '' + i,
+    };
+    // find matching object if it exists
+    const matchingObject = res.body.find((obj) => {
+      return (
+        obj.title === expectedObject.title &&
+        obj.description === expectedObject.description &&
+        obj.recurrence === expectedObject.recurrence
+      );
+    });
+    expect(matchingObject).toBeDefined();
+  }
 });

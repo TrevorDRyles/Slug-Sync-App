@@ -28,44 +28,46 @@ exports.createGoal = async (req, res) => {
 //   res.status(200).json({id: result.rows[0].id, ...result.rows[0].goal});
 // };
 
-// exports.getPostsByPageAndSize = async function(req, res) {
-//   let pageNum = req.query.page;
-//   let searchTerm = req.query.search;
-//   if (searchTerm === undefined) {
-//     searchTerm = '%';
-//   }
-//
-//   let size = parseInt(req.query.size);
-//   // const user = req.user;
-//   if (size === undefined) {
-//     size = 20;
-//     pageNum = 1;
-//   }
-//
-//   const selectQuery = `
-// SELECT *
-// FROM
-//     goal     -- the post's member is the logged in user
-// WHERE goal->>'title' ILIKE $3
-// ORDER BY
-//     goal->>'members'
-// DESC
-// LIMIT $2
-// OFFSET $1`;
-//   const query = {
-//     text: selectQuery,
-//     values: [(pageNum - 1) * size, size, `%${searchTerm}%`],
-//   };
-//   const result = await pool.query(query);
-//   console.log(result);
-//   const goals = result.rows.map((row) => ({
-//     id: row.id,
-//     title: row.goal.title,
-//     recurrence: row.goal.recurrence,
-//     description: row.goal.description,
-//   }));
-//   res.status(200).json(goals);
-// };
+exports.getPostsByPageAndSize = async function(req, res) {
+  let pageNum = req.query.page;
+  let searchTerm = req.query.search;
+  if (searchTerm === undefined) {
+    searchTerm = '%';
+  }
+
+  let size = req.query.size;
+  // const user = req.user;
+  if (size === undefined) {
+    size = 20;
+    pageNum = 1;
+  } else {
+    size = parseInt(req.query.size);
+  }
+
+  const selectQuery = `
+SELECT *
+FROM
+    goal     -- the post's member is the logged in user
+WHERE goal->>'title' ILIKE $3
+ORDER BY
+    goal->>'members'
+DESC
+LIMIT $2
+OFFSET $1`;
+  const query = {
+    text: selectQuery,
+    values: [(pageNum - 1) * size, size, `%${searchTerm}%`],
+  };
+  const result = await pool.query(query);
+  console.log(result);
+  const goals = result.rows.map((row) => ({
+    id: row.id,
+    title: row.goal.title,
+    recurrence: row.goal.recurrence,
+    description: row.goal.description,
+  }));
+  res.status(200).json(goals);
+};
 
 exports.viewGoal = async (req, res) => {
   const goalId = req.params.id;
