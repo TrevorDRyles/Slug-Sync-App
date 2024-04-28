@@ -36,14 +36,15 @@ exports.postSignup = async (data) => {
 };
 
 // referenced from cse 186 code trevor ryles
-exports.selectAllUsers = async () => {
-  const select = 'SELECT * FROM "user"';
-  const query = {
-    text: select,
-  };
-  const {rows} = await pool.query(query);
-  return rows;
-};
+// exports.selectAllUsers = async () => {
+//   const select = 'SELECT * FROM "user"';
+//   const query = {
+//     text: select,
+//   };
+//   const {rows} = await pool.query(query);
+//   return rows;
+// };
+
 // referenced from cse 186 code trevor ryles
 exports.getMemberByPasswordAndEmail = async (password, email) => {
   const selectQuery = `SELECT *

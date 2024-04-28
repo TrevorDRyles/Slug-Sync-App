@@ -2,9 +2,9 @@ import { it, beforeAll, afterAll } from 'vitest';
 import {fireEvent, waitFor, screen} from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import CreateGoal from "../components/Goal/Create.jsx";
+import CreateGoal from "../../components/Goal/Create.jsx";
 import {BrowserRouter} from "react-router-dom";
-import { render } from "./render";
+import { render } from "../render";
 
 const URL = 'http://localhost:3010/v0/goal';
 
@@ -28,15 +28,9 @@ it('Loads create goal', async () => {
   //   },
   // const navigate = vi.fn();
   render(<BrowserRouter><CreateGoal/></BrowserRouter>);
-  await waitFor(() => {
-    screen.findByText('Title', {exact: false});
-  });
-  await waitFor(() => {
-    screen.findByText('Description');
-  });
-  await waitFor(() => {
-    screen.findByText('Recurrence (every x days)', {exact: false});
-  });
+    screen.getByText('Title', {exact: false});
+    screen.getByText('Description');
+    screen.getByText('Recurrence (every x days)', {exact: false});
 
   const title = screen.getByTestId('title', {exact: false});
   fireEvent.change(title, {target: {value: 'Title'}});
@@ -53,7 +47,7 @@ it('Loads create goal', async () => {
   fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
   fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
   fireEvent.keyDown(recurrence, {key: 'Enter', code: 'Enter'});
-  await screen.findByText('3 days');
+  screen.getByText('3 days');
 
   // Assert that the selected option is the one we expect
   const selectedOption = screen.getByText('3 days');
@@ -77,15 +71,9 @@ it('Loads create goal with error', async () => {
   //   },
   // const navigate = vi.fn();
   render(<BrowserRouter><CreateGoal/></BrowserRouter>);
-  await waitFor(() => {
-    screen.findByText('Title', {exact: false});
-  });
-  await waitFor(() => {
-    screen.findByText('Description');
-  });
-  await waitFor(() => {
-    screen.findByText('Recurrence (every x days)', {exact: false});
-  });
+    screen.getByText('Title', {exact: false});
+    screen.getByText('Description');
+    screen.getByText('Recurrence (every x days)', {exact: false});
 
   const title = screen.getByTestId('title', {exact: false});
   fireEvent.change(title, {target: {value: 'Title'}});
@@ -102,7 +90,7 @@ it('Loads create goal with error', async () => {
   fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
   fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
   fireEvent.keyDown(recurrence, {key: 'Enter', code: 'Enter'});
-  await screen.findByText('3 days');
+  screen.getByText('3 days');
 
   // Assert that the selected option is the one we expect
   const selectedOption = screen.getByText('3 days');

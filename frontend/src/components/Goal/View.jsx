@@ -3,11 +3,14 @@ import { Paper, Text, Divider, Button} from '@mantine/core';
 import { useParams } from 'react-router-dom';
 import styles from './Goal.module.css';
 import Header from "@/components/Header.jsx";
+import Sidebar from "@/components/Sidebar.jsx";
+import {useDisclosure} from "@mantine/hooks";
 
 const ViewGoal = () => {
   const { id } = useParams();
   const [goalData, setGoalData] = useState(null);
   const [members, setMembers] = useState([]);
+  const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
 
   useEffect(() => {
     fetch(`http://localhost:3010/v0/goal/${id}`, {
@@ -56,13 +59,13 @@ const ViewGoal = () => {
 
   return (
     <>
-      <Header/>
-    <div className={styles.goalContainer}>
+      <Header toggleSidebar={toggleSidebar}/>
+      <div className={`${styles.container}`}>
       <div className={`${styles.column} ${styles.goalColumn}`}>
         {goalData ? (
           <>
             <Paper className={styles.goalPaper}>
-              <Text className={styles.goalText}>{goalData.title}</Text>
+              <Text aria-label={`goal-title-${goalData.id}`} className={styles.goalText}>{goalData.title}</Text>
               <Divider my="sm" />
               <Text>{goalData.description}</Text>
               {goalData.recurrence > 1 ? (
@@ -89,6 +92,7 @@ const ViewGoal = () => {
         </Paper>
       </div>
     </div>
+      <Sidebar sidebarOpened={sidebarOpened}/>
     </>
   );
 };

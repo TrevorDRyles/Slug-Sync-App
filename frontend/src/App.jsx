@@ -6,6 +6,7 @@ import '@mantine/core/styles.css';
 import CreateGoal from "./components/Goal/Create.jsx";
 import ViewGoal from "./components/Goal/View.jsx";
 import { useState } from 'react';
+import Index from "@/components/Goal/Index.jsx";
 
 /**
  * App
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/login" default element={<SignIn />} />
           <Route path="/createGoal" default element={<CreateGoal />} />
+          <Route path="/goals" default element={<Index />} />
           <Route path="/goal/:id" default element={<ViewGoal />} />
           <Route path="/" default element={<Home />} />
         </Routes>
