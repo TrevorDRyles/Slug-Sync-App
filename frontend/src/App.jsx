@@ -7,6 +7,7 @@ import CreateGoal from "./components/Goal/Create.jsx";
 import ViewGoal from "./components/Goal/View.jsx";
 import { useState } from 'react';
 import Index from "@/components/Goal/Index.jsx";
+import Profile from "./components/Profile/Profile.jsx";
 
 /**
  * App
@@ -25,6 +26,7 @@ function App() {
           <Route path="/createGoal" default element={<CreateGoal />} />
           <Route path="/goals" default element={<Index />} />
           <Route path="/goal/:id" default element={<ViewGoal />} />
+          <Route path="/profile" default element={<Profile />} />
           <Route path="/" default element={<Home />} />
         </Routes>
       </BrowserRouter>

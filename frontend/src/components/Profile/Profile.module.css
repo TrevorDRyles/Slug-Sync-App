@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    background-color: lightblue;
+    padding: 20px 0px 20px 0px;
+  }
+
+.card_container{
+    max-width: 300px;
+    margin: 20px 100px;
+    padding: 20px;
+    position: relative;
+    float: left;
+}
+
+.inner_container{
+    height: 150px;
+    margin-top: 30px;
+}
+
+.paper{
+    max-height: fit-content;
+    max-width: 600px;
+    width: 100%;
+    margin: 0px 100px;
+    padding: 20px;
+    position: relative;
+    float: left;
+}
+
+.avatar{
+    position: absolute;
+    top: 25%;
+    left: calc(50% - 45px);
+    background-color: rgb(198, 241, 255);
+    border-radius: 50%;
+}
+
+
