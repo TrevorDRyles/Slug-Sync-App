@@ -82,7 +82,7 @@ afterEach(async () => {
  * createGoal
  * @param {string} title
  * @param {string} description
- * @param {string} arrowsDownOnRecurrence
+ * @param {number} arrowsDownOnRecurrence
  * @return {Promise<void>}
  */
 async function createGoal(title, description, arrowsDownOnRecurrence) {
