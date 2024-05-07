@@ -155,5 +155,4 @@ export default function SignInForm({type, toggle, ...props}) {
 SignInForm.propTypes = {
   type: PropTypes.oneOf(['signin', 'signup']).isRequired,
   toggle: PropTypes.func.isRequired,
-  signInUser: PropTypes.func.isRequired
 };

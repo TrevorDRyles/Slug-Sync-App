@@ -24,6 +24,11 @@ const goodCredentials = {
   password: 'testpassword',
 };
 
+const goodLoginCredentials = {
+  email: 'test@email.com',
+  password: 'testpassword',
+};
+
 test('POST successful /signup returns 201', async () => {
   await request.post('/v0/signup')
     .send(goodCredentials)
@@ -64,4 +69,19 @@ test('POST duplicate email /signup error ROLLBACK', async () => {
   await request.post('/v0/signup')
     .send(goodCredentials)
     .expect(403);
+});
+
+test('POST successful /login returns 200', async () => {
+  await request.post('/v0/login')
+    .send(goodLoginCredentials)
+    .expect(200);
+});
+
+test('POST unsuccessful /login returns 401', async () => {
+  await request.post('/v0/login')
+    .send({
+      email: 'BadEmail@example.com',
+      password: goodCredentials.password,
+    })
+    .expect(401);
 });

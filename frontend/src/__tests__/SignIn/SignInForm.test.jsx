@@ -6,9 +6,6 @@ import SignInForm from '@/components/SignIn/SignInForm';
 import userEvent from '@testing-library/user-event';
 import {errorHandlers, handlers} from './Handlers'
 
-
-const URL = 'http://localhost:3010/v0/singup';
-
 const server = setupServer();
 
 beforeAll(() => server.listen());
@@ -94,6 +91,44 @@ it('Successfully Signs up the user', async() => {
     expect(alerted).toBeTruthy()
   })
 })
+
+it('Invalid user login', async () => {
+  server.use(...errorHandlers);
+  let alerted = false;
+  window.alert = () => {
+    alerted = true;
+  };
+
+  render(<SignInForm toggle={vi.fn()} type={'login'} />);
+
+  const paswdInput = screen.getByLabelText('Password Input');
+  await userEvent.type(paswdInput, '12345678');
+  const emailInput = screen.getByLabelText('Email Input');
+  await userEvent.type(emailInput, 'test@gmail.com');
+  fireEvent.click(screen.getByText('Login'));
+
+  await waitFor(() => {
+    expect(alerted).toBeTruthy();
+  });
+});
+
+it('Test Valid User Login', async () => {
+  server.use(...handlers);
+  const toggle = vi.fn();
+
+  render(<SignInForm toggle={toggle} type={'login'} />);
+
+  const paswdInput = screen.getByLabelText('Password Input');
+  await userEvent.type(paswdInput, 'huntertratar');
+  const emailInput = screen.getByLabelText('Email Input');
+  await userEvent.type(emailInput, 'hunter@ucsc.edu');
+  fireEvent.click(screen.getByText('Login'));
+
+  await waitFor(() => {
+    const userToken = localStorage.getItem('user');
+    expect(userToken).toBeTruthy();
+  });
+});
 
 it('Fails to Sign up the user', async() => {
   server.use(...errorHandlers)
