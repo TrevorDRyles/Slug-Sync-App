@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, Text, Divider, Button} from '@mantine/core';
+import { Paper, Text, Divider, Button, Badge} from '@mantine/core';
 import { useParams } from 'react-router-dom';
 import styles from './Goal.module.css';
 import Header from "@/components/Header.jsx";
 import Sidebar from "@/components/Sidebar.jsx";
 import {useDisclosure} from "@mantine/hooks";
+import {IconTag} from '@tabler/icons-react';
 
 const ViewGoal = () => {
   const { id } = useParams();
@@ -66,6 +67,9 @@ const ViewGoal = () => {
           <>
             <Paper className={styles.goalPaper}>
               <Text aria-label={`goal-title-${goalData.id}`} className={styles.goalText}>{goalData.title}</Text>
+              {goalData.tag !== '' && goalData.tag !== undefined ?
+               (<Badge leftSection={<IconTag style={{width: 16, height: 16}}/>}>{goalData.tag}</Badge>):(<></>)
+              }
               <Divider my="sm" />
               <Text>{goalData.description}</Text>
               {goalData.recurrence > 1 ? (

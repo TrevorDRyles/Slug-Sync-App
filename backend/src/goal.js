@@ -65,6 +65,7 @@ OFFSET $1`;
     title: row.goal.title,
     recurrence: row.goal.recurrence,
     description: row.goal.description,
+    tag: row.goal.tag,
   }));
   res.status(200).json(goals);
 };

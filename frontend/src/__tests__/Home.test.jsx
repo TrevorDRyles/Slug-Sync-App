@@ -42,11 +42,11 @@ it('Loads home and sidebar', async () => {
 
     fireEvent.click(screen.getByLabelText('Burger1'));
 
-    screen.getByLabelText('HomeIcon1');
+    fireEvent.click(screen.getByLabelText('HomeIcon1'));
 
-    screen.getByLabelText('UserIcon1');
+    fireEvent.click(screen.getByLabelText('UserIcon1'));
 
-    screen.getByLabelText('SettingsIcon1');
+    fireEvent.click(screen.getByLabelText('SettingsIcon1'));
 
-    screen.getByLabelText('LogoutIcon');
+    fireEvent.click(screen.getByLabelText('LogoutIcon'));
 });

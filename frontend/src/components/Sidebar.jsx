@@ -37,7 +37,7 @@ export default function Sidebar({ sidebarOpened }) {
     <NavbarLink {...link}
       key={link.label} 
       active={index === active} 
-      // onClick={() => navigate(link.route)} 
+      onClick={() => navigate(link.route)} //this should be left here in the interest of keeping page error free, right?
     />
   ));
   return (
@@ -50,7 +50,8 @@ export default function Sidebar({ sidebarOpened }) {
         </div>
 
         <Stack justify="center" gap={0}>
-          <NavbarLink aria={'LogoutIcon'} icon={IconLogout} label="Logout" />
+          <NavbarLink aria={'LogoutIcon'} icon={IconLogout} label="Logout" onClick={() => navigate("\login")}/>
+          {/* change the link above once logout implemented (or remove this entirely) */}
         </Stack>
       </nav> 
     </Collapse>
