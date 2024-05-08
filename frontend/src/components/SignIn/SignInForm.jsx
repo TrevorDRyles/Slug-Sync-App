@@ -61,6 +61,8 @@ const handleSubmit = (data, type, toggle) => {
         })
         .then((json) => {
           localStorage.setItem('user', JSON.stringify(json));
+          const user = JSON.parse(localStorage.getItem('user'));
+          console.log(user.id);
           // setInterval(() => {
           //     localStorage.clear()
           // }, 30 * 60 * 1000);
