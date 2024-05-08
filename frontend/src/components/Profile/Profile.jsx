@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect } from 'react';
+import jwt from 'jsonwebtoken';
+import {getUserInfo} from '../../../../backend/src/profile'
 import {HoverCard, Card,  Avatar,  Image, Text, Badge, Group, Title, Divider, Paper} from '@mantine/core';
-import {useNavigate} from "react-router-dom";
+import {useParams } from 'react-router-dom';
 import styles from './Profile.module.css';
 import {useDisclosure} from "@mantine/hooks";
 import Header from "@/components/Header.jsx";
@@ -9,18 +11,18 @@ import Sidebar from "@/components/Sidebar.jsx";
 const Profile = () => {
     const { id } = useParams();
     const [userData, setUserData] = useState(null);
-    const [topGoals, setTopGoals] = useState([]);
     const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
 
-    useEffect(() => {
-      const user = JSON.parse(localStorage.getItem('user')); // Retrieve user from localStorage
+    useEffect(async() => {
+      const decodedToken = jwt.decode(token);
+      const userData = await getUserInfo(decodedToken.email);
+
       if (!userId) {
         console.log('User ID not found in localStorage');
         return;
       }
 
-      const userId = user.id;
-      console.log(userId);
+      console.log("user: ", userId);
     
       fetch(`http://localhost:3010/v0/profile/${userId}`, {
         method: 'GET',
@@ -36,8 +38,7 @@ const Profile = () => {
           return res.json();
         })
         .then((json) => {
-          console.log('User Info:', json);
-          // Process user information here
+          setUserData(userData);
         })
         .catch((err) => {
           console.log('Error getting user info: ' + err);
@@ -65,6 +66,7 @@ const Profile = () => {
                         <Group justify="space-between" mt="md" mb="xs">
                             <Text fw={500}>Name </Text>
                             <Text size="md">{userData && userData.name}</Text>
+                            {/* To be redone when the streaks functionality is done */}
                             <HoverCard width={150} shadow="md">
                                 <HoverCard.Target>
                                     <Badge color="red">50 Days</Badge>
@@ -92,7 +94,7 @@ const Profile = () => {
                   {topGoals.length === 0 ? (
                     <div>Looking kinda empty there...</div>
                   ) : (
-                    topGoals.map((goal, index) => (
+                    userData.topGoals.map((goal, index) => (
                       <Paper key={index} className={styles.goalPaper}>
                         <Text aria-label={`goal-title-${goal.id}`} className={styles.goalText}>{goal.title}</Text>
                         <Divider my="sm" />
