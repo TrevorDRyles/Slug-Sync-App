@@ -99,3 +99,24 @@ it('Loads create goal with error', async () => {
   fireEvent.click(submit);
   // expect(navigate).toHaveBeenLastCalledWith('/');
 });
+
+it('Loads create goal with tags', async () => {
+  server.use(
+    http.post(URL, async () => {
+      return HttpResponse.json({id: '1', content: 'content', recurrence: '1', title: 'title', tag: 'Hobbies'}, {status: 200});
+    }),
+  );
+
+  render(<BrowserRouter><CreateGoal/></BrowserRouter>);
+  screen.getAllByText('Select a tag', {exact: false});
+
+  const tag = screen.getByTestId('tag', {exact: false});
+  fireEvent.click(tag);
+  fireEvent.change(tag, {target: {value: 'Hobbies'}});
+  fireEvent.keyDown(tag, {key: 'Enter', code: 'Enter'});
+
+  const selectedOption = screen.getByText('Hobbies');
+  expect(selectedOption).toBeInTheDocument();
+  const submit = screen.getByTestId('submit');
+  fireEvent.click(submit);
+});

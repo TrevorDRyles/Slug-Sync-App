@@ -12,6 +12,20 @@ for(let i = 2; i <= 31; i++) {
   days.push({label: `${i} days`, value: `${i}`});
 }
 
+//add basic tags
+let tags = [
+  {label: 'Health', value: 'Health'},
+  {label: 'Athletics', value: 'Athletics'},
+  {label: 'Productivity', value: 'Productivity'},
+  {label: 'Academics', value: 'Academics'},
+  {label: 'Social', value: 'Social'},
+  {label: 'Hobbies', value: 'Hobbies'},
+  {label: 'Finance and Bills', value: 'Finance'},
+  {label: 'Work', value: 'Work'},
+  {label: 'Personal', value: 'Personal'},
+  {label: 'Other', value: 'Other'},
+];
+
 // https://chat.openai.com/share/4da161a6-46be-448b-a884-107b5c2d63c2
 function CreateGoal() {
   const history = useNavigate();
@@ -20,6 +34,7 @@ function CreateGoal() {
     title: '',
     description: '',
     recurrence: `1`,
+    tag: '',
   });
 
   const handleChange = (field, value) => {
@@ -34,7 +49,7 @@ function CreateGoal() {
     e.preventDefault();
     fetch('http://localhost:3010/v0/goal', {
       method: 'POST',
-      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence}),
+      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence, tag: formData.tag}),
       headers: {
         'Content-Type': 'application/json',
         // 'Authorization': `Bearer ${bearerToken}`,
@@ -93,6 +108,17 @@ function CreateGoal() {
               style={{ marginBottom: 15 }}
               id={"recurrence"}
               data-testid={"recurrence"}
+            />
+            <Select
+              data = {tags}
+              label="Select a tag"
+              placeholder="Select a tag"
+              value={formData.tag}
+              onChange={(e) => handleChange('tag', e)}
+              style={{ marginBottom: 15 }}
+              id={"tag"}
+              data-testid={"tag"}
+              searchable
             />
             <Button data-testid="submit" type="submit" variant="outline" color="blue">
               Submit

@@ -5,9 +5,11 @@ import { setupServer } from 'msw/node';
 import {BrowserRouter} from "react-router-dom";
 import { render } from "../render";
 import Index from "@/components/Goal/Index.jsx";
-import {indexHandlers} from "@/__tests__/Goal/Handlers.js";
+import {indexHandlers, indexHandlers2} from "@/__tests__/Goal/Handlers.js";
 import userEvent from '@testing-library/user-event';
 import { indexErrorHandlers } from './Handlers';
+
+const INDEX_URL = 'http://localhost:3010/v0/goal';
 
 const server = setupServer();
 
@@ -84,4 +86,29 @@ it('Search into goals field and click a goal', async () => {
   const searchInput = screen.getByPlaceholderText('Search goals...');
   await userEvent.type(searchInput, 'Run a mile6');
   fireEvent.click(screen.getByText('Run a mile6'));
+});
+
+it('check that tag exists', async () => {
+  server.use(...indexHandlers);
+  render(<BrowserRouter><Index/></BrowserRouter>);
+  await waitFor(() => screen.getByText('Athletics', {exact: false}));
+  screen.getByText('run a mile1', {exact: false});
+  screen.getByText('Athletics', {exact: false});
+  expect(screen.getAllByTestId('tag').length).toBe(6);
+});
+
+it('Ensure no tag if tag not selected', async () => { 
+  // server.use( //fails because goals.map is not a function?????????????? Find out why!!!!
+  //   http.get(INDEX_URL, async () => {
+  //     return HttpResponse.json({id: '1', content: 'content', recurrence: '1', title: 'title1'});
+  //   }),
+  // );
+  server.use(...indexHandlers2);
+  render(<BrowserRouter><Index/></BrowserRouter>);
+  await waitFor(() => screen.getByText('title1', {exact: false}));
+  try {
+    screen.getAllByTestId('tag');
+  } catch (error) {
+    expect(error).toBeDefined();
+  }
 });

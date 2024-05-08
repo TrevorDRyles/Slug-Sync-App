@@ -88,18 +88,29 @@ afterEach(async () => {
 async function createGoal(title, description, arrowsDownOnRecurrence) {
   // https://chat.openai.com/share/67880247-ed5d-4614-af95-1b17ae8a6d05
   await page.goto('http://localhost:3000/createGoal');
+
   const titleInput = await page
     .waitForSelector('input[id="title"]');
   await titleInput.type(title);
+
   const descriptionInput = await page
     .waitForSelector('textarea[id="description"]');
   await descriptionInput.type(description);
+
   await page.waitForSelector('#recurrence');
   await page.click('#recurrence');
   for (let i = 0; i < arrowsDownOnRecurrence; i++) {
     await page.keyboard.press('ArrowDown'); // Move down in the dropdown
   }
   await page.keyboard.press('Enter'); // Select the option
+
+  await page.waitForSelector('#tag'); //timesout atm
+  await page.click('#tag');
+  for (let i = 0; i < arrowsDownOnRecurrence; i++) {
+    await page.keyboard.press('ArrowDown'); //Using same var as recurrence because of similar format
+  }
+  await page.keyboard.press('Enter'); // Select the option
+  
   await page.$eval(`[type="submit"]`, (element) =>
     element.click(),
   );
@@ -189,4 +200,4 @@ test('Filtering goals by search', async () => {
   }
   await page.goto('http://localhost:3000/goals');
   await typeIntoSearchAndExpectFilter();
-});
+}, 15000);

@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, Text, TextInput } from '@mantine/core';
+import { Button, Card, Text, TextInput, Badge, Group } from '@mantine/core';
 import {Link, useNavigate} from "react-router-dom";
 import styles from './Goal.module.css';
 import Header from "@/components/Header.jsx";
 import {useDisclosure} from "@mantine/hooks";
 import Sidebar from "@/components/Sidebar.jsx";
+import {IconTag} from '@tabler/icons-react';
 
 const GoalsListing = () => {
   // https://chat.openai.com/share/5c73d542-08b5-4772-96ab-c9eecd503ba1
@@ -123,7 +124,14 @@ const Goal = ({ goal, onAddGoal }) => {
     <Card shadow="xs" className={styles.goal}>
       <div>
         <Link aria-label={`goal-link-${goal.id}`} className={styles.goalLink} to={'/goal/' + goal.id}>
-          <Text size="lg" style={{ flexGrow: 1 }}>{goal.title}</Text>
+          <Group justify="space-between">
+            <Text size="lg" style={{ flexGrow: 1 }}>
+              {goal.title}
+            </Text>
+            {goal.tag !== '' && goal.tag !== undefined ?
+               (<Badge data-testid={"tag"} leftSection={<IconTag style={{width: 16, height: 16}}/>}>{goal.tag}</Badge>):(<></>)
+            }
+          </Group>
         </Link>
         <Text size="sm">Members: {goal.memberCount}</Text>
         <Button onClick={onAddGoal} style={{ marginLeft: '10px' }}>Add Goal</Button>
@@ -137,6 +145,7 @@ Goal.propTypes = {
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     memberCount: PropTypes.number,
+    tag: PropTypes.string,
   }).isRequired,
   onAddGoal: PropTypes.func.isRequired,
 };

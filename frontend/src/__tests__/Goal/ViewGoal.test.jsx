@@ -18,6 +18,7 @@ it('Loads view goal recurring every 7 days', async () => {
     title: 'Test Goal',
     description: 'Test Description',
     recurrence: 7,
+    tag: 'Hobbies',
   };
 
   server.use(
