@@ -27,13 +27,14 @@ exports.login = async (req, res) => {
         algorithm: 'HS256',
       },
     );
-    res.status(200).json({token: accessToken});
+    res.status(200).json({token: accessToken, name: user.name, id: user.id});
   }
 };
 
 
 exports.signup = async (req, res) => {
   const err = await db.postSignup(req.body);
+  console.log(err);
   err ? res.status(403).send() : res.status(201).send();
 };
 
