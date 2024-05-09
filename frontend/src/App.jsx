@@ -5,7 +5,8 @@ import { MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 import CreateGoal from "./components/Goal/Create.jsx";
 import ViewGoal from "./components/Goal/View.jsx";
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { LoginContext } from './contexts/Login.jsx';
 import Index from "@/components/Goal/Index.jsx";
 
 /**
@@ -14,20 +15,31 @@ import Index from "@/components/Goal/Index.jsx";
  */
 function App() {
 
-  const [isLight, setIsLight] = useState(false);
+  const [accessToken, setAccessToken] = React.useState('')
+  const [userName, setUserName] = React.useState('')
 
+  React.useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      const json = JSON.parse(user)
+      setAccessToken(json.token)
+      setUserName(json.name)
+    }
+  }, [])
 
   return (
   <MantineProvider theme={{height: '100vh'}} defaultColorScheme='light'>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" default element={<SignIn />} />
-          <Route path="/createGoal" default element={<CreateGoal />} />
-          <Route path="/goals" default element={<Index />} />
-          <Route path="/goal/:id" default element={<ViewGoal />} />
-          <Route path="/" default element={<Home />} />
-        </Routes>
-      </BrowserRouter>
+    <LoginContext.Provider value={{accessToken, setAccessToken, userName, setUserName}}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" default element={<SignIn />} />
+            <Route path="/createGoal" default element={<CreateGoal />} />
+            <Route path="/goals" default element={<Index />} />
+            <Route path="/goal/:id" default element={<ViewGoal />} />
+            <Route path="/" default element={<Home />} />
+          </Routes>
+        </BrowserRouter>
+      </LoginContext.Provider>
     </MantineProvider>
   );
 }

@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "repository": "none",
   "devDependencies": {
-    "eslint": "*",
+    "eslint": "^v8.57.0",
     "eslint-config-google": "*",
     "jest": "*",
     "nodemon": "*",

@@ -1,0 +1,25 @@
+.wrapper {
+  padding-left: 100px;
+  padding-top: 80px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.goalWrapper {
+  max-width: 350px;
+  min-width: 350px;
+  padding-bottom: 20px;
+}
+
+.ListWrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}

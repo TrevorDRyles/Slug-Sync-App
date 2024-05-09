@@ -59,7 +59,6 @@ OFFSET $1`;
     values: [(pageNum - 1) * size, size, `%${searchTerm}%`],
   };
   const result = await pool.query(query);
-  console.log(result);
   const goals = result.rows.map((row) => ({
     id: row.id,
     title: row.goal.title,

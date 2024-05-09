@@ -38,7 +38,6 @@ function CreateGoal() {
   });
 
   const handleChange = (field, value) => {
-    // console.log(field, value);
     setFormData((prevData) => ({
       ...prevData,
       [field]: value,
@@ -62,7 +61,6 @@ function CreateGoal() {
         return res.json();
       })
       .then((json) => {
-        console.log('create goal response: ' + JSON.stringify(json));
         history(`/goal/${json.id}`);
       })
       .catch((err) => {

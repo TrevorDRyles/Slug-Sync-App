@@ -4,6 +4,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import ViewGoal from "../../components/Goal/View";
 import { BrowserRouter } from "react-router-dom";
+import { LoginProvider } from '../../contexts/Login.jsx';
 import { render } from "../render";
 
 const server = setupServer();
@@ -31,9 +32,11 @@ it('Loads view goal recurring every 7 days', async () => {
   );
 
   render(
-    <BrowserRouter>
-      <ViewGoal />
-    </BrowserRouter>
+    <LoginProvider>
+      <BrowserRouter>
+        <ViewGoal />
+      </BrowserRouter>
+    </LoginProvider>
   );
 
   await waitFor(() => {
@@ -60,9 +63,11 @@ it('Loads view goal recurring every day', async() => {
   );
 
   render(
-    <BrowserRouter>
-      <ViewGoal />
-    </BrowserRouter>
+    <LoginProvider>
+      <BrowserRouter>
+        <ViewGoal />
+      </BrowserRouter>
+    </LoginProvider>
   );
 
   await waitFor(() => {
@@ -87,9 +92,11 @@ it('Loads view goal with error', async () => {
     );
 
     render(
+      <LoginProvider>
       <BrowserRouter>
         <ViewGoal />
       </BrowserRouter>
+    </LoginProvider>
     );
 
     // Check if the loading indicator is shown while the request is pending

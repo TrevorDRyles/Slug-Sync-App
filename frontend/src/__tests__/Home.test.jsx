@@ -1,4 +1,4 @@
-import { it, beforeAll, afterAll } from 'vitest';
+import { it, beforeAll, afterAll, expect } from 'vitest';
 import {fireEvent, waitFor, screen} from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
@@ -7,6 +7,8 @@ import Home from "../components/Home.jsx";
 import {BrowserRouter, useNavigate} from "react-router-dom";
 import { render } from "./render";
 import Sidebar from '../components/Sidebar.jsx';
+import { LoginContext, LoginProvider } from '../contexts/Login.jsx';
+import Header from '../components/Header.jsx';
 
 const URL = 'http://localhost:3010/v0/goal';
 
@@ -17,36 +19,68 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 it('Loads home', async () => {
-    render(<BrowserRouter><Home/></BrowserRouter>);
+  render(
+    <LoginProvider>
+      <BrowserRouter>
+        <Home/>
+      </BrowserRouter>
+    </LoginProvider>
+  );
 
-    screen.getByText('Goals', {exact: false});
-    fireEvent.click(screen.getByText('Goals', {exact: false}));
+  const goals = screen.getAllByText('Goals', {exact: false});
+  fireEvent.click(goals[0]);
 
-    screen.getByText('Home', {exact: false});
-    fireEvent.click(screen.getByText('Home', {exact: false}));
+  const home= screen.getByText('Home', {exact: false});
+  fireEvent.click(home);
 
-    // screen.getByText('Search', {exact: false});
-    // fireEvent.click(screen.getByText('Search', {exact: false}));
+  const search = screen.getAllByText('Search', {exact: false});
+  fireEvent.click(search[0]);
 
-    screen.getByText('Log in', {exact: false});
-    fireEvent.click(screen.getByText('Log in', {exact: false}));
+  const login = screen.getAllByText('Login', {exact: false});
+  fireEvent.click(login[0]);
 
-    screen.getByText('Sign up', {exact: false});
-    fireEvent.click(screen.getByText('Sign up', {exact: false}));
-    screen.getAllByText('Slug Sync', {exact: false});
+  const signup = screen.getAllByText('Sign up', {exact: false});
+  fireEvent.click(signup[0]);
 
 });
 
 it('Loads home and sidebar', async () => {
-    render(<BrowserRouter><Home/></BrowserRouter>);
+  render(
+    <LoginProvider>
+      <BrowserRouter>
+        <Home/>
+      </BrowserRouter>
+    </LoginProvider>
+  );
 
-    fireEvent.click(screen.getByLabelText('Burger1'));
+  screen.getByLabelText('HomeIcon1');
 
-    fireEvent.click(screen.getByLabelText('HomeIcon1'));
+  screen.getByLabelText('UserIcon1');
 
-    fireEvent.click(screen.getByLabelText('UserIcon1'));
+  screen.getByLabelText('SettingsIcon1');
 
-    fireEvent.click(screen.getByLabelText('SettingsIcon1'));
-
-    fireEvent.click(screen.getByLabelText('LogoutIcon'));
+  screen.getByLabelText('LogoutIcon');
 });
+
+it('Clicks logout', async() => {
+  let loggedout = false
+  const accessToken = '1234'
+  const setAccessToken = () => {loggedout = true}
+  const userName = 'test username'
+  render(
+    <LoginContext.Provider value={{accessToken, setAccessToken, userName}}>
+      <BrowserRouter>
+        <Header />
+      </BrowserRouter>
+    </LoginContext.Provider>
+  )
+
+  await waitFor(() => {
+    expect(screen.getByText('Hello test username!', {exact: false})).toBeInTheDocument();
+  })
+
+  fireEvent.click(screen.getByText('Logout'))
+  await waitFor(() => {
+    expect(loggedout).toBeTruthy()
+  })
+})
