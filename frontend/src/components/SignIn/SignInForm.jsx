@@ -14,8 +14,10 @@ import {
 } from '@mantine/core';
 import {useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
+import {LoginContext} from '../../contexts/Login'
+import * as React from 'react'
 
-const handleSubmit = (data, type, toggle) => {
+const handleSubmit = (data, type, toggle, setAccessToken, history) => {
   if (type === 'register') {
     fetch(`http://localhost:3010/v0/signup`, {
       method: 'post',
@@ -60,13 +62,12 @@ const handleSubmit = (data, type, toggle) => {
           return res.json();
         })
         .then((json) => {
+          setAccessToken(json.accessToken)
           localStorage.setItem('user', JSON.stringify(json));
-          // setInterval(() => {
-          //     localStorage.clear()
-          // }, 30 * 60 * 1000);
-          window.location.href = '/';
+          history('/');
         })
         .catch((err) => {
+          console.error(err);
           alert('Error signing in, please try again')
         });
   }
@@ -87,6 +88,9 @@ export default function SignInForm({type, toggle, ...props}) {
     },
   });
 
+  const {setAccessToken} = React.useContext(LoginContext);
+  const history = useNavigate();
+
   return (
     <Paper radius="md" p="xl" withBorder {...props} style={{minWidth: '500px'}}>
       <Center>
@@ -98,7 +102,7 @@ export default function SignInForm({type, toggle, ...props}) {
       <Divider labelPosition="center" my="lg" />
 
 
-      <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle)})}>
+      <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle, setAccessToken, history)})}>
         <Stack>
           {type === 'register' && (
             <TextInput
@@ -153,6 +157,6 @@ export default function SignInForm({type, toggle, ...props}) {
 }
 
 SignInForm.propTypes = {
-  type: PropTypes.oneOf(['signin', 'signup']).isRequired,
+  type: PropTypes.oneOf(['login', 'register']).isRequired,
   toggle: PropTypes.func.isRequired,
 };

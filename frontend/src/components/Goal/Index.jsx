@@ -29,7 +29,6 @@ const GoalsListing = () => {
   };
 
   const handleAddGoal = (goal) => {
-    console.log('Adding goal:', goal);
     // navigate to goal page with history
     // history(`/goal/${goal.id}`);
     // call an api to add goal

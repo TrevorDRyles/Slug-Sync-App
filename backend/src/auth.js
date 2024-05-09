@@ -1,14 +1,5 @@
 const jwt = require('jsonwebtoken');
-// const {Pool} = require('pg');
 const db = require('./db');
-
-// const pool = new Pool({
-//   host: 'localhost',
-//   port: 5432,
-//   database: process.env.POSTGRES_DB,
-//   user: process.env.POSTGRES_USER,
-//   password: process.env.POSTGRES_PASSWORD,
-// });
 
 // referenced from cse 186 code trevor ryles
 exports.login = async (req, res) => {
@@ -20,13 +11,13 @@ exports.login = async (req, res) => {
   }
   const user = users[0];
   const accessToken = jwt.sign(
-    {email: user.email, name: user.name, roles: user.roles},
+    {id: user.id, email: user.email, name: user.name, roles: user.roles},
     `${process.env.MASTER_SECRET}`, {
       expiresIn: '30m',
       algorithm: 'HS256',
     },
   );
-  res.status(200).json({token: accessToken});
+  res.status(200).json({token: accessToken, name: user.name});
 };
 
 
@@ -35,12 +26,7 @@ exports.signup = async (req, res) => {
   err ? res.status(403).send() : res.status(201).send();
 };
 
-
-// NOTE: Exports don't seem to be in use currently.
-// Commenting out for test coverage for now.
-
 // check endpoint referenced from authenticated books example
-// TODO refactor handlers db access into the db module
 // exports.check = (req, res, next) => {
 //   const authHeader = req.headers.authorization;
 //   if (authHeader) {

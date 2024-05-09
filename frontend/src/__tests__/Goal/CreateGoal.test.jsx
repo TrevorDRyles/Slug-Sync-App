@@ -5,6 +5,7 @@ import { setupServer } from 'msw/node';
 import CreateGoal from "../../components/Goal/Create.jsx";
 import {BrowserRouter} from "react-router-dom";
 import { render } from "../render";
+import { LoginProvider } from '../../contexts/Login.jsx';
 
 const URL = 'http://localhost:3010/v0/goal';
 
@@ -14,23 +15,26 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
+const renderCreateGoal = () => {
+  return render(
+    <LoginProvider>
+      <BrowserRouter>
+        <CreateGoal />
+      </BrowserRouter>
+    </LoginProvider>
+  )
+}
+
 it('Loads create goal', async () => {
   server.use(
     http.post(URL, async () => {
       return HttpResponse.json({id: '1', content: 'content', recurrence: '1', title: 'title'}, {status: 200});
     }),
   );
-  // {
-  //   mock: {
-  //     'react-router-dom': {
-  //       useNavigate: vi.fn().mockImplementation(() => navigate),
-  //     },
-  //   },
-  // const navigate = vi.fn();
-  render(<BrowserRouter><CreateGoal/></BrowserRouter>);
-    screen.getByText('Title', {exact: false});
-    screen.getByText('Description');
-    screen.getByText('Recurrence (every x days)', {exact: false});
+  renderCreateGoal();
+  screen.getByText('Title', {exact: false});
+  screen.getByText('Description');
+  screen.getByText('Recurrence (every x days)', {exact: false});
 
   const title = screen.getByTestId('title', {exact: false});
   fireEvent.change(title, {target: {value: 'Title'}});
@@ -41,7 +45,6 @@ it('Loads create goal', async () => {
   expect(description.value).toBe('Description');
 
   const recurrence = screen.getByTestId('recurrence');
-  // select the 3rd option by down key
   fireEvent.click(recurrence);
   fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
   fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
@@ -49,12 +52,10 @@ it('Loads create goal', async () => {
   fireEvent.keyDown(recurrence, {key: 'Enter', code: 'Enter'});
   screen.getByText('3 days');
 
-  // Assert that the selected option is the one we expect
   const selectedOption = screen.getByText('3 days');
   expect(selectedOption).toBeInTheDocument();
   const submit = screen.getByTestId('submit');
   fireEvent.click(submit);
-  // expect(navigate).toHaveBeenLastCalledWith('/');
 });
 
 it('Loads create goal with error', async () => {
@@ -63,17 +64,10 @@ it('Loads create goal with error', async () => {
       return HttpResponse.json({}, {status: 400});
     }),
   );
-  // {
-  //   mock: {
-  //     'react-router-dom': {
-  //       useNavigate: vi.fn().mockImplementation(() => navigate),
-  //     },
-  //   },
-  // const navigate = vi.fn();
-  render(<BrowserRouter><CreateGoal/></BrowserRouter>);
-    screen.getByText('Title', {exact: false});
-    screen.getByText('Description');
-    screen.getByText('Recurrence (every x days)', {exact: false});
+  renderCreateGoal();
+  screen.getByText('Title', {exact: false});
+  screen.getByText('Description');
+  screen.getByText('Recurrence (every x days)', {exact: false});
 
   const title = screen.getByTestId('title', {exact: false});
   fireEvent.change(title, {target: {value: 'Title'}});
@@ -84,7 +78,6 @@ it('Loads create goal with error', async () => {
   expect(description.value).toBe('Description');
 
   const recurrence = screen.getByTestId('recurrence');
-  // select the 3rd option by down key
   fireEvent.click(recurrence);
   fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
   fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
@@ -92,12 +85,10 @@ it('Loads create goal with error', async () => {
   fireEvent.keyDown(recurrence, {key: 'Enter', code: 'Enter'});
   screen.getByText('3 days');
 
-  // Assert that the selected option is the one we expect
   const selectedOption = screen.getByText('3 days');
   expect(selectedOption).toBeInTheDocument();
   const submit = screen.getByTestId('submit');
   fireEvent.click(submit);
-  // expect(navigate).toHaveBeenLastCalledWith('/');
 });
 
 it('Loads create goal with tags', async () => {
@@ -107,16 +98,19 @@ it('Loads create goal with tags', async () => {
     }),
   );
 
-  render(<BrowserRouter><CreateGoal/></BrowserRouter>);
+  renderCreateGoal();
   screen.getAllByText('Select a tag', {exact: false});
 
   const tag = screen.getByTestId('tag', {exact: false});
-  fireEvent.click(tag);
-  fireEvent.change(tag, {target: {value: 'Hobbies'}});
-  fireEvent.keyDown(tag, {key: 'Enter', code: 'Enter'});
+
+  fireEvent.mouseDown(tag);
+  const hobbiesOption = screen.getByText('Hobbies');
+  fireEvent.click(hobbiesOption);
+  fireEvent.blur(tag);
 
   const selectedOption = screen.getByText('Hobbies');
   expect(selectedOption).toBeInTheDocument();
+
   const submit = screen.getByTestId('submit');
   fireEvent.click(submit);
 });

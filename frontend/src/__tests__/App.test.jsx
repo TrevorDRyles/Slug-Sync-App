@@ -1,4 +1,4 @@
-import { it, beforeAll, afterAll } from 'vitest';
+import { it, beforeAll, afterAll, expect } from 'vitest';
 import {fireEvent, waitFor, screen} from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
@@ -17,4 +17,10 @@ afterAll(() => server.close());
 
 it('Renders app', async () => {
   render(<App/>);
+})
+
+it('Remembers user when app is rendered', async() => {
+  localStorage.setItem('user', '{"token": "temp token", "name":"tempname"}')
+  render(<App />)
+  expect(screen.getByText('tempname', {exact: false})).toBeInTheDocument()
 })

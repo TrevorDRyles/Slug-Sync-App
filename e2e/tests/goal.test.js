@@ -100,17 +100,20 @@ async function createGoal(title, description, arrowsDownOnRecurrence) {
   await page.waitForSelector('#recurrence');
   await page.click('#recurrence');
   for (let i = 0; i < arrowsDownOnRecurrence; i++) {
-    await page.keyboard.press('ArrowDown'); // Move down in the dropdown
+    // Move down in the dropdown
+    await page.keyboard.press('ArrowDown');
+  }
+  // Select the option
+  await page.keyboard.press('Enter');
+  // timesout atm
+  await page.waitForSelector('#tag');
+  await page.click('#tag');
+  for (let i = 0; i < arrowsDownOnRecurrence; i++) {
+    // Using same var as recurrence because of similar format
+    await page.keyboard.press('ArrowDown');
   }
   await page.keyboard.press('Enter'); // Select the option
 
-  await page.waitForSelector('#tag'); //timesout atm
-  await page.click('#tag');
-  for (let i = 0; i < arrowsDownOnRecurrence; i++) {
-    await page.keyboard.press('ArrowDown'); //Using same var as recurrence because of similar format
-  }
-  await page.keyboard.press('Enter'); // Select the option
-  
   await page.$eval(`[type="submit"]`, (element) =>
     element.click(),
   );
@@ -185,7 +188,7 @@ async function typeIntoSearchAndExpectFilter() {
 
 test('Index page for goal', async () => {
   // Create sample goal data
-  for (let i = 20; i <= 1; i++) {
+  for (let i = 1; i <= 5; i++) {
     await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
   }
   await page.goto('http://localhost:3000/goals');
@@ -200,4 +203,4 @@ test('Filtering goals by search', async () => {
   }
   await page.goto('http://localhost:3000/goals');
   await typeIntoSearchAndExpectFilter();
-}, 15000);
+});
