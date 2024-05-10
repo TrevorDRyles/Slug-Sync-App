@@ -61,6 +61,8 @@ const handleSubmit = (data, type, toggle) => {
         })
         .then((json) => {
           localStorage.setItem('user', JSON.stringify(json));
+          console.log(HI)
+          console.log(JSON.parse(localStorage.getItem('user')).id)
           // setInterval(() => {
           //     localStorage.clear()
           // }, 30 * 60 * 1000);
@@ -153,7 +155,6 @@ export default function SignInForm({type, toggle, ...props}) {
 }
 
 SignInForm.propTypes = {
-  type: PropTypes.oneOf(['signin', 'signup']).isRequired,
+  type: PropTypes.oneOf(['login', 'register']).isRequired,
   toggle: PropTypes.func.isRequired,
-  signInUser: PropTypes.func.isRequired
 };

@@ -1,6 +1,4 @@
 import React, {useState, useEffect } from 'react';
-import jwt from 'jsonwebtoken';
-import {getUserInfo} from '../../../../backend/src/profile'
 import {HoverCard, Card,  Avatar,  Image, Text, Badge, Group, Title, Divider, Paper} from '@mantine/core';
 import {useParams } from 'react-router-dom';
 import styles from './Profile.module.css';
@@ -13,9 +11,8 @@ const Profile = () => {
     const [userData, setUserData] = useState(null);
     const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
 
-    useEffect(async() => {
-      const decodedToken = jwt.decode(token);
-      const userData = await getUserInfo(decodedToken.email);
+    useEffect(() => {
+      const userId = JSON.parse(localStorage.getItem('user')).id
 
       if (!userId) {
         console.log('User ID not found in localStorage');
@@ -91,7 +88,7 @@ const Profile = () => {
                 </Title>
                 <Divider my="md" />
                 <div className={`${styles.column} ${styles.goalColumn}`}>
-                  {topGoals.length === 0 ? (
+                  {userData.topGoals.length === 0 ? (
                     <div>Looking kinda empty there...</div>
                   ) : (
                     userData.topGoals.map((goal, index) => (
