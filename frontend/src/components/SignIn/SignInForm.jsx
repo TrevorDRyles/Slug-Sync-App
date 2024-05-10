@@ -14,8 +14,9 @@ import {
 } from '@mantine/core';
 import {useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
+import * as React from 'react'
 
-const handleSubmit = (data, type, toggle) => {
+const handleSubmit = (data, type, toggle, history) => {
   if (type === 'register') {
     fetch(`http://localhost:3010/v0/signup`, {
       method: 'post',
@@ -54,6 +55,7 @@ const handleSubmit = (data, type, toggle) => {
       },
     })
         .then((res) => {
+          console.log(res)
           if (!res.ok) {
             throw res;
           }
@@ -61,12 +63,8 @@ const handleSubmit = (data, type, toggle) => {
         })
         .then((json) => {
           localStorage.setItem('user', JSON.stringify(json));
-          console.log(HI)
           console.log(JSON.parse(localStorage.getItem('user')).id)
-          // setInterval(() => {
-          //     localStorage.clear()
-          // }, 30 * 60 * 1000);
-          window.location.href = '/';
+          history('/')
         })
         .catch((err) => {
           alert('Error signing in, please try again')
@@ -89,6 +87,9 @@ export default function SignInForm({type, toggle, ...props}) {
     },
   });
 
+  const history = useNavigate();
+
+
   return (
     <Paper radius="md" p="xl" withBorder {...props} style={{minWidth: '500px'}}>
       <Center>
@@ -100,7 +101,7 @@ export default function SignInForm({type, toggle, ...props}) {
       <Divider labelPosition="center" my="lg" />
 
 
-      <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle)})}>
+      <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle, history)})}>
         <Stack>
           {type === 'register' && (
             <TextInput

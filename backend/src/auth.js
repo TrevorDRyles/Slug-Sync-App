@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
   const user = users[0];
   if (user) {
     const accessToken = jwt.sign(
-      {email: user.email, name: user.name, roles: user.roles},
+      {id: user.id, email: user.email, name: user.name, roles: user.roles},
       `${process.env.MASTER_SECRET}`, {
         expiresIn: '30m',
         algorithm: 'HS256',
@@ -34,7 +34,6 @@ exports.login = async (req, res) => {
 
 exports.signup = async (req, res) => {
   const err = await db.postSignup(req.body);
-  console.log(err);
   err ? res.status(403).send() : res.status(201).send();
 };
 
@@ -42,6 +41,7 @@ exports.signup = async (req, res) => {
 // TODO refactor handlers db access into the db module
 exports.check = (req, res, next) => {
   const authHeader = req.headers.authorization;
+  console.log(req.headers)
   if (authHeader) {
     const token = authHeader.split(' ')[1];
     jwt.verify(token, process.env.MASTER_SECRET, (err, user) => {
@@ -55,6 +55,11 @@ exports.check = (req, res, next) => {
     res.sendStatus(401);
   }
 };
+
+exports.getUserId = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+}
 
 exports.getAllUsers = async (req, res) => {
   const query = `

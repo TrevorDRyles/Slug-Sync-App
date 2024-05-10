@@ -12,7 +12,8 @@ const Profile = () => {
     const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
 
     useEffect(() => {
-      const userId = JSON.parse(localStorage.getItem('user')).id
+      const userId = JSON.parse(localStorage.getItem('user').id)
+      console.log(userId)
 
       if (!userId) {
         console.log('User ID not found in localStorage');

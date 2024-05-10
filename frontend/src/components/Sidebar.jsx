@@ -60,7 +60,7 @@ NavbarLink.propTypes = {
   icon: PropTypes.elementType.isRequired,
   label: PropTypes.string.isRequired,
   active: PropTypes.bool,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   aria: PropTypes.string,
 };
 

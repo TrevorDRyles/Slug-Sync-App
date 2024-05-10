@@ -7,9 +7,14 @@ import { useDisclosure } from '@mantine/hooks';
 
 function Home() {
 
-  const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
-  
+  let id;
+  const user = localStorage.getItem('user')
+  if (user) {
+    id = JSON.parse(user).id
+  }
+  console.log(id)
 
+  const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
 
   return (
     <div>
