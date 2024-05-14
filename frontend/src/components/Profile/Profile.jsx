@@ -1,26 +1,23 @@
 import React, {useState, useEffect } from 'react';
-import {HoverCard, Card,  Avatar,  Image, Text, Badge, Group, Title, Divider, Paper} from '@mantine/core';
-import {useParams } from 'react-router-dom';
+import { Button, HoverCard, Card,  Avatar,  Image, Text, Badge, Group, Title, Divider, Paper} from '@mantine/core';
+import { GoalCard } from '../Goal/GoalCard';
 import styles from './Profile.module.css';
 import {useDisclosure} from "@mantine/hooks";
 import Header from "@/components/Header.jsx";
 import Sidebar from "@/components/Sidebar.jsx";
 
 const Profile = () => {
-    const { id } = useParams();
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState([]);
     const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
 
     useEffect(() => {
-      const userId = JSON.parse(localStorage.getItem('user').id)
-      console.log(userId)
-
+      const userId = JSON.parse(localStorage.getItem('user')).id;
       if (!userId) {
         console.log('User ID not found in localStorage');
         return;
       }
 
-      console.log("user: ", userId);
+      console.log(userId);
     
       fetch(`http://localhost:3010/v0/profile/${userId}`, {
         method: 'GET',
@@ -36,12 +33,12 @@ const Profile = () => {
           return res.json();
         })
         .then((json) => {
-          setUserData(userData);
+          setUserData(json);
+          console.log(userData.name);
         })
         .catch((err) => {
           console.log('Error getting user info: ' + err);
-        });
-    
+        });    
     }, []);
     
 
@@ -62,9 +59,7 @@ const Profile = () => {
 
                     <div className={`${styles.inner_container}`}>
                         <Group justify="space-between" mt="md" mb="xs">
-                            <Text fw={500}>Name </Text>
-                            <Text size="md">{userData && userData.name}</Text>
-                            {/* To be redone when the streaks functionality is done */}
+                            <Text fw={500}>{userData && userData.name}</Text>
                             <HoverCard width={150} shadow="md">
                                 <HoverCard.Target>
                                     <Badge color="red">50 Days</Badge>
@@ -82,34 +77,20 @@ const Profile = () => {
                         </Text>
                     </div>
             </Card>
-
             <Paper padding="lg" shadow="sm" withBorder className = {`${styles.paper}`} >
                 <Title order={1} >
                     Top Goals
                 </Title>
                 <Divider my="md" />
                 <div className={`${styles.column} ${styles.goalColumn}`}>
-                  {userData.topGoals.length === 0 ? (
-                    <div>Looking kinda empty there...</div>
-                  ) : (
-                    userData.topGoals.map((goal, index) => (
-                      <Paper key={index} className={styles.goalPaper}>
-                        <Text aria-label={`goal-title-${goal.id}`} className={styles.goalText}>{goal.title}</Text>
-                        <Divider my="sm" />
-                        <Text>{goal.description}</Text>
-                        {goal.recurrence > 1 ? (
-                          <Text style={{ color: 'grey' }}>Recurring every {goal.recurrence} days</Text>
-                        ) : (
-                          <Text style={{ color: 'grey' }}>Recurring every day</Text>
-                        )}
-                        <Divider my="sm" />
-                        <Button className={styles.goalComplete}>
-                          Complete for today!
-                        </Button>
-                      </Paper>
-                    ))
-                  )}
-                </div>
+                    {userData.topGoals?.length === 0 ? (
+                        <div>Looking kinda empty there...</div>
+                    ) : (
+                        userData.topGoals?.map((goal, index) => (
+                          <GoalCard key={index} goalData={goal} />
+                        ))
+                    )}
+                 </div>
             </Paper>
 
             <Sidebar sidebarOpened={sidebarOpened}/>

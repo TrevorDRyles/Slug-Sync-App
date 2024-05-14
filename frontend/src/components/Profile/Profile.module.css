@@ -1,18 +1,27 @@
 .container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     width: 100%;
     background-color: lightblue;
-    padding: 20px 0px 20px 0px;
+    padding: 50px 0px 50px 0px;
   }
 
 .card_container{
     max-width: 300px;
-    margin: 20px 100px;
+    margin: 40px 100px;
     padding: 20px;
     position: relative;
+    max-height: 400px;
     float: left;
 }
+
+.goalColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-content: space-between;
+    text-align: center;
+  }
 
 .inner_container{
     height: 150px;
