@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import { Button, Card, Text, TextInput, Badge, Group } from '@mantine/core';
+import { Button, Card, Text, TextInput, Badge, Group, Menu } from '@mantine/core';
 import {Link, useNavigate} from "react-router-dom";
 import styles from './Goal.module.css';
 import Header from "@/components/Header.jsx";
 import {useDisclosure} from "@mantine/hooks";
 import Sidebar from "@/components/Sidebar.jsx";
-import {IconTag} from '@tabler/icons-react';
+import {IconTag, IconSortAscending, IconSortDescending} from '@tabler/icons-react';
+
+let tags =['Health','Athletics','Productivity','Academics','Social','Hobbies','Finance and Bills','Work','Personal','Other'];
 
 const GoalsListing = () => {
   // https://chat.openai.com/share/5c73d542-08b5-4772-96ab-c9eecd503ba1
@@ -19,6 +21,11 @@ const GoalsListing = () => {
   let [goals, setGoals] = useState([]);
   // let currentGoals = [];
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
+  const [sort, setSort] = useState(1);
+
+  const handleSort = () => {
+    if (sort === 1 ? setSort(0) : setSort(1));
+  };
 
   const handlePrevPage = () => {
     setCurrentPage(currentPage - 1);
@@ -96,13 +103,37 @@ const GoalsListing = () => {
         <div className={styles.goalsContainer}>
           <h1 style={{alignContent: 'center'}}>Goals</h1>
         </div>
-        <TextInput
-          id={'search-filter-goals'}
-          placeholder="Search goals..."
-          value={searchQuery}
-          onChange={(event) => handleSearch(event.target.value)}
-          style={{ marginBottom: '20px' }}
-        />
+        <div style={{ display: 'flex' }}>
+          <TextInput
+            id={'search-filter-goals'}
+            placeholder="Search goals..."
+            value={searchQuery}
+            onChange={(event) => handleSearch(event.target.value)}
+            style={{ marginBottom: '20px', width: '80%'}}
+          />
+          <Menu shadow="md" width={200} transitionProps={{ transition: 'scale-y', duration: 180}}>
+            <Menu.Target>
+              <Button style={{marginLeft: '8px'}}><IconTag style={{width: 20, height: 20}}/></Button>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Label>Select a tag</Menu.Label>
+
+              {
+                tags.map((tag, index) => (
+                  <Menu.Item key={index}><Badge data-testid={"tag"} leftSection={<IconTag style={{width: 16, height: 16}}/>}>{tag}</Badge></Menu.Item>
+                ))
+              }
+            </Menu.Dropdown>
+
+          </Menu>
+          
+          <Button 
+            style={{marginLeft: '8px'}} 
+            onClick={handleSort}>
+              {sort ? <IconSortAscending style={{width: 20, height: 20}}/> : <IconSortDescending style={{width: 20, height: 20}}/>}
+          </Button>
+        </div>
         {goals.map((goal, index) => (
           <div key={`goal-${index}`}>
             <Goal key={goal.id} goal={goal} onAddGoal={() => handleAddGoal(goal)}/>
