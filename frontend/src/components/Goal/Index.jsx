@@ -113,7 +113,7 @@ const GoalsListing = () => {
           />
           <Menu shadow="md" width={200} transitionProps={{ transition: 'scale-y', duration: 180}}>
             <Menu.Target>
-              <Button style={{marginLeft: '8px'}}><IconTag style={{width: 20, height: 20}}/></Button>
+              <Button style={{marginLeft: '8px', width: '9%'}}><IconTag style={{width: 20, height: 20}}/></Button>
             </Menu.Target>
 
             <Menu.Dropdown>
@@ -129,7 +129,7 @@ const GoalsListing = () => {
           </Menu>
           
           <Button 
-            style={{marginLeft: '8px'}} 
+            style={{marginLeft: '8px', width: '9%'}} 
             onClick={handleSort}>
               {sort ? <IconSortAscending style={{width: 20, height: 20}}/> : <IconSortDescending style={{width: 20, height: 20}}/>}
           </Button>
