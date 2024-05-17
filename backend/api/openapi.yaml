@@ -53,6 +53,14 @@ paths:
           schema:
             additionalProperties: false
             type: number
+        - name: tag
+          in: query
+          description: Tag to filter with
+          required: false
+          schema:
+            additionalProperties: false
+            type: string
+            nullable: true
         - name: search
           in: query
           description: Search term

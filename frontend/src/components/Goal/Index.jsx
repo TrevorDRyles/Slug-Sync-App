@@ -14,6 +14,7 @@ const GoalsListing = () => {
   // https://chat.openai.com/share/5c73d542-08b5-4772-96ab-c9eecd503ba1
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterTag, setFilterTag] = useState('');
   const goalsPerPage = 5;
   const history = useNavigate();
   const indexOfLastGoal = currentPage * goalsPerPage;
@@ -65,6 +66,9 @@ const GoalsListing = () => {
   //   )
   // }
 
+  const handleFilterTag = (tag) => {
+    setFilterTag(tag);
+  };
 
   const handleSearch = (searchTerm) => {
     setSearchQuery(searchTerm);
@@ -72,7 +76,8 @@ const GoalsListing = () => {
 
   useEffect(() => {
     const searchTerm = searchQuery.length > 0 ? '&search=' + searchQuery : ''
-    fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${searchTerm}`)
+    const filterTerm = filterTag.length > 0 ? '&tag=' + filterTag : ''
+    fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${filterTerm}${searchTerm}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error('response was not ok in add goal');
@@ -92,7 +97,7 @@ const GoalsListing = () => {
       .catch((err) => {
         alert(err.message);
       });
-    }, [currentPage, searchQuery]);
+    }, [currentPage, searchQuery, filterTag]);
 
   // https://chat.openai.com/share/92235a8f-fdb7-4143-9674-69af74f89174
   return (
