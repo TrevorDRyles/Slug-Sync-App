@@ -15,6 +15,11 @@
     float: left;
 }
 
+.editBio{
+    display: flex;
+    text-align: center;
+}
+
 .goalColumn {
     display: flex;
     flex-direction: column;

@@ -33,8 +33,7 @@
 .goalPaper {
   padding: 20px;
   text-align: center;
-  background-color: lightgray;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
   max-width: 600px;
   /*margin: 0 auto;*/

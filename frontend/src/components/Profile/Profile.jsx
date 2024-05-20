@@ -9,6 +9,8 @@ import Sidebar from "@/components/Sidebar.jsx";
 const Profile = () => {
     const [userData, setUserData] = useState([]);
     const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [bio, setBio] = useState("");
 
     useEffect(() => {
       const userId = JSON.parse(localStorage.getItem('user')).id;
@@ -40,7 +42,52 @@ const Profile = () => {
           console.log('Error getting user info: ' + err);
         });    
     }, []);
+
+    {/*
+    const topGoal = userData.topGoals?.[0];
+    const highestStreak = topGoal?.streaks?.[0];
+
+    const displayStreak = () => {
+      if (highestStreak === undefined) {
+        return "None";
+      } else if (highestStreak === 1) {
+        return "1 day";
+      } else {
+        return `${highestStreak} days`;
+      }
+    };
+
+    const handleEditClick = () => {
+      setIsEditing(true);
+    };
+
+    const handleCancelClick = () => {
+      setIsEditing(false);
+      setBio(userData.bio || "");
+    };
     
+    const handleSaveClick = async () => {
+      try {
+        const response = await fetch('http://localhost:3010/v0/profile/${userId}', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ bio }),
+        });
+        const result = await response.json();
+        if (response.ok) {
+          setUserData((prevData) => ({ ...prevData, bio }));
+          setIsEditing(false);
+        } else {
+          console.error('Failed to update bio:', result.message);
+        }
+      } catch (error) {
+        console.error('Error updating bio:', error);
+      }
+    };
+    console.log(highestStreak);
+  */}
 
     return (
         <>
@@ -62,7 +109,7 @@ const Profile = () => {
                             <Text fw={500}>{userData && userData.name}</Text>
                             <HoverCard width={150} shadow="md">
                                 <HoverCard.Target>
-                                    <Badge color="red">50 Days</Badge>
+                                    <Badge color="red">1 Day </Badge>
                                 </HoverCard.Target>
                                 <HoverCard.Dropdown>
                                 <Text size="sm">
@@ -73,8 +120,19 @@ const Profile = () => {
                         </Group>
 
                         <Text ta="center" size="md" c="dimmed">
-                          {userData && userData.bio}
+                          {userData && userData.bio == '' ? "No bio." : userData.bio}
                         </Text>
+                        {/*
+                        {isEditing ? (
+                          <div>
+                            <Textarea value={bio} onChange={(e) => setBio(e.target.value)} />
+                            <Button onClick={handleSaveClick}>Save</Button>
+                            <Button onClick={handleCancelClick}>Cancel</Button>
+                          </div>
+                        ) : (
+                          <Button onClick={handleEditClick} className = "editBio">Edit Bio</Button>
+                        )}
+                        */}
                     </div>
             </Card>
             <Paper padding="lg" shadow="sm" withBorder className = {`${styles.paper}`} >

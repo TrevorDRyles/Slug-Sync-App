@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 export function GoalCard({goalData}) {
   return(
     <div className={styles.goalPaper}>
-      <Paper style = {{backgroundcolor: 'lightgrey'}}>
+      <Paper>
         <Text aria-label={'goal-title-' + goalData.title} className={styles.goalText}>{goalData.title}</Text>
         <Divider my="sm" />
         <Text>{goalData.description}</Text>
