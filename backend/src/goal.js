@@ -86,6 +86,8 @@ exports.getPostsByPageAndSize = async function(req, res) {
       recurrence: row.goal.recurrence,
       description: row.goal.description,
       tag: row.goal.tag,
+      startdate: row.goal.startdate,
+      enddate: row.goal.enddate,
       comments: rows,
       memberCount: row.goal.memberCount,
     };

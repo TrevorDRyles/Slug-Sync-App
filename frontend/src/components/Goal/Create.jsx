@@ -1,7 +1,11 @@
 import React, {useState} from 'react';
-import {TextInput, Paper, Button, Textarea, Select, Divider, Text} from '@mantine/core';
+import {TextInput, Paper, Button, Textarea, Select, Divider, Text, rem} from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
+import { IconCalendar } from '@tabler/icons-react';
 import {useNavigate} from "react-router-dom";
 import styles from './Goal.module.css';
+import '@mantine/core/styles.css';
+import '@mantine/dates/styles.css';
 import {useDisclosure} from "@mantine/hooks";
 import Header from "@/components/Header.jsx";
 import Sidebar from "@/components/Sidebar.jsx";
@@ -38,7 +42,33 @@ function CreateGoal() {
     recurrence: `1`,
     tag: '',
     completed: false,
+    startdate: '',
+    enddate: '',
   });
+
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [startDateError, setStartDateError] = useState(null);
+  const [endDateError, setEndDateError] = useState(null);
+  const icon = <IconCalendar style={{ width: rem(18), height: rem(18) }} stroke={1.5} />;
+
+  const handleStartDateChange = (date) => {
+    if (date && endDate && date > endDate) {
+      setStartDateError('Start date cannot be after end date');
+    } else {
+      setStartDate(date);
+      setStartDateError(null);
+    }
+  };
+
+  const handleEndDateChange = (date) => {
+    if (date && startDate && date < startDate) {
+      setEndDateError('End date cannot be before start date');
+    } else {
+      setEndDate(date);
+      setEndDateError(null);
+    }
+  };
 
   const handleChange = (field, value) => {
     setFormData((prevData) => ({
@@ -51,7 +81,7 @@ function CreateGoal() {
     e.preventDefault();
     fetch('http://localhost:3010/v0/goal', {
       method: 'POST',
-      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence + " days", author: userId, tag: formData.tag, comments: [], memberCount: 0}),
+      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence + " days", author: userId, tag: formData.tag, comments: [], memberCount: 0, startDate: formData.startDate, endDate: formData.endDate}),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userToken}`,
@@ -88,7 +118,7 @@ function CreateGoal() {
             </Text>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="formContainer">
             <TextInput
               label="Title"
               placeholder="Enter title"
@@ -112,7 +142,6 @@ function CreateGoal() {
               minRows={3}
               maxRows={6}
             />
-
             <div style={{ display: 'flex', gap: '15px' }}>
               <Select
                 data={days}
@@ -139,6 +168,27 @@ function CreateGoal() {
                 //searchable
               />
             </div>
+            <DatePickerInput
+              leftSection={icon}
+              style={{ marginBottom: 15 }}
+              leftSectionPointerEvents="none"
+              label="Start Date"
+              required
+              placeholder="Select start date"
+              value={startDate}
+              error={startDateError}
+              onChange={handleStartDateChange}
+            />
+            <DatePickerInput
+              leftSection={icon}
+              style={{ marginBottom: 15 }}
+              leftSectionPointerEvents="none"
+              label="End Date"
+              value={endDate}
+              error={endDateError}
+              onChange={handleEndDateChange}
+              placeholder="Select end date"
+            />
             <Button data-testid="submit" type="submit" variant="outline" color="blue">
               Submit
             </Button>
