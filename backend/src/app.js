@@ -8,7 +8,6 @@ const OpenApiValidator = require('express-openapi-validator');
 const auth = require('./auth');
 const goal = require('./goal.js');
 const profile = require('./profile.js');
-const jwt = require('jsonwebtoken');
 
 const app = express();
 app.use(cors());
@@ -41,6 +40,8 @@ app.post('/v0/goal', goal.createGoal);
 app.get('/v0/goal/:id', goal.viewGoal);
 
 app.get('/v0/profile/:id', profile.getUserInfo);
+
+app.post('/v0/profile/:id', profile.updateBio);
 
 app.get('/v0/goal', goal.getPostsByPageAndSize);
 

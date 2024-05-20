@@ -2,7 +2,7 @@
 
 --INSERT INTO "user"(data) VALUES (jsonb_build_object('name', 'Hunter', 'email', 'hunter@ucsc.edu', 'password', crypt('huntertratar', 'cs')));
 
-INSERT INTO "user"(id, data) VALUES ('66c0cab9-4d54-4d69-98e1-4e0f7198c6f0',jsonb_build_object('name', 'Hunter', 'email', 'hunter@ucsc.edu', 'password', crypt('huntertratar', 'cs'), 'bio', 'itsabio'));
+INSERT INTO "user"(id, data) VALUES ('66c0cab9-4d54-4d69-98e1-4e0f7198c6f0',jsonb_build_object('name', 'Hunter', 'email', 'hunter@ucsc.edu', 'password', crypt('huntertratar', 'cs'), 'bio', ''));
 
 INSERT INTO goal(goal) VALUES (jsonb_build_object('user_id', '1', 'title', 'Learn React', 'description', 'Learn React', 'recurrence', '1'));
 INSERT INTO goal(goal) VALUES (jsonb_build_object('user_id', '2', 'title', 'Run a Mile', 'description', 'Run a mile', 'recurrence', '7'));

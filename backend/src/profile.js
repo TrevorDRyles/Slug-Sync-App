@@ -79,7 +79,7 @@ exports.updateBio = async (userId, bio) => {
 
     const query = {
       text: updateQuery,
-      values: [bio, userId],
+      values: [JSON.stringify(bio), userId],
     };
 
     await pool.query(query);
