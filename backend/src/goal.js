@@ -59,13 +59,11 @@ ORDER BY
 DESC
 LIMIT $2
 OFFSET $1`;
-  console.log(selectQuery);
   const query = {
     text: selectQuery,
     values: [(pageNum - 1) * size, size, `%${searchTerm}%`, `%${filterTerm}%`],
   };
   const result = await pool.query(query);
-  console.log(result.rows);
   const goals = result.rows.map((row) => ({
     id: row.id,
     title: row.goal.title,

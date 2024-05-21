@@ -6,7 +6,7 @@ import styles from './Goal.module.css';
 import Header from "@/components/Header.jsx";
 import {useDisclosure} from "@mantine/hooks";
 import Sidebar from "@/components/Sidebar.jsx";
-import {IconTag, IconSortAscending, IconSortDescending} from '@tabler/icons-react';
+import {IconTag, IconSortAscending, IconSortDescending, IconX} from '@tabler/icons-react';
 
 let tags =['Health','Athletics','Productivity','Academics','Social','Hobbies','Finance and Bills','Work','Personal','Other'];
 
@@ -68,7 +68,6 @@ const GoalsListing = () => {
 
   const handleFilterTag = (tag) => {
     let tagText = tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();
-    //console.log(tagText);
     setFilterTag(tagText);
   };
 
@@ -116,7 +115,20 @@ const GoalsListing = () => {
             placeholder="Search goals..."
             value={searchQuery}
             onChange={(event) => handleSearch(event.target.value)}
-            style={{ marginBottom: '20px', width: '80%'}}
+            style={{ marginBottom: '20px', width: '80%' }}
+            rightSectionWidth={180}
+            rightse
+            rightSection={filterTag && 
+              <div style={{ display: 'flex', justifyContent: 'flex-end', width: '95%' }}>
+                <Badge 
+                  data-testid={"filterDisplaytag"} 
+                  leftSection={<IconTag style={{width: 16, height: 16}}/>}
+                  rightSection={ <IconX className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}>
+                  
+                    {filterTag} 
+                </Badge>
+              </div>
+            }
           />
           <Menu shadow="md" width={200} transitionProps={{ transition: 'scale-y', duration: 180}}>
             <Menu.Target>
@@ -128,7 +140,14 @@ const GoalsListing = () => {
 
               {
                 tags.map((tag, index) => (
-                  <Menu.Item key={index}><Badge data-testid={"tag"} onClick={(event) => handleFilterTag(event.target.innerText)} leftSection={<IconTag style={{width: 16, height: 16}}/>}>{tag}</Badge></Menu.Item>
+                  <Menu.Item key={index}>
+                    <Badge 
+                      data-testid={"tag"} 
+                      onClick={(event) => handleFilterTag(event.target.innerText)} 
+                      leftSection={<IconTag style={{width: 16, height: 16}}/>}>
+                        {tag}
+                    </Badge>
+                  </Menu.Item>
                 ))
               }
             </Menu.Dropdown>
@@ -165,8 +184,8 @@ const Goal = ({ goal, onAddGoal }) => {
             <Text size="lg" style={{ flexGrow: 1 }}>
               {goal.title}
             </Text>
-            {goal.tag !== '' && goal.tag !== undefined ?
-               (<Badge data-testid={"tag"} leftSection={<IconTag style={{width: 16, height: 16}}/>}>{goal.tag}</Badge>):(<></>)
+            {goal.tag && 
+               (<Badge data-testid={"tag"} leftSection={<IconTag style={{width: 16, height: 16}}/>}>{goal.tag}</Badge>)
             }
           </Group>
         </Link>
