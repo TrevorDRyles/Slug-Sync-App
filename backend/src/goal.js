@@ -35,6 +35,11 @@ exports.getPostsByPageAndSize = async function(req, res) {
     searchTerm = '%';
   }
 
+  let filterTerm = req.query.tag;
+  if (filterTerm === undefined) {
+    filterTerm = '%';
+  }
+
   let size = req.query.size;
   // const user = req.user;
   if (size === undefined) {
@@ -48,17 +53,19 @@ exports.getPostsByPageAndSize = async function(req, res) {
 SELECT *
 FROM
     goal     -- the post's member is the logged in user
-WHERE goal->>'title' ILIKE $3
+WHERE goal->>'title' ILIKE $3 AND goal->>'tag' ILIKE $4
 ORDER BY
     goal->>'members'
 DESC
 LIMIT $2
 OFFSET $1`;
+  console.log(selectQuery);
   const query = {
     text: selectQuery,
-    values: [(pageNum - 1) * size, size, `%${searchTerm}%`],
+    values: [(pageNum - 1) * size, size, `%${searchTerm}%`, `%${filterTerm}%`],
   };
   const result = await pool.query(query);
+  console.log(result.rows);
   const goals = result.rows.map((row) => ({
     id: row.id,
     title: row.goal.title,

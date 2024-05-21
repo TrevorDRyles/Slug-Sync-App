@@ -67,7 +67,9 @@ const GoalsListing = () => {
   // }
 
   const handleFilterTag = (tag) => {
-    setFilterTag(tag);
+    let tagText = tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();
+    //console.log(tagText);
+    setFilterTag(tagText);
   };
 
   const handleSearch = (searchTerm) => {
@@ -126,7 +128,7 @@ const GoalsListing = () => {
 
               {
                 tags.map((tag, index) => (
-                  <Menu.Item key={index}><Badge data-testid={"tag"} leftSection={<IconTag style={{width: 16, height: 16}}/>}>{tag}</Badge></Menu.Item>
+                  <Menu.Item key={index}><Badge data-testid={"tag"} onClick={(event) => handleFilterTag(event.target.innerText)} leftSection={<IconTag style={{width: 16, height: 16}}/>}>{tag}</Badge></Menu.Item>
                 ))
               }
             </Menu.Dropdown>
