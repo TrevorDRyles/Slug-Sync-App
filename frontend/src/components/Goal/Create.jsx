@@ -35,6 +35,7 @@ function CreateGoal() {
     description: '',
     recurrence: `1`,
     tag: '',
+    completed: false,
   });
 
   const handleChange = (field, value) => {
@@ -48,7 +49,7 @@ function CreateGoal() {
     e.preventDefault();
     fetch('http://localhost:3010/v0/goal', {
       method: 'POST',
-      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence, tag: formData.tag}),
+      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence, tag: formData.tag, comments: [], completed: false}),
       headers: {
         'Content-Type': 'application/json',
         // 'Authorization': `Bearer ${bearerToken}`,

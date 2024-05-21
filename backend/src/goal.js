@@ -59,12 +59,24 @@ OFFSET $1`;
     values: [(pageNum - 1) * size, size, `%${searchTerm}%`],
   };
   const result = await pool.query(query);
-  const goals = result.rows.map((row) => ({
-    id: row.id,
-    title: row.goal.title,
-    recurrence: row.goal.recurrence,
-    description: row.goal.description,
-    tag: row.goal.tag,
+
+  const goals = await Promise.all(result.rows.map(async (row) => {
+    // load comments
+    const commentsQuery = `
+        SELECT *
+        FROM comment
+        WHERE goal_id = $1;
+    `;
+    const {rows} = await pool.query(commentsQuery, [row.id]);
+
+    return {
+      id: row.id,
+      title: row.goal.title,
+      recurrence: row.goal.recurrence,
+      description: row.goal.description,
+      tag: row.goal.tag,
+      comments: rows,
+    };
   }));
   res.status(200).json(goals);
 };
@@ -81,4 +93,5 @@ exports.viewGoal = async (req, res) => {
     res.status(200).json({id: rows[0].id, ...rows[0].goal});
   }
 };
+
 

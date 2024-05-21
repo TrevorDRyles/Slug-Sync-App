@@ -9,6 +9,33 @@ servers:
   - url: http://localhost:3010/v0
 
 paths:
+  /user/{id}:
+    get:
+      tags:
+        - get user
+      summary: get user
+      parameters:
+        - name: id
+          in: path
+          description: Id of user
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /goal:
     post:
       tags:
@@ -132,6 +159,68 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /goal/{id}/comment:
+    post:
+      tags:
+        - get goal
+      summary: get goal
+      parameters:
+        - name: id
+          in: path
+          description: Id of goal
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      requestBody:
+        description: add comment to goal
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    get:
+      tags:
+        - get comments
+      summary: get all comments
+      parameters:
+        - name: id
+          in: path
+          description: Id of goal
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    $ref: '#/components/schemas/CommentResponse'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Error:
@@ -166,6 +255,40 @@ components:
         title: "title"
         description: "description"
         recurrence: "1"
+    Comment:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          description: content of comment
+        username:
+          type: string
+          description: username of comment
+        date:
+          type: string
+          description: date of comment
+      example:
+        description: "new comment"
+    CommentResponse:
+      type: object
+      properties:
+        content:
+          type: string
+          description: content of comment
+        id:
+          type: string
+          description: id of comment
+        username:
+          type: string
+          description: username of comment
+        date:
+          type: string
+          description: date of comment
+      example:
+        id: "1"
+        description: "new comment"
     GoalWithId:
       type: object
       required:
@@ -234,7 +357,14 @@ components:
           type: string
       required:
         - token
-
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
   securitySchemes:
     bearerAuth:
       type: http

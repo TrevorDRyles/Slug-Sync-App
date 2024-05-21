@@ -7,6 +7,8 @@ const path = require('path');
 const OpenApiValidator = require('express-openapi-validator');
 const auth = require('./auth');
 const goal = require('./goal.js');
+const user = require('./user.js');
+const comment = require('./comment.js');
 
 const app = express();
 app.use(cors());
@@ -37,6 +39,12 @@ app.post('/v0/login', auth.login);
 app.post('/v0/goal', goal.createGoal);
 
 app.get('/v0/goal/:id', goal.viewGoal);
+
+app.post('/v0/goal/:id/comment', comment.addCommentToGoal);
+
+app.get('/v0/goal/:id/comment', comment.getAllCommentsOnGoal);
+
+app.get('/v0/user/:id', user.getUserById);
 
 app.get('/v0/goal', goal.getPostsByPageAndSize);
 
