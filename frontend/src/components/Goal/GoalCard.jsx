@@ -1,4 +1,4 @@
-import { Paper,Text, Divider, Button } from "@mantine/core"
+import { Paper,Text, Divider, Button,  Grid} from "@mantine/core"
 import styles from './Goal.module.css';
 import {Check} from 'react-feather'
 import PropTypes from 'prop-types';
@@ -43,17 +43,25 @@ export function GoalCard({goalData}) {
         <div className={styles.goalBottom}>
           {goalData.completed ? (
             <Check aria-label="Goal completed"/>
-            ) : (
+          ) : (
             <Button onClick={() => completeGoal(goalData.id, setRefetch)} aria-label="Goal not completed">
               Complete for today!
             </Button>
-            )
+          )
           }
           <div className={styles.streakCount}>
             <IconFlame />
             <Text>{goalData.streak}</Text>
           </div>
         </div>
+        <Grid style={{marginTop: 15}}>
+          <Grid.Col span={6}>
+            <Text ta="left" c="dimmed">Start Date: {goalData.startdate}</Text>
+          </Grid.Col>
+          <Grid.Col span={6}>
+            <Text ta="center" c="dimmed">End Date: {goalData.enddate}</Text>
+          </Grid.Col>
+        </Grid>
       </Paper>
     </div>
   )
@@ -65,6 +73,8 @@ GoalCard.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     recurrence: PropTypes.string.isRequired,
+    startdate: PropTypes.string,
+    enddate: PropTypes.string,
     completed: PropTypes.bool.isRequired,
     streak: PropTypes.number.isRequired,
   }).isRequired,

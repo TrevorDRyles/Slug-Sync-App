@@ -58,6 +58,7 @@ function CreateGoal() {
     } else {
       setStartDate(date);
       setStartDateError(null);
+      handleChange('startdate', formatDate(date));
     }
   };
 
@@ -67,7 +68,12 @@ function CreateGoal() {
     } else {
       setEndDate(date);
       setEndDateError(null);
+      handleChange('enddate', formatDate(date));
     }
+  };
+
+  const formatDate = (date) => {
+    return date ? date.toISOString().split('T')[0] : '';
   };
 
   const handleChange = (field, value) => {
@@ -81,7 +87,11 @@ function CreateGoal() {
     e.preventDefault();
     fetch('http://localhost:3010/v0/goal', {
       method: 'POST',
+<<<<<<< HEAD
       body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence + " days", author: userId, tag: formData.tag, comments: [], memberCount: 0, startDate: formData.startDate, endDate: formData.endDate}),
+=======
+      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence, tag: formData.tag, startdate: formData.startdate, enddate: formData.enddate}),
+>>>>>>> d9ae713 (Slight tweaks to backend, currently working on testing)
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userToken}`,
