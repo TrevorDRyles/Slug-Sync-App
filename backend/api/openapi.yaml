@@ -398,6 +398,8 @@ components:
         - title
         - description
         - recurrence
+        - startdate
+        - enddate
       properties:
         title:
           type: string
@@ -408,6 +410,12 @@ components:
         recurrence:
           type: string
           description: recurrence of goal
+        startdate:
+          type: string
+          description: start date of goal
+        enddate:
+          type: string
+          description: end date of goal
       example:
         title: "title"
         description: "description"
@@ -449,6 +457,8 @@ components:
         - title
         - description
         - recurrence
+        - startdate
+        - enddate
       properties:
         id:
           type: string
@@ -463,6 +473,12 @@ components:
         recurrence:
           type: string
           description: recurrence of goal
+        startdate:
+          type: string
+          description: start date of goal
+        enddate:
+          type: string
+          description: end date of goal
       example:
         id: "1"
         title: "title"

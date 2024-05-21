@@ -41,6 +41,9 @@ it('Loads create goal', async () => {
   screen.getByText('Title', {exact: false});
   screen.getByText('Description');
   screen.getByText('Repeat goal every ...', {exact: false});
+  screen.getByText('Recurrence (every x days)', {exact: false});
+  screen.getAllByText('Start Date', {exact: false});
+  screen.getAllByText('End Date', {exact: false});
 
   const title = screen.getByTestId('title', {exact: false});
   fireEvent.change(title, {target: {value: 'Title'}});
@@ -60,6 +63,15 @@ it('Loads create goal', async () => {
 
   const selectedOption = screen.getByText('3 days');
   expect(selectedOption).toBeInTheDocument();
+
+  const startDateInput = screen.getByText('Select start date');
+  fireEvent.click(startDateInput);
+  expect(startDateInput).toBeInTheDocument();
+
+  const endDateInput = screen.getByText('Select end date');
+  fireEvent.click(endDateInput);
+  expect(endDateInput).toBeInTheDocument();
+
   const submit = screen.getByTestId('submit');
   fireEvent.click(submit);
 });

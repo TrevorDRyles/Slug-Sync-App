@@ -84,6 +84,8 @@ afterEach(async () => {
  * createGoal
  * @param {string} title
  * @param {string} description
+ * @param {string} startdate
+ * @param {string} enddate
  * @param {number} arrowsDownOnRecurrence
  * @return {Promise<void>}
  */
@@ -114,6 +116,19 @@ async function createGoal(title, description, arrowsDownOnRecurrence) {
     // Using same var as recurrence because of similar format
     await page.keyboard.press('ArrowDown');
   }
+  await page.waitForSelector('input[placeholder="Select start date"]');
+  await page.click('input[placeholder="Select start date"]');
+
+  await page.click('div[role="dialog"]'); // Open the calendar dialog
+  await page.click('button[aria-label="May 10, 2024"]'); // Select the specific date
+
+  // Select end date
+  await page.waitForSelector('input[placeholder="Select end date"]');
+  await page.click('input[placeholder="Select end date"]');
+
+  await page.click('div[role="dialog"]'); // Open the calendar dialog
+  await page.click('button[aria-label="May 20, 2024"]');
+
   await page.keyboard.press('Enter'); // Select the option
 
   await page.$eval(`[type="submit"]`, (element) =>
