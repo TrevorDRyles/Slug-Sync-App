@@ -68,7 +68,7 @@ const GoalsListing = () => {
     fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${searchTerm}`)
       .then((res) => {
         if (!res.ok) {
-          throw new Error('response was not ok in add goal');
+          throw new Error('response was not ok in get goals');
         }
         return res.json();
       })

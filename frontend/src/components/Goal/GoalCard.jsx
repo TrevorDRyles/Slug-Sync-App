@@ -33,7 +33,7 @@ GoalCard.propTypes = {
   goalData: PropTypes.shape({
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    recurrence: PropTypes.number.isRequired,
+    recurrence: PropTypes.string.isRequired,
     completed: PropTypes.bool.isRequired,
   }).isRequired,
 };

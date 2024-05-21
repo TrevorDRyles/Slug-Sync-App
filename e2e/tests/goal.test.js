@@ -147,7 +147,7 @@ async function expectViewGoalPageContents() {
   await page.waitForSelector('[aria-label^="goal-title-"]');
   const goalTitle = await page.evaluate(() => {
     const goalLink = document.querySelector('[aria-label^="goal-title-"]');
-    return goalLink.innerText; // or any other property you want to retrieve
+    return goalLink.innerText;
   });
   expect(goalTitle).toBeDefined();
 }
@@ -186,7 +186,56 @@ async function typeIntoSearchAndExpectFilter() {
   }, {}, 'GoalTitle1', 5);
 }
 
-test('Index page for goal', async () => {
+/**
+ * addCommentToGoal
+ * @return {Promise<void>}
+ */
+async function addCommentToGoal() {
+  const titleInput = await page
+    .waitForSelector('[aria-label^="Type comment"]');
+  await titleInput.type('I like this goal');
+
+  await page.evaluate(() => {
+    const postComment = document.querySelector('[aria-label^="Post comment"]');
+    if (postComment) {
+      postComment.click();
+    }
+  });
+}
+
+/**
+ * verifyTextOnScreenBySelectorAndText
+ * @param{string} selector
+ * @param{string} text
+ * @return {Promise<void>}
+ */
+async function verifyTextOnScreenBySelectorAndText(selector, text) {
+  await page.waitForSelector(selector);
+  await page.waitForFunction(
+    (selector, text) => {
+      const element = document.querySelector(selector);
+      return element && element.innerText.includes(text);
+    },
+    {},
+    selector,
+    text,
+  );
+}
+
+/**
+ * viewCommentOnGoal
+ * @return {Promise<void>}
+ */
+async function viewCommentOnGoal() {
+  const comment = '[aria-label^="Comment 1"]';
+  await verifyTextOnScreenBySelectorAndText(
+    comment, 'I like this goal');
+  await verifyTextOnScreenBySelectorAndText(
+    comment, 'Today');
+}
+
+test('Clicking into goal from listing page and viewing its ' +
+  'contents', async () => {
   // Create sample goal data
   for (let i = 1; i <= 5; i++) {
     await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
@@ -203,4 +252,10 @@ test('Filtering goals by search', async () => {
   }
   await page.goto('http://localhost:3000/goals');
   await typeIntoSearchAndExpectFilter();
+});
+
+test('Adding comments to a goal', async () => {
+  await createGoal('GoalTitle1', 'GoalDescription' + 1, 1);
+  await addCommentToGoal();
+  await viewCommentOnGoal();
 });
