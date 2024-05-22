@@ -17,7 +17,7 @@ exports.login = async (req, res) => {
       algorithm: 'HS256',
     },
   );
-  res.status(200).json({token: accessToken, name: user.name});
+  res.status(200).json({token: accessToken, id: user.id, name: user.name});
 };
 
 
@@ -27,27 +27,19 @@ exports.signup = async (req, res) => {
 };
 
 // check endpoint referenced from authenticated books example
-// exports.check = (req, res, next) => {
-//   const authHeader = req.headers.authorization;
-//   if (authHeader) {
-//     const token = authHeader.split(' ')[1];
-//     jwt.verify(token, process.env.MASTER_SECRET, (err, user) => {
-//       if (err) {
-//         return res.sendStatus(403);
-//       }
-//       req.user = user;
-//       next();
-//     });
-//   } else {
-//     res.sendStatus(401);
-//   }
-// };
-
-// exports.getAllUsers = async (req, res) => {
-//   const query = `
-//       SELECT id, "user"->>'name' AS name FROM "user";
-//   `;
-//   const result = await pool.query(query, []);
-//   res.status(200).json(result.rows);
-// };
+exports.check = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader) {
+    const token = authHeader.split(' ')[1];
+    jwt.verify(token, process.env.MASTER_SECRET, (err, user) => {
+      if (err) {
+        return res.sendStatus(403);
+      }
+      req.user = user;
+      next();
+    });
+  } else {
+    res.status(401).send();
+  }
+};
 

@@ -5,6 +5,7 @@ import ViewGoal from "../../components/Goal/View";
 import {BrowserRouter, MemoryRouter, Route, Routes} from "react-router-dom";
 import { LoginProvider } from '../../contexts/Login.jsx';
 import { render } from "../render";
+import { http, HttpResponse } from 'msw';
 import {
   goalDataEveryDay,
   goalDataEveryWeek, invalidCommentHandler, invalidUserHandler, setDate,
@@ -12,6 +13,7 @@ import {
   viewGoalErrorHandlers,
   viewGoalHandlers
 } from "@/__tests__/Goal/Handlers.js";
+import { RefetchProvider } from '../../contexts/Refetch.jsx';
 
 const server = setupServer();
 
@@ -24,15 +26,37 @@ afterEach(() => {
 afterAll(() => server.close());
 
 it('Loads view goal recurring every 7 days', async () => {
-  setGoalSetting('EVERY_WEEK');
-  server.use(...viewGoalHandlers);
+  const goalData = {
+    id: '1',
+    title: 'Test Goal',
+    description: 'Test Description',
+    recurrence: '7 days',
+    tag: 'Hobbies',
+  };
 
-  renderViewGoalPage();
+  server.use(
+    http.get('http://localhost:3010/v0/goal/:id', async () => {
+      return HttpResponse.json(goalData);
+    }),
+    http.get('http://localhost:3010/v0/members', async () => {
+      return HttpResponse.json([]);
+    }),
+  );
+
+  render(
+    <LoginProvider>
+      <RefetchProvider>
+        <BrowserRouter>
+          <ViewGoal />
+        </BrowserRouter>
+      </RefetchProvider>
+    </LoginProvider>
+  );
 
   await waitFor(() => {
-    screen.getByText(goalDataEveryWeek.title);
-    screen.getByText(goalDataEveryWeek.description);
-    screen.getByText(`Recurring every ${goalDataEveryWeek.recurrence} days`);
+    screen.getByText(goalData.title);
+    screen.getByText(goalData.description);
+    screen.getByText(`Recurring every ${goalData.recurrence}`);
   });
 });
 
@@ -45,7 +69,7 @@ it('Loads view goal recurring every day', async() => {
   await waitFor(() => {
     screen.getByText(goalDataEveryDay.title);
     screen.getByText(goalDataEveryDay.description);
-    screen.getByText(`Recurring every day`);
+    screen.getByText(`Recurring every ${goalDataEveryDay.recurrence}`);
   });
 });
 
@@ -73,12 +97,29 @@ it('Loads username with error', async () => {
 });
 
 function renderViewGoalPage() {
+  const goalData = {
+    id: '1',
+    title: 'Test Goal',
+    description: 'Test Description',
+    recurrence: '1 day',
+  };
+  server.use(
+    http.get('http://localhost:3010/v0/goal/:id', async () => {
+      return HttpResponse.json(goalData);
+    }),
+    http.get('http://localhost:3010/v0/members', async () => {
+      return HttpResponse.json([]);
+    }),
+  );
+
   render(
     <MemoryRouter initialEntries={['/goal/123']}>
       <Routes>
         <Route path="/goal/:id" element={
           <LoginProvider>
-            <ViewGoal/>
+      <RefetchProvider>
+                <ViewGoal/>
+        </RefetchProvider>
           </LoginProvider>
         }/>
       </Routes>
@@ -203,6 +244,33 @@ it('Adds multiple comment successfully', async () => {
   const addComment = screen.getByPlaceholderText('Add a comment');
   fireEvent.change(addComment, {target: {value: 'Test comment'}});
   fireEvent.click(screen.getByLabelText('Post comment'));
+})
+
+it('Loads view goal with error', async () => {
+  const notFound = new HttpResponse('Not Found', {
+    status: 404,
+  });
+    server.use(
+      http.get('http://localhost:3010/v0/goal/:id', async (req, res, ctx) => {
+        return notFound
+      }),
+      http.get('http://localhost:3010/v0/goal/{goalid}/members', async (req, res, ctx) => {
+        return res(ctx.json([]), ctx.status(200));
+      })
+    );
+
+    render(
+      <LoginProvider>
+        <RefetchProvider>
+          <BrowserRouter>
+            <ViewGoal />
+          </BrowserRouter>
+        </RefetchProvider>
+      </LoginProvider>
+    );
+
+    // Check if the loading indicator is shown while the request is pending
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
 });
 
 it('Adds comment unsuccessfully', async () => {

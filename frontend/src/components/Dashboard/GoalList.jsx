@@ -1,54 +1,16 @@
 
 import { GoalCard } from "../Goal/GoalCard"
-import { Box, Divider, Flex, Text } from "@mantine/core"
+import {Text } from "@mantine/core"
 
 import classes from './Dashboard.module.css'
 import React from "react";
+import { RefetchContext } from "../../contexts/Refetch";
 
-// const complete = [
-//   {
-//     id: 1,
-//     title: "Goal 1",
-//     "description": "This is a test goal wowsers 123",
-//     "recurrence": 2,
-//     "completed": true
-//   },
-//   {
-//     id: 2,
-//     title: "Goal 2",
-//     "description": "Test goal 1",
-//     "recurrence": 3,
-//     "completed": true
-//   },
-//   {
-//     id: 3,
-//     title: "Walk a mile",
-//     "description": "Test goal 1",
-//     "recurrence": 7,
-//     "completed": true
-//   }
-// ]
-
-// const incomplete = [
-//   {
-//     id: 4,
-//     title: "Do task for class",
-//     "description": "Test goal 1",
-//     "recurrence": 1
-//   },
-//   {
-//     id: 5,
-//     title: "Homework",
-//     "description": "Test goal 1",
-//     "recurrence": 4
-//   },
-// ]
-
-const fetchGoals = (setComplete, completed) => {
+const fetchIncompletedGoals = (setIncomplete) => {
   const item = localStorage.getItem('user');
   const user = JSON.parse(item)
-  const bearerToken = user ? user.accessToken: '';
-  fetch(`http://localhost:3010/v0/goal?page=1`, {
+  const bearerToken = user ? user.token: '';
+  fetch(`http://localhost:3010/v0/goal/incompleted`, {
     method: 'GET',
     headers: new Headers({
       'Authorization': `Bearer ${bearerToken}`
@@ -62,11 +24,38 @@ const fetchGoals = (setComplete, completed) => {
     })
     .then((json) => {
       const updatedJson = json.map(item => {
-        return {...item, completed: completed}
+        return {...item, completed: false}
       })
-      setComplete(updatedJson);
+      setIncomplete(updatedJson);
     })
     .catch((err) => {
+      console.error(err)
+    })
+}
+
+const fetchCompletedGoals = (setComplete) => {
+  const item = localStorage.getItem('user')
+  const user = JSON.parse(item)
+  const bearerToken = user ? user.token : '';
+  fetch(`http://localhost:3010/v0/goal/completed`, {
+    method: 'GET',
+    headers: new Headers({
+      'Authorization': `Bearer ${bearerToken}`
+    })
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw response;
+      }
+      return response.json()
+    })
+    .then((json) => {
+      const updatedJson = json.map(item => {
+        return {...item, completed: true}
+      })
+      setComplete(updatedJson)
+    })
+    .catch(err => {
       console.error(err)
     })
 }
@@ -75,12 +64,13 @@ export function GoalList() {
 
   const [complete, setComplete] = React.useState([])
   const [incomplete, setIncomplete] = React.useState([])
+  const {refetch, setRefetch} = React.useContext(RefetchContext)
 
   React.useEffect(() => {
-    fetchGoals(setIncomplete, false)
-    fetchGoals(setComplete, true)
-  }, [])
-  console.log(complete)
+    fetchCompletedGoals(setComplete)
+    fetchIncompletedGoals(setIncomplete)
+    setRefetch(false)
+  }, [refetch, setRefetch])
 
   const completedGoals = complete.map((goal) => (
     <div key={goal.id} className={classes.goalWrapper}>

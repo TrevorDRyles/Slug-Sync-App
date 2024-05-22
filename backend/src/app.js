@@ -38,6 +38,10 @@ app.post('/v0/login', auth.login);
 
 app.post('/v0/goal', goal.createGoal);
 
+app.get('/v0/goal/completed', auth.check, goal.getAllCompleted);
+
+app.get('/v0/goal/incompleted', auth.check, goal.getAllIncompleted);
+
 app.get('/v0/goal/:id', goal.viewGoal);
 
 app.post('/v0/goal/:id/comment', comment.addCommentToGoal);
@@ -47,6 +51,8 @@ app.get('/v0/goal/:id/comment', comment.getAllCommentsOnGoal);
 app.get('/v0/user/:id', user.getUserById);
 
 app.get('/v0/goal', goal.getPostsByPageAndSize);
+
+app.put('/v0/complete/:goal', auth.check, goal.completeGoal);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

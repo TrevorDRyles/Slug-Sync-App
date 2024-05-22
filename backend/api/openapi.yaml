@@ -221,6 +221,66 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /goal/completed:
+    get:
+      security:
+        - bearerAuth: []
+      description: Get all completed goals from a user
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GoalWithId'
+  
+  /goal/incompleted:
+    get:
+      security:
+        - bearerAuth: []
+      description: Get all incompleted goals from a user
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GoalWithId'
+  
+  /complete/{goal}:
+    put:
+      security:
+        - bearerAuth: []
+      description: Complete a goal
+      parameters:
+        - name: goal
+          in: path
+          description: id of the goal
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Goal completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  goal_id:
+                    type: string
+                    format: uuid
+                required:
+                  - goal_id
+                additionalProperties: false
+
+
 components:
   schemas:
     Error:

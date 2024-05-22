@@ -1,7 +1,8 @@
 .wrapper {
   padding-left: 100px;
   padding-top: 80px;
-  display: flex;
+  padding-bottom: 70px;
+  display: flex; 
   justify-content: space-evenly;
 }
 

@@ -62,7 +62,7 @@ const handleSubmit = (data, type, toggle, setAccessToken, history) => {
           return res.json();
         })
         .then((json) => {
-          setAccessToken(json.accessToken)
+          setAccessToken(json.token)
           localStorage.setItem('user', JSON.stringify(json));
           history('/');
         })
