@@ -123,3 +123,28 @@ it('Ensure no tag if tag not selected', async () => {
     expect(error).toBeDefined();
   }
 });
+
+it('check that sort and tag filter button exists', async () => {
+  server.use(...indexHandlers);
+  renderIndex();
+  const sortButton = screen.getByLabelText('sort-button', {exact: false});
+  expect(sortButton).toBeDefined();
+  expect(screen.getByLabelText('asc-icon', {exact: false})).toBeDefined();
+  try{
+    screen.getByLabelText('desc-icon', {exact: false});
+  } catch (error){
+    expect(error).toBeDefined();
+  }
+  
+
+  fireEvent.click(sortButton);
+  expect(screen.getByLabelText('desc-icon', {exact: false})).toBeDefined();
+  try{
+    screen.getByLabelText('asc-icon', {exact: false});
+  } catch (error2){
+    expect(error2).toBeDefined();
+  }
+
+  const filterButton = screen
+  
+});

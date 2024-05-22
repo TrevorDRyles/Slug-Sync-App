@@ -156,8 +156,9 @@ const GoalsListing = () => {
           
           <Button 
             style={{marginLeft: '8px', width: '9%'}} 
+            aria-label='sort-button'
             onClick={handleSort}>
-              {sort ? <IconSortAscending style={{width: 20, height: 20}}/> : <IconSortDescending style={{width: 20, height: 20}}/>}
+              {sort ? <IconSortAscending aria-label='asc-icon' style={{width: 20, height: 20}}/> : <IconSortDescending aria-label='desc-icon' style={{width: 20, height: 20}}/>}
           </Button>
         </div>
         {goals.map((goal, index) => (
