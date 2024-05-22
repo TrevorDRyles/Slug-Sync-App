@@ -1,4 +1,5 @@
 const {Pool} = require('pg');
+const db = require('./db');
 
 const pool = new Pool({
   host: 'localhost',
@@ -94,4 +95,25 @@ exports.viewGoal = async (req, res) => {
   }
 };
 
+exports.getAllCompleted = async (req, res) => {
+  const {id} = req.user;
+  const goals = await db.getAllCompletedGoals(id);
+  res.status(200).json(goals);
+};
 
+exports.getAllIncompleted = async (req, res) => {
+  const {id} = req.user;
+  const goals = await db.getAllIncompletedGoals(id);
+  res.status(200).json(goals);
+};
+
+exports.completeGoal = async (req, res) => {
+  const {id} = req.user;
+  const goalId = req.params.goal;
+  const completed = await db.completeGoal(id, goalId);
+  if (completed) {
+    res.status(200).json(completed);
+  } else {
+    res.status(404).send();
+  }
+};

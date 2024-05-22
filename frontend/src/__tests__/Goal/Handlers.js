@@ -36,7 +36,7 @@ export const goalDataEveryDay = {
   id: '1',
   title: 'Test Goal',
   description: 'Test Description',
-  recurrence: '1',
+  recurrence: '1 day',
   completed: false
 };
 

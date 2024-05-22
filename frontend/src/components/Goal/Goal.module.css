@@ -91,6 +91,26 @@
   font-size: 24px;
 }
 
+.goalBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.streakCount {
+  display: flex;
+}
+
+.goalBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.streakCount {
+  display: flex;
+}
+
 /*comments*/
 .commentsSection {
   margin-top: 20px;

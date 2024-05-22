@@ -48,9 +48,9 @@ exports.postSignup = async (data) => {
 // referenced from cse 186 code trevor ryles
 exports.getMemberByPasswordAndEmail = async (password, email) => {
   const selectQuery = `SELECT *
-                       FROM "user"
-                       where data ->> 'password' = crypt($1, 'cs')
-                         AND data ->> 'email' = $2`;
+  FROM "user"
+  where data ->> 'password' = crypt($1, 'cs')
+  AND data ->> 'email' = $2`;
   const query = {
     text: selectQuery,
     values: [password, email],
@@ -66,3 +66,58 @@ exports.getMemberByPasswordAndEmail = async (password, email) => {
   }));
 };
 
+exports.getAllCompletedGoals = async (userId) => {
+  const select = `SELECT 
+    g.id, 
+    g.goal->>'title' AS title,
+    g.goal->>'description' AS description,
+    g.goal->>'recurrence' AS recurrence,
+    ug.streak AS streak
+  FROM goal g
+  LEFT OUTER JOIN user_goal ug ON g.id = ug.goal_id
+  LEFT OUTER JOIN "user" u ON u.id = ug.user_id
+  WHERE ug.last_checked + (g.goal->>'recurrence')::interval > CURRENT_TIMESTAMP
+  AND ug.user_id = $1`;
+  const query = {
+    text: select,
+    values: [userId],
+  };
+  const {rows} = await pool.query(query);
+  return rows;
+};
+
+exports.getAllIncompletedGoals = async (userId) => {
+  const select = `SELECT 
+    g.id, 
+    g.goal->>'title' AS title,
+    g.goal->>'description' AS description,
+    g.goal->>'recurrence' AS recurrence,
+    ug.streak AS streak
+  FROM goal g
+  LEFT OUTER JOIN user_goal ug ON g.id = ug.goal_id
+  LEFT OUTER JOIN "user" u ON u.id = ug.user_id
+  WHERE ug.last_checked + (g.goal->>'recurrence')::interval < CURRENT_TIMESTAMP
+  AND ug.user_id = $1`;
+  const query = {
+    text: select,
+    values: [userId],
+  };
+  const {rows} = await pool.query(query);
+  return rows;
+};
+
+exports.completeGoal = async (userId, goalId) => {
+  const update = `UPDATE user_goal
+  SET last_checked = CURRENT_TIMESTAMP,
+  streak = streak + 1
+  WHERE user_id = $1
+  AND goal_id = $2
+  RETURNING goal_id`;
+  
+  const query = {
+    text: update,
+    values: [userId, goalId],
+  };
+  const {rows} = await pool.query(query);
+  return rows[0];
+};

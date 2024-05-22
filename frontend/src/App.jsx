@@ -8,6 +8,7 @@ import ViewGoal from "./components/Goal/View.jsx";
 import React, { useState } from 'react';
 import { LoginContext } from './contexts/Login.jsx';
 import Index from "@/components/Goal/Index.jsx";
+import { RefetchProvider } from './contexts/Refetch.jsx';
 
 /**
  * App
@@ -30,15 +31,17 @@ function App() {
   return (
   <MantineProvider theme={{height: '100vh'}} defaultColorScheme='light'>
     <LoginContext.Provider value={{accessToken, setAccessToken, userName, setUserName}}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" default element={<SignIn />} />
-            <Route path="/createGoal" default element={<CreateGoal />} />
-            <Route path="/goals" default element={<Index />} />
-            <Route path="/goal/:id" default element={<ViewGoal />} />
-            <Route path="/" default element={<Home />} />
-          </Routes>
-        </BrowserRouter>
+      <RefetchProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" default element={<SignIn />} />
+              <Route path="/createGoal" default element={<CreateGoal />} />
+              <Route path="/goals" default element={<Index />} />
+              <Route path="/goal/:id" default element={<ViewGoal />} />
+              <Route path="/" default element={<Home />} />
+            </Routes>
+          </BrowserRouter>
+        </RefetchProvider>
       </LoginContext.Provider>
     </MantineProvider>
   );
