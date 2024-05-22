@@ -165,6 +165,8 @@ test('GET /v0/goal with valid page, size, and search term ' +
         title: 'newtitle' + i,
         description: 'newdescription' + i,
         recurrence: '' + i,
+        startdate: '2024-05-10' + i,
+        enddate: '2024-05-20' + i,
       })
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${userToken1}`),
@@ -188,6 +190,8 @@ test('GET /v0/goal with undefined size and search term' +
         title: 'newtitle' + i,
         description: 'newdescription' + i,
         recurrence: '' + i,
+        startdate: '2024-05-10' + i,
+        enddate: '2024-05-20' + i,
       })
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${userToken1}`),
@@ -211,6 +215,8 @@ test('GET /v0/goal with undefined size and search term' +
         title: 'newtitle' + i,
         description: 'newdescription' + i,
         recurrence: '' + i,
+        startdate: '2024-05-10' + i,
+        enddate: '2024-05-20' + i,
       }));
   }
   await Promise.all(promises);
@@ -224,6 +230,8 @@ test('GET /v0/goal with undefined size and search term' +
       title: 'newtitle' + i,
       description: 'newdescription' + i,
       recurrence: '' + i,
+      startdate: '2024-05-10' + i,
+      enddate: '2024-05-20' + i,
     };
     // find matching object if it exists
     const matchingObject = res.body.find((obj) => {

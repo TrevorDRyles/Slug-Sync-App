@@ -187,8 +187,10 @@ function CreateGoal() {
               placeholder="Select start date"
               value={startDate}
               error={startDateError}
+              data-testid={"startdate"}
               onChange={handleStartDateChange}
             />
+<<<<<<< HEAD
             <DatePickerInput
               leftSection={icon}
               style={{ marginBottom: 15 }}
@@ -199,6 +201,19 @@ function CreateGoal() {
               onChange={handleEndDateChange}
               placeholder="Select end date"
             />
+=======
+              <DatePickerInput
+                leftSection={icon}
+                style={{ marginBottom: 15 }}
+                leftSectionPointerEvents="none"
+                label="End Date"
+                value={endDate}
+                error={endDateError}
+                data-testid={"enddate"}
+                onChange={handleEndDateChange}
+                placeholder="Select end date"
+              />
+>>>>>>> 16544ac (more test changes, still a work in progress, frontend at 95% code coverage and backend fully passes)
             <Button data-testid="submit" type="submit" variant="outline" color="blue">
               Submit
             </Button>
