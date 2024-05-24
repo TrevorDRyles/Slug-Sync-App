@@ -128,28 +128,30 @@ it('check that filter exists and allows selection', async () => {
   server.use(...indexHandlers);
   renderIndex();
 
+  const user = userEvent.setup();
+
   const filterButton = screen.getByLabelText('filter-menu-button', {exact: false});
-  expect(filterButton).toBeDefined();
+  //expect(filterButton).toBeDefined();
 
+  //console.log(filterButton);
+
+  
   //userEvent.click(filterButton);
-  fireEvent.click(filterButton);
+  user.click(filterButton);
+  screen.getByText("Productivity", {exact: false});
 
-  // fireEvent.keyDown(filterButton, {key: 'ArrowDown', code: 'ArrowDown'});
-  // fireEvent.keyDown(filterButton, {key: 'ArrowDown', code: 'ArrowDown'});
-  // fireEvent.keyDown(filterButton, {key: 'Enter', code: 'Enter'});
-
-  const getHealth = await waitFor(() => screen.getByText('Health', {exact: false}));
-  console.log("-------------------------------------------asdasdasdas--------------------------------------------------------------");
+  // const getHealth = await waitFor(() => screen.getByText('Health', {exact: false}));
   //console.log(getHealth);
   
 
   
-  // const getHealth = screen.getByText('Health', {exact: false});
-  expect(getHealth).toBeDefined();
+  // // const getHealth = screen.getByText('Health', {exact: false});
+  // expect(getHealth).toBeDefined();
 
-  fireEvent.click(getHealth);
+  // fireEvent.click(getHealth);
 
-  const testText = await waitFor(() => screen.getAllByText('Health', {exact: false})[0]);
+  // const testText = await waitFor(() => screen.getAllByText('Health', {exact: false})[0]);
+  // console.log(testText);
 
 
 

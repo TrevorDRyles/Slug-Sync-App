@@ -105,6 +105,7 @@ test('GET /v0/goal with valid page, size, and search term ' +
         title: 'newtitle' + i,
         description: 'newdescription' + i,
         recurrence: '' + i,
+        tag: '' + i,
       }));
   }
   await Promise.all(promises);
@@ -118,6 +119,7 @@ test('GET /v0/goal with valid page, size, and search term ' +
       title: 'newtitle' + i,
       description: 'newdescription' + i,
       recurrence: '' + i,
+      tag: '' + i,
     };
     // find matching object if it exists
     const matchingObject = res.body.find((obj) => {
@@ -142,6 +144,7 @@ test('GET /v0/goal with undefined size and search term' +
         title: 'newtitle' + i,
         description: 'newdescription' + i,
         recurrence: '' + i,
+        tag: '' + i,
       }));
   }
   await Promise.all(promises);
@@ -155,6 +158,55 @@ test('GET /v0/goal with undefined size and search term' +
       title: 'newtitle' + i,
       description: 'newdescription' + i,
       recurrence: '' + i,
+      tag: '' + i,
+    };
+    // find matching object if it exists
+    const matchingObject = res.body.find((obj) => {
+      return (
+        obj.title === expectedObject.title &&
+        obj.description === expectedObject.description &&
+        obj.recurrence === expectedObject.recurrence &&
+        obj.tag === expectedObject.tag
+      );
+    });
+    expect(matchingObject).toBeDefined();
+  }
+});
+
+test('GET /v0/goal with valid filter' +
+  'returns goal data ', async () => {
+  // create sample goal data
+  const promises = [];
+  for (let i = 1; i <= 5; i++) {
+    promises.push(request.post('/v0/goal')
+      .send({
+        title: 'newtitle' + i,
+        description: 'newdescription' + i,
+        recurrence: '' + i,
+        tag: 'Athletics' + i,
+      }));
+  }
+  for (let i = 1; i <= 5; i++) {
+    promises.push(request.post('/v0/goal')
+      .send({
+        title: 'newtitle' + i,
+        description: 'newdescription' + i,
+        recurrence: '' + i,
+        tag: 'Hobbies' + i,
+      }));
+  }
+  await Promise.all(promises);
+
+  const res = await supertest(server)
+    .get('/v0/goal?size=100&page=1&search=title&tag=Athletics');
+  expect(res.status).toBe(200);
+  expect(res.body.length).toBe(5);
+  for (let i = 1; i <= 5; i++) {
+    const expectedObject = {
+      title: 'newtitle' + i,
+      description: 'newdescription' + i,
+      recurrence: '' + i,
+      tag: '' + i,
     };
     // find matching object if it exists
     const matchingObject = res.body.find((obj) => {
@@ -164,6 +216,7 @@ test('GET /v0/goal with undefined size and search term' +
         obj.recurrence === expectedObject.recurrence
       );
     });
+
     expect(matchingObject).toBeDefined();
   }
 });

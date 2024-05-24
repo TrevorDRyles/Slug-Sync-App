@@ -68,6 +68,7 @@ const GoalsListing = () => {
 
   const handleFilterTag = (tag) => {
     if (tag === undefined) {
+      setFilterTag('');
       return;
     }
     let tagText = tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();

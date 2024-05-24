@@ -204,3 +204,45 @@ test('Filtering goals by search', async () => {
   await page.goto('http://localhost:3000/goals');
   await typeIntoSearchAndExpectFilter();
 });
+
+async function createGoalWithTag(title, description, arrowsDownOnRecurrence, arrowsDownOnTags = 0, tag=undefined) {
+  // https://chat.openai.com/share/67880247-ed5d-4614-af95-1b17ae8a6d05
+  await page.goto('http://localhost:3000/createGoal');
+
+  const titleInput = await page
+    .waitForSelector('input[id="title"]');
+  await titleInput.type(title);
+
+  const descriptionInput = await page
+    .waitForSelector('textarea[id="description"]');
+  await descriptionInput.type(description);
+
+  await page.waitForSelector('#recurrence');
+  await page.click('#recurrence');
+  for (let i = 0; i < arrowsDownOnRecurrence; i++) {
+    await page.keyboard.press('ArrowDown'); // Move down in the dropdown
+  }
+  await page.keyboard.press('Enter'); // Select the option
+
+  if (arrowsDownOnTags > 0){
+    await page.waitForSelector('#tag');
+    await page.click('#tag');
+    for (let i = 0; i < arrowsDownOnTags; i++) {
+      await page.keyboard.press('ArrowDown'); //Using same var as recurrence because of similar format
+    }
+    await page.keyboard.press('Enter'); // Select the option
+  }
+  
+  await page.$eval(`[type="submit"]`, (element) =>
+    element.click(),
+  );
+  await page.waitForNavigation();
+}
+
+
+
+test('Create goals with tags', async () => {
+  await createGoalWithTag('GoalTitle1', 'GoalDescription', 3, 5);
+  await createGoalWithTag('GoalTitle2', 'GoalDescription', 4, 4);
+  await createGoalWithTag('GoalTitle3', 'GoalDescription', 5, 0); // no tag should be selected
+});
