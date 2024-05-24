@@ -67,10 +67,6 @@ const GoalsListing = () => {
   // }
 
   const handleFilterTag = (tag) => {
-    if (tag === undefined) {
-      setFilterTag('');
-      return;
-    }
     let tagText = tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();
     setFilterTag(tagText);
   };
@@ -143,7 +139,7 @@ const GoalsListing = () => {
 
               {
                 tags.map((tag, index) => (
-                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => handleFilterTag(event.target.innerText)}>
+                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => handleFilterTag(event.target.textContent)}>
                     <Badge 
                       data-testid={"tag"} 
                        

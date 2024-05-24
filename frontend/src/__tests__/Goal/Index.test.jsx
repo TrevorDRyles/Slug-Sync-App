@@ -138,9 +138,9 @@ it('check that filter exists and allows selection', async () => {
 
   const getBadge = await waitFor(() => screen.getByLabelText('filter-badge', {exact: false}));
 
-  // const getFilterRemoval = await waitFor(() => screen.getByLabelText('remove-filter', {exact: false}));
-  // expect(getFilterRemoval).toBeDefined();
-  // fireEvent.click(getFilterRemoval);
+  const getFilterRemoval = await waitFor(() => screen.getByLabelText('remove-filter', {exact: false}));
+  expect(getFilterRemoval).toBeDefined();
+  fireEvent.click(getFilterRemoval);
 
   try {
     screen.getByText('filter-badge', {exact: false});
