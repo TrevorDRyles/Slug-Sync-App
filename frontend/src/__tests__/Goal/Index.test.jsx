@@ -127,41 +127,20 @@ it('Ensure no tag if tag not selected', async () => {
 it('check that filter exists and allows selection', async () => {
   server.use(...indexHandlers);
   renderIndex();
-
-  const user = userEvent.setup();
+  //const user = userEvent.setup();
 
   const filterButton = screen.getByLabelText('filter-menu-button', {exact: false});
-  //expect(filterButton).toBeDefined();
-
-  //console.log(filterButton);
-
+  fireEvent.click(filterButton)
+  await waitFor(() => screen.getByText("Productivity", {exact: false}));
   
-  //userEvent.click(filterButton);
-  user.click(filterButton);
-  screen.getByText("Productivity", {exact: false});
+  const getHealth = await waitFor(() => screen.getByLabelText('menu-item-Health', {exact: false}));
+  fireEvent.click(getHealth);
 
-  // const getHealth = await waitFor(() => screen.getByText('Health', {exact: false}));
-  //console.log(getHealth);
-  
-
-  
-  // // const getHealth = screen.getByText('Health', {exact: false});
-  // expect(getHealth).toBeDefined();
-
-  // fireEvent.click(getHealth);
-
-  // const testText = await waitFor(() => screen.getAllByText('Health', {exact: false})[0]);
-  // console.log(testText);
-
-
+  const getBadge = await waitFor(() => screen.getByLabelText('filter-badge', {exact: false}));
 
   // const getFilterRemoval = await waitFor(() => screen.getByLabelText('remove-filter', {exact: false}));
   // expect(getFilterRemoval).toBeDefined();
   // fireEvent.click(getFilterRemoval);
-
-  // console.log(getFilterRemoval);
-
-  console.log("-------------------------------------------asdasdasdas--------------------------------------------------------------");
 
   try {
     screen.getByText('filter-badge', {exact: false});

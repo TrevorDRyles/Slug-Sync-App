@@ -143,7 +143,7 @@ const GoalsListing = () => {
 
               {
                 tags.map((tag, index) => (
-                  <Menu.Item key={index} onClick={(event) => handleFilterTag(event.target.innerText)}>
+                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => handleFilterTag(event.target.innerText)}>
                     <Badge 
                       data-testid={"tag"} 
                        
