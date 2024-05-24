@@ -11,12 +11,22 @@ const pool = new Pool({
 
 exports.createGoal = async (req, res) => {
   const goal = req.body;
+  const user = req.user;
+  goal.author = user['id'];
+  // todo: abstract these into db.js?
   const query = `
         INSERT INTO goal(goal)
         VALUES ($1)
         RETURNING *
   `;
   const result = await pool.query(query, [goal]);
+  memberGoalData = {
+    'member_id': user['id'],
+    'goal_id': result['rows'][0]['id'],
+    'lastChecked': new Date('1900-01-01T00:00:00Z').toISOString(),
+    'streak': '0',
+  };
+  await db.joinGoal(memberGoalData);
   res.status(200).json({id: result.rows[0].id, ...result.rows[0].goal});
 };
 
@@ -46,15 +56,15 @@ exports.getPostsByPageAndSize = async function(req, res) {
   }
 
   const selectQuery = `
-SELECT *
-FROM
-    goal     -- the post's member is the logged in user
-WHERE goal->>'title' ILIKE $3
-ORDER BY
-    goal->>'members'
-DESC
-LIMIT $2
-OFFSET $1`;
+    SELECT *
+    FROM
+        goal     -- the post's member is the logged in user
+    WHERE goal->>'title' ILIKE $3
+    ORDER BY
+        goal->>'members'
+    DESC
+    LIMIT $2
+    OFFSET $1`;
   const query = {
     text: selectQuery,
     values: [(pageNum - 1) * size, size, `%${searchTerm}%`],
@@ -93,6 +103,66 @@ exports.viewGoal = async (req, res) => {
   } else {
     res.status(200).json({id: rows[0].id, ...rows[0].goal});
   }
+};
+
+exports.deleteGoal = async (req, res) => {
+  const goalId = req.params.id;
+  const user = req.user;
+
+  goalData = await db.getGoal(goalId);
+  if (goalData == null) {
+    return res.status(404).send();
+  }
+
+  if (goalData.author != user.id) {
+    return res.status(401).send();
+  }
+  db.deleteGoal(goalId);
+  res.status(200).send();
+};
+
+exports.joinGoal = async (req, res) => {
+  const user = req.user;
+  const goalId = req.path.split('/')[3];
+  if (await db.isMemberInGoal(user.id, goalId) == true) {
+    console.log('user alreaady in goal!');
+    return res.status(400).json({message: 'User already in goal!'});
+  }
+
+  memberGoalData = {
+    'member_id': user.id,
+    'goal_id': goalId,
+    'lastChecked': new Date().toISOString(),
+    'streak': '0',
+  };
+  await db.joinGoal(memberGoalData);
+
+  res.status(200).json({message: 'Successfully joined goal!'});
+};
+
+exports.leaveGoal = async (req, res) => {
+  const user = req.user;
+  const goalToLeaveId = req.path.split('/')[3];
+
+  const goalData = await db.getGoal(goalToLeaveId);
+
+  if (goalData == null) {
+    return res.status(404).send();
+  }
+  
+  if (goalData.author == user.id) {
+    console.log('cannot leave goal as the creator. must delete goal.');
+    return res.status(401).send();
+  }
+
+  if (await db.isMemberInGoal(user.id, goalToLeaveId) == false) {
+    console.log('not in the goal anyway'); // hella professional 🥶🥶🥶🥶🥶
+    return res.status(401).send();
+  }
+
+  db.leaveGoal(user.id, goalToLeaveId);
+
+  res.status(200).json({'message': 'Successfully left the goal'});
 };
 
 exports.getAllCompleted = async (req, res) => {

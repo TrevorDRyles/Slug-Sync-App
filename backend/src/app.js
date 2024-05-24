@@ -36,7 +36,9 @@ app.post('/v0/signup', auth.signup);
 
 app.post('/v0/login', auth.login);
 
-app.post('/v0/goal', goal.createGoal);
+app.post('/v0/goal', auth.check, goal.createGoal);
+
+app.post('/v0/goal/:id/join', auth.check, goal.joinGoal);
 
 app.get('/v0/goal/completed', auth.check, goal.getAllCompleted);
 
@@ -44,11 +46,15 @@ app.get('/v0/goal/incompleted', auth.check, goal.getAllIncompleted);
 
 app.get('/v0/goal/:id', goal.viewGoal);
 
-app.post('/v0/goal/:id/comment', comment.addCommentToGoal);
+app.post('/v0/goal/:id/comment', auth.check, comment.addCommentToGoal);
 
 app.get('/v0/goal/:id/comment', comment.getAllCommentsOnGoal);
 
 app.get('/v0/user/:id', user.getUserById);
+
+app.delete('/v0/goal/:id', auth.check, goal.deleteGoal);
+
+app.post('/v0/goal/:id/leave', auth.check, goal.leaveGoal);
 
 app.get('/v0/goal', goal.getPostsByPageAndSize);
 

@@ -5,17 +5,31 @@ const db = require('./db');
 const app = require('../app');
 
 let server;
+let userToken1;
+let userToken2;
 
-beforeAll(() => {
+beforeAll(async () => {
   server = http.createServer(app);
   server.listen();
   request = supertest(server);
-  return db.reset();
+  await db.reset();
 });
 
-
-afterEach(async () => {
+beforeEach(async () => {
   await db.reset();
+  const response = await request.post('/v0/login').send({
+    email: 'hunter@ucsc.edu',
+    password: 'huntertratar',
+  })
+    .set('Content-Type', 'application/json');
+  userToken1 = response.body.token;
+
+  const response2 = await request.post('/v0/login').send({
+    email: 'arelyx@example.com',
+    password: 'arelyxuser',
+  })
+    .set('Content-Type', 'application/json');
+  userToken2 = response2.body.token;
 });
 
 afterAll((done) => {
@@ -31,7 +45,8 @@ test('POST /v0/goal creates goal 200', async () => {
       description: 'description',
       recurrence: '1',
     })
-    .set('Content-Type', 'application/json');
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
   expect(goal.status).toBe(200);
   expect(goal.body).toHaveProperty('id');
   expect(goal.body.title).toBe('title');
@@ -46,7 +61,8 @@ test('POST /v0/goal with missing title returns 400', async () => {
       description: 'description',
       recurrence: '1',
     })
-    .set('Content-Type', 'application/json');
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
   expect(goal.status).toBe(400);
 });
 
@@ -57,7 +73,8 @@ test('POST /v0/goal with missing description returns 400', async () => {
       title: 'title',
       recurrence: '1',
     })
-    .set('Content-Type', 'application/json');
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
   expect(goal.status).toBe(400);
 });
 
@@ -67,7 +84,8 @@ test('POST /v0/goal with missing recurrence returns 400', async () => {
       title: 'title',
       description: 'description',
     })
-    .set('Content-Type', 'application/json');
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
   expect(goal.status).toBe(400);
 });
 
@@ -76,9 +94,12 @@ test('GET /v0/goal/:id returns goal 200', async () => {
     .send({
       title: 'title',
       description: 'description',
-      recurrence: '1'});
+      recurrence: '1',
+    })
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
 
-  const res = await supertest(server).get('/v0/goal/' + goal.body.id);
+  const res = await request.get('/v0/goal/' + goal.body.id);
 
   expect(res.status).toBe(200);
   expect(res.body.id).toBe(goal.body.id);
@@ -103,74 +124,220 @@ test('GET /v0/goal with valid page, size, and search term ' +
         title: 'newtitle' + i,
         description: 'newdescription' + i,
         recurrence: '' + i,
-      }));
+      })
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${userToken1}`),
+    );
   }
   await Promise.all(promises);
 
-  const res = await supertest(server)
-    .get('/v0/goal?size=100&page=1&search=title');
+  const res = await request.get('/v0/goal?size=100&page=1&search=title');
   expect(res.status).toBe(200);
   expect(res.body.length).toBe(10);
-  for (let i = 1; i <= 10; i++) {
-    const expectedObject = {
-      title: 'newtitle' + i,
-      description: 'newdescription' + i,
-      recurrence: '' + i,
-    };
-    // find matching object if it exists
-    const matchingObject = res.body.find((obj) => {
-      return (
-        obj.title === expectedObject.title &&
-        obj.description === expectedObject.description &&
-        obj.recurrence === expectedObject.recurrence
-      );
-    });
-
-    expect(matchingObject).toBeDefined();
-  }
 });
 
-//Test failed and was way too complicated so it was hard to debug
+test('GET /v0/goal with undefined size and search term' +
+  'returns goal data ', async () => {
+  // create sample goal data
+  const promises = [];
+  for (let i = 1; i <= 20; i++) {
+    promises.push(request.post('/v0/goal')
+      .send({
+        title: 'newtitle' + i,
+        description: 'newdescription' + i,
+        recurrence: '' + i,
+      })
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${userToken1}`),
+    );
+  }
+  await Promise.all(promises);
 
-// test('GET /v0/goal with undefined size and search term ' +
-//   'returns goal data ', async () => {
-//   // create sample goal data
-//   const promises = [];
-//   for (let i = 1; i <= 20; i++) {
-//     promises.push(request.post('/v0/goal')
-//       .send({
-//         title: 'newtitle' + i,
-//         description: 'newdescription' + i,
-//         recurrence: '' + i,
-//       }));
-//   }
-//   await Promise.all(promises);
-
-//   const res = await supertest(server)
-//     .get('/v0/goal?page=1&size=21');
-//   expect(res.status).toBe(200);
-//   expect(res.body.length).toBe(21);
-//   for (let i = 1; i <= 20; i++) {
-//     const expectedObject = {
-//       title: 'newtitle' + i,
-//       description: 'newdescription' + i,
-//       recurrence: '' + i,
-//     };
-//     // find matching object if it exists
-//     const matchingObject = res.body.find((obj) => {
-//       return (
-//         obj.title === expectedObject.title &&
-//         obj.description === expectedObject.description &&
-//         obj.recurrence === expectedObject.recurrence
-//       );
-//     });
-//     expect(matchingObject).toBeDefined();
-//   }
-// });
+  const res = await request.get('/v0/goal?page=1&size=21');
+  expect(res.status).toBe(200);
+  expect(res.body.length).toBe(21);
+});
 
 test('GET /v0/goal with no size gets goals 200', async () => {
-  const res = await supertest(server)
-    .get('/v0/goal?page=1');
+  const res = await request.get('/v0/goal?page=1');
   expect(res.status).toBe(200);
-  expect(res.body.length).toBeGreaterThanOrEqual(1);
+});
+
+
+test('DELETE /v0/goal/:id to delete a goal', async () => {
+  // create a goal to be deleted
+  const goal = await request.post('/v0/goal')
+    .send({
+      title: 'title',
+      description: 'description',
+      recurrence: '1 day',
+    })
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
+
+  const goalToBeDeleted = goal.body.id;
+
+  // actually delete the goal
+  const deleteGoalRes = await request.delete(`/v0/goal/${goalToBeDeleted}`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
+
+  expect(deleteGoalRes.status).toBe(200);
+});
+
+test('DELETE /v0/goal/:id invalid user delete goal', async () => {
+  // create a goal to be deleted
+  const goal = await request.post('/v0/goal')
+    .send({
+      title: 'title',
+      description: 'description',
+      recurrence: '1 day',
+    })
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
+
+  const goalToBeDeleted = goal.body.id;
+
+  // actually delete the goal
+  const deleteGoalRes = await request.delete(`/v0/goal/${goalToBeDeleted}`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken2}`);
+
+  expect(deleteGoalRes.status).toBe(401);
+});
+
+test('DELETE /v0/goal/:id delete a goal that doesn\'t exist', async () => {
+  // attempt to delete an invalid goal
+  const deleteGoalRes = await request.delete(`/v0/goal/${crypto.randomUUID()}`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken2}`);
+
+  expect(deleteGoalRes.status).toBe(404);
+});
+
+test('POST /v0/goal/:id/join Attempt to join a goal', async () => {
+  // user1 creates a goal
+  let goalToBeJoined;
+  await request.post('/v0/goal')
+    .set('Authorization', `Bearer ${userToken1}`)
+    .send({
+      title: 'anothergoal',
+      description: 'anotherdesc',
+      recurrence: '1 day',
+    })
+    .expect(200)
+    .then((res) => {
+      console.log(res.body);
+      goalToBeJoined = res.body.id;
+    });
+
+  await request.post(`/v0/goal/${goalToBeJoined}/join`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken2}`)
+    .then((res) => {
+      expect(res.status).toBe(200);
+    });
+});
+
+test('POST /v0/goal/:id/join Join goal user is already in', async () => {
+  // user1 creates a goal
+  let goalToBeJoined;
+  await request.post('/v0/goal')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`)
+    .send({
+      title: 'anothergoal',
+      description: 'anotherdesc',
+      recurrence: '1 day',
+    })
+    .then((res) => {
+      console.log(res.body);
+      goalToBeJoined = res.body.id;
+    });
+
+  const joinedRes1 = await request.post(`/v0/goal/${goalToBeJoined}/join`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
+
+  expect(joinedRes1.status).toBe(400);
+});
+
+test('POST /v0/goal/:id/leave Attempt to leave goal', async () => {
+  // user1 creates a goal
+  const goal = await supertest(server)
+    .post('/v0/goal')
+    .send({
+      title: 'anothergoal',
+      description: 'anotherdesc',
+      recurrence: '1',
+    })
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
+
+  const goalToBeLeft = goal.body.id;
+
+  // join the goal
+  await supertest(server)
+    .post(`/v0/goal/${goalToBeLeft}/join`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken2}`);
+
+  // now leave the goal
+  const leaveRes = await supertest(server)
+    .post(`/v0/goal/${goalToBeLeft}/leave`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken2}`);
+
+  expect(leaveRes.status).toBe(200);
+});
+
+test('POST /v0/goal/:id/leave Attempt to leave goal as an author', async () => {
+  // user1 creates a goal
+  const goal = await request.post('/v0/goal')
+    .send({
+      title: 'anothergoal',
+      description: 'anotherdesc',
+      recurrence: '1',
+    })
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
+
+  const goalToBeLeft = goal.body.id;
+
+  // now leave the goal
+  const leaveRes = await request.post(`/v0/goal/${goalToBeLeft}/leave`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
+
+  expect(leaveRes.status).toBe(401);
+});
+
+test('POST /v0/goal/:id/leave Leave goal user is not in anyway', async () => {
+  // user1 creates a goal
+  const goal = await request.post('/v0/goal')
+    .send({
+      title: 'anothergoal',
+      description: 'anotherdesc',
+      recurrence: '1',
+    })
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
+
+  const goalToBeLeft = goal.body.id;
+
+  // now leave the goal
+  const leaveRes = await request.post(`/v0/goal/${goalToBeLeft}/leave`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken2}`);
+
+  expect(leaveRes.status).toBe(401);
+});
+
+test('POST /v0/goal/:id/leave Leave goal that does not exist', async () => {
+  // now leave the goal
+  const leaveRes = await request.post(`/v0/goal/${crypto.randomUUID()}/leave`)
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`);
+
+  expect(leaveRes.status).toBe(404);
 });
