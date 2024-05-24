@@ -35,6 +35,55 @@ exports.postSignup = async (data) => {
   }
 };
 
+/**
+ * Inserts a new record into the "member_goal" table, linking a user to a goal.
+ * @async
+ * @function joinGoal
+ * @param {Object} data - Data object containing information for the insertion.
+ * @param {string} data.member_id - The ID of the user to link to the goal.
+ * @param {string} data.goal_id - The ID of the goal to link to the user.
+ * @param {Object} data.jsonb - Additional data to be stored in "data"
+ * @return {Promise<Object>} - A Promise that resolves.
+ */
+exports.joinGoal = async (data) => {
+  const insert = `
+    INSERT INTO "user_goal"("user_id", "goal_id", "last_checked", "streak")
+    VALUES ($1, $2, $3, $4)
+  `;
+  const query = {
+    text: insert,
+    values: [data.member_id, data.goal_id, data.lastChecked, data.streak],
+  };
+
+  await pool.query(query);
+};
+
+exports.getGoal = async (goalId) => {
+  const goalQuery = {
+    text: `
+      SELECT * FROM goal WHERE id = $1;
+    `,
+    values: [goalId],
+  };
+  const {rows} = await pool.query(goalQuery);
+  if (rows.length === 0) {
+    return null;
+  } else {
+    return {id: rows[0].id, ...rows[0].goal};
+  }
+};
+
+exports.deleteGoal = async (goalId) => {
+  const deleteGoalQuery = {
+    text: `
+      DELETE FROM "goal"
+      WHERE id = $1
+    `,
+    values: [goalId],
+  };
+  await pool.query(deleteGoalQuery);
+};
+
 // referenced from cse 186 code trevor ryles
 // exports.selectAllUsers = async () => {
 //   const select = 'SELECT * FROM "user"';
@@ -120,4 +169,46 @@ exports.completeGoal = async (userId, goalId) => {
   };
   const {rows} = await pool.query(query);
   return rows[0];
+};
+/**
+ * 
+ * @async
+ * @function isMemberInGoal
+ * @param {string} userId - The ID of the user/member to check.
+ * @param {string} goalId - The ID of the goal to check.
+ * @return {Promise<boolean>}
+ */
+exports.isMemberInGoal = async (userId, goalId) => {
+  const query = {
+    text: `
+      SELECT EXISTS (
+        SELECT 1 FROM "user_goal"
+        WHERE user_id = $1 AND goal_id = $2
+      )
+    `,
+    values: [userId, goalId],
+  };
+  const result = await pool.query(query);
+  console.log(result.rows);
+  return result.rows[0].exists;
+};
+
+/**
+ * 
+ * @async
+ * @function deleteMemberGoalByUserAndGoalId
+ * @param {string} userId - The ID of the user/member.
+ * @param {string} goalId - The ID of the goal.
+ * @return {Promise<Object>}
+ */
+exports.leaveGoal = async (userId, goalId) => {
+  const deleteQuery = {
+    text: `
+      DELETE FROM "user_goal"
+      WHERE user_id = $1 AND goal_id = $2
+    `,
+    values: [userId, goalId],
+  };
+
+  await pool.query(deleteQuery);
 };

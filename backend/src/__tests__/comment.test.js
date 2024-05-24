@@ -4,13 +4,27 @@ const http = require('http');
 const db = require('./db');
 const app = require('../app');
 const USER_ID = '1e0d7c46-2194-4a30-b8e5-1b0a7c287e80';
+
 let server;
+let accessToken;
 
 beforeAll(() => {
   server = http.createServer(app);
   server.listen();
   request = supertest(server);
   return db.reset();
+});
+
+beforeEach(async () => {
+  const credentials = {
+    'email': 'hunter@ucsc.edu',
+    'password': 'huntertratr',
+  };
+  await request.post('/v0/login')
+    .send(credentials)
+    .then((res) => {
+      accessToken = res.body.token;
+    });
 });
 
 
@@ -32,10 +46,11 @@ async function createGoal() {
     .send({
       title: 'title',
       description: 'description',
-      recurrence: '1',
+      recurrence: '1 day',
       comments: [],
     })
-    .set('Content-Type', 'application/json');
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer: ${accessToken}`);
   return goal;
 }
 
@@ -47,10 +62,10 @@ async function createGoal() {
 async function createComment(goal) {
   const comment = await request.post(`/v0/goal/${goal.body.id}/comment`)
     .send({
-      userId: USER_ID,
       content: 'content',
-      date: new Date(),
+      date: new Date().toISOString(),
     })
+    .set('Authorization', `Bearer: ${accessToken}`)
     .set('Content-Type', 'application/json');
   return comment;
 }
@@ -69,20 +84,20 @@ test('POST /v0/:goalId/comment creates comment 200', async () => {
 test('POST /v0/:goalId/comment with missing goal returns 404', async () => {
   const comment = await request.post(`/v0/goal/${crypto.randomUUID()}/comment`)
     .send({
-      userId: USER_ID,
       content: 'content',
       date: new Date(),
     })
-    .set('Content-Type', 'application/json');
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer: ${accessToken}`);
   expect(comment.status).toBe(404);
 });
 
 test('POST /v0/:goalId/comment with missing content returns 400', async () => {
   const comment = await request.post(`/v0/goal/${crypto.randomUUID()}/comment`)
     .send({
-      userId: USER_ID,
       date: new Date(),
     })
+    .set('Authorization', `Bearer: ${accessToken}`)
     .set('Content-Type', 'application/json');
   expect(comment.status).toBe(400);
 });

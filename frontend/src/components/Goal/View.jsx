@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Paper, Text, Divider, Button } from '@mantine/core';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Paper, Text, Divider, Button, Modal } from '@mantine/core';
+import { useParams, useNavigate } from 'react-router-dom';
 import styles from './Goal.module.css';
 import Header from "@/components/Header.jsx";
 import { GoalCard } from './GoalCard';
 import Sidebar from "@/components/Sidebar.jsx";
 import { useDisclosure } from "@mantine/hooks";
+import { LoginContext } from '../../contexts/Login';
 
 // https://chatgpt.com/share/1e49ddf9-1e32-42f0-809e-2c7b4d472f53
 const ViewGoal = () => {
@@ -18,13 +19,14 @@ const ViewGoal = () => {
   const [commentsChanged, setCommentsChanged] = useState(false);
   const [userNames, setUserNames] = useState({});
   const [error, setError] = useState(null);
+  const {accessToken} = useContext(LoginContext)
 
   useEffect(() => {
     fetch(`http://localhost:3010/v0/goal/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${bearerToken}`,
+        'Authorization': `Bearer ${accessToken}`,
       },
     })
       .then((res) => {
@@ -46,7 +48,7 @@ const ViewGoal = () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${bearerToken}`,
+        'Authorization': `Bearer ${accessToken}`,
       },
     })
       .then((res) => {
@@ -63,7 +65,7 @@ const ViewGoal = () => {
         setError('Error getting comments');
       });
     setCommentsChanged(false);
-  }, [id, commentsChanged]);
+  }, [id, commentsChanged, accessToken]);
 
   // load usernames from the comment
   useEffect(() => {
@@ -103,9 +105,9 @@ const ViewGoal = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${bearerToken}`,
+        'Authorization': `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ content: newComment, userId: '1e0d7c46-2194-4a30-b8e5-1b0a7c287e80', date: new Date() }),
+      body: JSON.stringify({ content: newComment, date: new Date() }),
     })
       .then((res) => {
         if (!res.ok) {
@@ -191,12 +193,70 @@ const ViewGoal = () => {
   }
 
   // https://chatgpt.com/share/23b6a8ff-7ebf-45d9-99c1-75a00eeaf8d8
+  const handleDelete = () => {
+    fetch(`http://localhost:3010/v0/goal/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`, 
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw res;
+        }
+        return;
+      })
+      .then(() => {
+        console.log('Goal deleted successfully');
+        navigate('/goals'); 
+      })
+      .catch((err) => {
+        console.log('Error deleting goal: ' + err);
+      });
+  };
+
+  const handleLeave = () => {
+    fetch(`http://localhost:3010/v0/goal/${id}/leave`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw res;
+        }
+        return res.json();
+      })
+      .then(() => {
+        console.log('Left goal successfully');
+        navigate('/goals');
+      })
+      .catch((err) => {
+        console.log('Error leaving goal: ' + err);
+      });
+  };
+
+  const [opened, { open, close }] = useDisclosure(false);
+
   return (
     <>
       <div>{error}</div>
       <Header toggleSidebar={toggleSidebar} />
 
       <div className={styles.container}>
+      <Modal opened={opened} onClose={close} title="Delete Goal">
+        <p>Are you sure you would like to delete this goal?</p>
+        <Button onClick={handleDelete} fullWidth variant="outline" color="red">
+          Yes, confirm delete
+        </Button>
+        <br></br>
+        <Button onClick={close} fullWidth>
+          Nevermind
+        </Button>
+      </Modal>
         <div className={`${styles.column} ${styles.goalColumn}`}>
           {goalData ? (
             <>
@@ -237,6 +297,14 @@ const ViewGoal = () => {
                   <Button aria-label={'Post comment'} onClick={handleAddComment} className={styles.commentButton}>
                     Add Comment
                   </Button>
+              <br></br>
+              <br></br>
+              <Button onClick={open} variant="outline" color="red">
+                Delete goal
+              </Button>
+              <Button onClick={handleLeave} variant="outline" color="red">
+                Leave Goal
+              </Button>
                 </div>
               </div>
             </>

@@ -61,6 +61,8 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateGoal'
+      security:
+        - bearerAuth: []
     get:
       tags:
         - get goals
@@ -96,6 +98,72 @@ paths:
                 $ref: '#/components/schemas/Goals'
         default:
           description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /goal/{id}/join:
+    post:
+      tags:
+        - join goal
+      summary: Join a goal
+      parameters:
+        - name: id
+          in: path
+          description: Id of the goal
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Successful join
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JoinedGoalResponse'
+        400:
+          description: Bad request. Already joined goal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlreadyJoinedGoalResponse'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+  /goal/{id}/leave:
+    post:
+      tags:
+        - leave goal
+      summary: Leave a goal
+      parameters:
+        - name: id
+          in: path
+          description: Id of the goal
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successfully left the goal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeftGoalResponse'
+        401:
+          description: Unauthorized
+        404:
+          description: Goal not found
+        default:
+          description: Unexpected error
           content:
             application/json:
               schema:
@@ -159,11 +227,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - delete goal
+      summary: delete goal
+      parameters:
+        - name: id
+          in: path
+          description: Id of goal
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Successful
+        401:
+          description: Unauthorized
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
   /goal/{id}/comment:
     post:
+      security:
+        - bearerAuth: []
       tags:
-        - get goal
-      summary: get goal
+        - Post a new comment on a goal
+      summary: Post a new comment on a goal
       parameters:
         - name: id
           in: path
@@ -323,14 +420,10 @@ components:
         content:
           type: string
           description: content of comment
-        username:
-          type: string
-          description: username of comment
         date:
           type: string
+          format: date-time
           description: date of comment
-      example:
-        description: "new comment"
     CommentResponse:
       type: object
       properties:
@@ -417,6 +510,7 @@ components:
           type: string
       required:
         - token
+
     User:
       type: object
       properties:
@@ -425,6 +519,39 @@ components:
           format: uuid
         username:
           type: string
+
+    JoinedGoalResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Confirmation message of joining the goal
+      example:
+        message: "Successfully joined the goal"
+
+    AlreadyJoinedGoalResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Error message. You've already joined this goal!
+      example:
+        message: "You have already joined this goal"
+
+    LeftGoalResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Confirmation message for leaving the goal
+      example:
+        message: "Successfully left the goal"
   securitySchemes:
     bearerAuth:
       type: http

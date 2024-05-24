@@ -57,11 +57,11 @@ test('Get all incompleted goals 200', async () => {
     .expect(200)
     .then((res) => {
       expect(res.body).toBeDefined();
-      expect(res.body.length).toEqual(3);
+      expect(res.body.length).toEqual(4);
       expect(res.body[0].id).toBeDefined();
-      expect(res.body[0].title).toBe('Eat breakfest at 9am');
+      expect(res.body[0].title).toBe('Learn React');
       expect(res.body[0].description)
-        .toBe('Eat breakfest at an early time to stay consistant!');
+        .toBe('Learn React');
       expect(res.body[0].recurrence).toBe('1 day');
     });
 });

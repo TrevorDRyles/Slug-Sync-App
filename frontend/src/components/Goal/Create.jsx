@@ -28,6 +28,8 @@ let tags = [
 
 // https://chat.openai.com/share/4da161a6-46be-448b-a884-107b5c2d63c2
 function CreateGoal() {
+  const userToken = JSON.parse(localStorage.getItem('user')).token;
+  const userId = JSON.parse(localStorage.getItem('user')).id;
   const history = useNavigate();
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
   const [formData, setFormData] = useState({
@@ -49,10 +51,10 @@ function CreateGoal() {
     e.preventDefault();
     fetch('http://localhost:3010/v0/goal', {
       method: 'POST',
-      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence, tag: formData.tag, comments: [], completed: false}),
+      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence + " days", author: userId, tag: formData.tag, comments: []}),
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${bearerToken}`,
+        'Authorization': `Bearer ${userToken}`,
       },
     })
       .then((res) => {

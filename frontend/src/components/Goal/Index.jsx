@@ -15,6 +15,7 @@ const GoalsListing = () => {
   const goalsPerPage = 5;
   const history = useNavigate();
   const indexOfLastGoal = currentPage * goalsPerPage;
+  const userToken = JSON.parse(localStorage.getItem('user')).token;
   const indexOfFirstGoal = indexOfLastGoal - goalsPerPage;
   let [goals, setGoals] = useState([]);
   // let currentGoals = [];
@@ -30,24 +31,24 @@ const GoalsListing = () => {
 
   const handleAddGoal = (goal) => {
     // navigate to goal page with history
-    // history(`/goal/${goal.id}`);
+    history(`/goal/${goal.id}`);
     // call an api to add goal
-    // fetch(`http://localhost:3010/v0/addGoal`, {
-    //   method: 'POST',
-    //   body: JSON.stringify(goal),
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    // })
-    //   .then((res) => {
-    //     if (!res.ok) {
-    //       throw new Error('response was not ok in add goal');
-    //     }
-    //     return res.json();
-    //   })
-    //   .catch((err) => {
-    //     console.log('Error adding goal: ' + err);
-    //   });
+    fetch(`http://localhost:3010/v0/goal/${goal.id}/join`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userToken}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('response was not ok in add goal');
+        }
+        return res.json();
+      })
+      .catch((err) => {
+        console.log('Error adding goal: ' + err);
+      });
   };
 
   // let filteredGoals = [];

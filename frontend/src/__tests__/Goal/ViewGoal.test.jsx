@@ -43,6 +43,8 @@ it('Loads view goal recurring every 7 days', async () => {
     }),
   );
 
+  localStorage.setItem('user', JSON.stringify({"token":"placeholder"}));
+
   render(
     <LoginProvider>
       <RefetchProvider>
