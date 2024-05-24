@@ -124,27 +124,68 @@ it('Ensure no tag if tag not selected', async () => {
   }
 });
 
-it('check that sort and tag filter button exists', async () => {
+it('check that filter exists and allows selection', async () => {
   server.use(...indexHandlers);
   renderIndex();
-  const sortButton = screen.getByLabelText('sort-button', {exact: false});
-  expect(sortButton).toBeDefined();
-  expect(screen.getByLabelText('asc-icon', {exact: false})).toBeDefined();
-  try{
-    screen.getByLabelText('desc-icon', {exact: false});
-  } catch (error){
-    expect(error).toBeDefined();
-  }
+
+  const filterButton = screen.getByLabelText('filter-menu-button', {exact: false});
+  expect(filterButton).toBeDefined();
+
+  //userEvent.click(filterButton);
+  fireEvent.click(filterButton);
+
+  // fireEvent.keyDown(filterButton, {key: 'ArrowDown', code: 'ArrowDown'});
+  // fireEvent.keyDown(filterButton, {key: 'ArrowDown', code: 'ArrowDown'});
+  // fireEvent.keyDown(filterButton, {key: 'Enter', code: 'Enter'});
+
+  const getHealth = await waitFor(() => screen.getByText('Health', {exact: false}));
+  console.log("-------------------------------------------asdasdasdas--------------------------------------------------------------");
+  //console.log(getHealth);
   
 
-  fireEvent.click(sortButton);
-  expect(screen.getByLabelText('desc-icon', {exact: false})).toBeDefined();
-  try{
-    screen.getByLabelText('asc-icon', {exact: false});
-  } catch (error2){
-    expect(error2).toBeDefined();
+  
+  // const getHealth = screen.getByText('Health', {exact: false});
+  expect(getHealth).toBeDefined();
+
+  fireEvent.click(getHealth);
+
+  const testText = await waitFor(() => screen.getAllByText('Health', {exact: false})[0]);
+
+
+
+  // const getFilterRemoval = await waitFor(() => screen.getByLabelText('remove-filter', {exact: false}));
+  // expect(getFilterRemoval).toBeDefined();
+  // fireEvent.click(getFilterRemoval);
+
+  // console.log(getFilterRemoval);
+
+  console.log("-------------------------------------------asdasdasdas--------------------------------------------------------------");
+
+  try {
+    screen.getByText('filter-badge', {exact: false});
+  } catch (error) {
+    expect(error).toBeDefined();
   }
 
-  const filterButton = screen
+
+
+
+  // const sortButton = screen.getByLabelText('sort-button', {exact: false});
+  // expect(sortButton).toBeDefined();
+  // expect(screen.getByLabelText('asc-icon', {exact: false})).toBeDefined();
+  // try{
+  //   screen.getByLabelText('desc-icon', {exact: false});
+  // } catch (error){
+  //   expect(error).toBeDefined();
+  // }
+  
+
+  // fireEvent.click(sortButton);
+  // expect(screen.getByLabelText('desc-icon', {exact: false})).toBeDefined();
+  // try{
+  //   screen.getByLabelText('asc-icon', {exact: false});
+  // } catch (error2){
+  //   expect(error2).toBeDefined();
+  // }
   
 });

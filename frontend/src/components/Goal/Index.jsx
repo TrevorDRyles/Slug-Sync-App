@@ -24,9 +24,9 @@ const GoalsListing = () => {
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
   const [sort, setSort] = useState(1);
 
-  const handleSort = () => {
-    if (sort === 1 ? setSort(0) : setSort(1));
-  };
+  // const handleSort = () => {
+  //   if (sort === 1 ? setSort(0) : setSort(1));
+  // };
 
   const handlePrevPage = () => {
     setCurrentPage(currentPage - 1);
@@ -67,6 +67,9 @@ const GoalsListing = () => {
   // }
 
   const handleFilterTag = (tag) => {
+    if (tag === undefined) {
+      return;
+    }
     let tagText = tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();
     setFilterTag(tagText);
   };
@@ -115,15 +118,14 @@ const GoalsListing = () => {
             placeholder="Search goals..."
             value={searchQuery}
             onChange={(event) => handleSearch(event.target.value)}
-            style={{ marginBottom: '20px', width: '80%' }}
+            style={{ marginBottom: '20px', width: '90%' }}
             rightSectionWidth={180}
-            rightse
             rightSection={filterTag && 
               <div style={{ display: 'flex', justifyContent: 'flex-end', width: '95%' }}>
                 <Badge 
-                  data-testid={"filterDisplaytag"} 
+                  aria-label='filter-badge'
                   leftSection={<IconTag style={{width: 16, height: 16}}/>}
-                  rightSection={ <IconX className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}>
+                  rightSection={ <IconX aria-label='remove-filter' className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}>
                   
                     {filterTag} 
                 </Badge>
@@ -131,8 +133,8 @@ const GoalsListing = () => {
             }
           />
           <Menu shadow="md" width={200} transitionProps={{ transition: 'scale-y', duration: 180}}>
-            <Menu.Target>
-              <Button style={{marginLeft: '8px', width: '9%'}}><IconTag style={{width: 20, height: 20}}/></Button>
+            <Menu.Target >
+              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '9%'}}><IconTag style={{width: 20, height: 20}}/></Button>
             </Menu.Target>
 
             <Menu.Dropdown>
@@ -140,10 +142,10 @@ const GoalsListing = () => {
 
               {
                 tags.map((tag, index) => (
-                  <Menu.Item key={index}>
+                  <Menu.Item key={index} onClick={(event) => handleFilterTag(event.target.innerText)}>
                     <Badge 
                       data-testid={"tag"} 
-                      onClick={(event) => handleFilterTag(event.target.innerText)} 
+                       
                       leftSection={<IconTag style={{width: 16, height: 16}}/>}>
                         {tag}
                     </Badge>
@@ -154,12 +156,12 @@ const GoalsListing = () => {
 
           </Menu>
           
-          <Button 
+          {/* <Button 
             style={{marginLeft: '8px', width: '9%'}} 
             aria-label='sort-button'
             onClick={handleSort}>
               {sort ? <IconSortAscending aria-label='asc-icon' style={{width: 20, height: 20}}/> : <IconSortDescending aria-label='desc-icon' style={{width: 20, height: 20}}/>}
-          </Button>
+          </Button> */ /**Commented out for now since use case of sort by member/date button uncertain */}
         </div>
         {goals.map((goal, index) => (
           <div key={`goal-${index}`}>
