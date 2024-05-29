@@ -20,6 +20,7 @@ const ViewGoal = () => {
   const [userNames, setUserNames] = useState({});
   const [error, setError] = useState(null);
   const {accessToken} = useContext(LoginContext)
+  const history = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:3010/v0/goal/${id}`, {
@@ -209,7 +210,7 @@ const ViewGoal = () => {
       })
       .then(() => {
         console.log('Goal deleted successfully');
-        navigate('/goals');
+        history('/goals');
       })
       .catch((err) => {
         console.log('Error deleting goal: ' + err);
@@ -232,7 +233,7 @@ const ViewGoal = () => {
       })
       .then(() => {
         console.log('Left goal successfully');
-        navigate('/goals');
+        history('/goals');
       })
       .catch((err) => {
         console.log('Error leaving goal: ' + err);
