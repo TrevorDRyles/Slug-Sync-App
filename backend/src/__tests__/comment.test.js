@@ -125,3 +125,10 @@ test('GET /v0/:goalId/comment with no comments ' +
   expect(comments.status).toBe(200);
   expect(comments.body.length).toBe(0);
 });
+
+test('GET /v0/:goalId/comment with no auth header 401', async () => {
+  const goal = await createGoal();
+
+  const comments = await request.get(`/v0/goal/${goal.body.id}/comment`);
+  expect(comments.status).toBe(401);
+});

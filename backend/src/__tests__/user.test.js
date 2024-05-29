@@ -58,3 +58,9 @@ test('GET /v0/user/:userId with non-uuid user ID returns 400', async () => {
   const goal = await request.get(`/v0/user/123`);
   expect(goal.status).toBe(400);
 });
+
+test('GET /v0/user/:userId gets user information without ' +
+  'auth header 401', async () => {
+  await request
+    .get(`/v0/user/${USER_ID}`);
+});

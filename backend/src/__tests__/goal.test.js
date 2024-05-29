@@ -347,3 +347,14 @@ test('POST /v0/goal/:id/leave Leave goal that does not exist', async () => {
 
   expect(leaveRes.status).toBe(404);
 });
+
+test('POST /v0/goal creates goal 401', async () => {
+  const goal = await request.post('/v0/goal')
+    .send({
+      title: 'title',
+      description: 'description',
+      recurrence: '1',
+    })
+    .set('Content-Type', 'application/json');
+  expect(goal.status).toBe(401);
+});
