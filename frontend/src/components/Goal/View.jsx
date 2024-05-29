@@ -97,7 +97,7 @@ const ViewGoal = () => {
     if (comments.length > 0) {
       fetchUserNames();
     }
-  }, [comments]);
+  }, [accessToken, comments]);
 
   const handleAddComment = () => {
     if (newComment.trim() === '') return;

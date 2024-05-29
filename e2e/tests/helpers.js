@@ -12,7 +12,8 @@ const EMAIL = 'hunter@ucsc.edu';
 const PASSWORD = 'huntertratar';
 
 /**
- * checkWorkspacesShow
+ * login
+ * @param{any} page
  * @return {Promise<void>}
  */
 module.exports.login = async function(page) {
@@ -29,8 +30,10 @@ module.exports.login = async function(page) {
   );
   await page.waitForNavigation();
 };
+
 /**
- * checkWorkspacesShow
+ * logout
+ * @param{any} page
  * @return {Promise<void>}
  */
 module.exports.logout = async function(page) {

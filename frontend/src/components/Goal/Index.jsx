@@ -94,7 +94,7 @@ const GoalsListing = () => {
       .catch((err) => {
         alert(err.message);
       });
-    }, [currentPage, searchQuery]);
+    }, [currentPage, searchQuery, userToken]);
 
   // https://chat.openai.com/share/92235a8f-fdb7-4143-9674-69af74f89174
   return (
