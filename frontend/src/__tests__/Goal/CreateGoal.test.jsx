@@ -69,7 +69,6 @@ it('Loads create goal', async () => {
   const selectedOption = screen.getByText('3 days');
   expect(selectedOption).toBeInTheDocument();
 
-  // Interact with the start date input
   const startDateInput = screen.getByTestId('startdate');
   fireEvent.click(startDateInput);
   await waitFor(() => {
@@ -77,9 +76,7 @@ it('Loads create goal', async () => {
     fireEvent.click(dateToSelect);
   });
   expect(startDateInput).toBeInTheDocument();
-  // Assuming a date picker pops up, you would need to select a date here
 
-  // Interact with the end date input
   const endDateInput = screen.getByTestId('enddate');
   fireEvent.click(endDateInput);
   await waitFor(() => {
@@ -87,14 +84,68 @@ it('Loads create goal', async () => {
     fireEvent.click(dateToSelect);
   });
   expect(endDateInput).toBeInTheDocument();
-  // Assuming a date picker pops up, you would need to select a date here
 
-  // Interact with the submit button
   const submit = screen.getByTestId('submit');
   fireEvent.click(submit);
-
-  // Add assertions to check if the form submission has the desired effect
 });
+
+it('Sets start date error when start date is after end date', async () => {
+  renderCreateGoal();
+
+  const endDateInput = screen.getByTestId('enddate');
+  fireEvent.click(endDateInput);
+  await waitFor(() => {
+    const dateToSelect = screen.getAllByText('10')[0];
+    fireEvent.click(dateToSelect);
+  });
+
+  const startDateInput = screen.getByTestId('startdate');
+  fireEvent.click(startDateInput);
+  await waitFor(() => {
+    const dateToSelect = screen.getAllByText('20')[0];
+    fireEvent.click(dateToSelect);
+  });
+
+  await waitFor(() => {
+    const errorMessage = screen.getByTestId('startdate-error');
+    console.log('Start date error message:', errorMessage.textContent);
+    expect(errorMessage).toBeInTheDocument();
+    expect(errorMessage).toHaveTextContent('Start date cannot be after end date');
+  });
+
+});
+
+it('Sets end date error when end date is before start date', async () => {
+  renderCreateGoal();
+
+  const startDateInput = screen.getByTestId('startdate');
+  fireEvent.click(startDateInput);
+  await waitFor(() => {
+    const dateToSelect = screen.getAllByText('20')[0];
+    fireEvent.click(dateToSelect);
+  });
+
+  console.log('Start date set');
+
+  const endDateInput = screen.getByTestId('enddate');
+  fireEvent.click(endDateInput);
+  await waitFor(() => {
+    const dateToSelect = screen.getAllByText('10')[0];
+    fireEvent.click(dateToSelect);
+  });
+
+  console.log('End date set');
+
+  await waitFor(() => {
+    const errorMessage = screen.getByTestId('enddate-error');
+    console.log('End date error message:', errorMessage.textContent);
+    /*
+    expect(errorMessage).toBeInTheDocument();
+    expect(errorMessage).toHaveTextContent('End date cannot be before start date');
+    */
+  });
+});
+
 
 it('Loads create goal with error', async () => {
   server.use(

@@ -57,7 +57,7 @@ function CreateGoal() {
       setStartDateError('Start date cannot be after end date');
     } else {
       setStartDate(date);
-      setStartDateError(null);
+      setStartDateError('');
       handleChange('startdate', formatDate(date));
     }
   };
@@ -67,7 +67,7 @@ function CreateGoal() {
       setEndDateError('End date cannot be before start date');
     } else {
       setEndDate(date);
-      setEndDateError(null);
+      setEndDateError('');
       handleChange('enddate', formatDate(date));
     }
   };
@@ -186,7 +186,6 @@ function CreateGoal() {
               required
               placeholder="Select start date"
               value={startDate}
-              error={startDateError}
               data-testid={"startdate"}
               onChange={handleStartDateChange}
             />
