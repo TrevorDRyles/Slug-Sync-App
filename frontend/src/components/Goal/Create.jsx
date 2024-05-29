@@ -76,7 +76,7 @@ function CreateGoal() {
       <Header toggleSidebar={toggleSidebar}/>
       <div className={styles.container}>
         <div className={`${styles.column} ${styles.goalColumn}`}>
-        <Paper padding="lg" shadow="lg" className={styles.goalPaper} style={{ maxHeight: 900, maxWidth: 900, margin: '0 auto' }}>
+        <Paper padding="lg" shadow="lg" className={styles.goalPaper} style={{ maxHeight: 900, maxWidth: 900, margin: '0 auto', borderRadius: '14px' }}>
           <div className={styles.goalText}>
             <Text
               size="xl"
