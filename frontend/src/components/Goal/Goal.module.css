@@ -3,8 +3,9 @@
   justify-content: space-around;
   align-items: flex-start;
   margin-top: 50px;
-  padding: 100px 50px 100px 50px;
-  background-color: lightblue;
+  margin-left: 50px;
+  padding: 100px 50px 424px 50px;
+  background-color: var(--mantine-color-dark-1);
 }
 
 .goalContainer {
@@ -12,6 +13,7 @@
   justify-content: space-around;
   align-items: flex-start;
   margin-top: 50px;
+  
   padding: 100px 50px;
   background-color: white;
 }
