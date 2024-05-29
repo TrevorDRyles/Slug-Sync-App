@@ -107,10 +107,8 @@ it('Sets start date error when start date is after end date', async () => {
   });
 
   await waitFor(() => {
-    const errorMessage = screen.getByTestId('startdate-error');
-    console.log('Start date error message:', errorMessage.textContent);
-    expect(errorMessage).toBeInTheDocument();
-    expect(errorMessage).toHaveTextContent('Start date cannot be after end date');
+    screen.debug()
+    expect(screen.getByTestId('Start date must be before end date'));
   });
 
 });

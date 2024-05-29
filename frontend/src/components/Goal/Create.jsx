@@ -184,6 +184,7 @@ function CreateGoal() {
               leftSectionPointerEvents="none"
               label="Start Date"
               required
+              error={startDateError}
               placeholder="Select start date"
               value={startDate}
               data-testid={"startdate"}
