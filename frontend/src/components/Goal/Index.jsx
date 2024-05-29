@@ -90,41 +90,41 @@ const GoalsListing = () => {
 
   // https://chat.openai.com/share/92235a8f-fdb7-4143-9674-69af74f89174
   return (
-    <>
-    <Header toggleSidebar={toggleSidebar}/>
-    <div className={styles.topContainer}>
-      <div className={styles.secondToTopContainer}>
-        <div className={styles.goalsContainer}>
-          <h1>
-            <Text
-              size="3xl"
-              fw={900}
-              variant="gradient"
-              gradient={{from: 'blue', to: 'cyan', deg: 321}}
-            >
-              Goals
-            </Text>
-          </h1>
-        </div>
-        <TextInput
-          id={'search-filter-goals'}
-          placeholder="Search goals..."
-          value={searchQuery}
-          onChange={(event) => handleSearch(event.target.value)}
-          style={{marginBottom: '20px'}}
-        />
-        {goals.map((goal, index) => (
-          <div key={`goal-${index}`}>
-            <Goal key={goal.id} goal={goal} onAddGoal={() => handleAddGoal(goal)}/>
-            <br/>
+    <div className={styles.grayBackground}>
+      <Header toggleSidebar={toggleSidebar}/>
+      <div className={styles.topContainer}>
+        <div className={styles.secondToTopContainer}>
+          <div className={styles.goalsContainer}>
+            <h1>
+              <Text
+                size="3xl"
+                fw={900}
+                variant="gradient"
+                gradient={{from: 'blue', to: 'cyan', deg: 321}}
+              >
+                Goals
+              </Text>
+            </h1>
           </div>
-            ))}
-        <Button disabled={currentPage === 1} onClick={handlePrevPage}>Previous Page</Button>
-        <Button disabled={false} onClick={handleNextPage} style={{marginLeft: '10px'}}>Next Page</Button>
+          <TextInput
+            id={'search-filter-goals'}
+            placeholder="Search goals..."
+            value={searchQuery}
+            onChange={(event) => handleSearch(event.target.value)}
+            style={{marginBottom: '20px'}}
+          />
+          {goals.map((goal, index) => (
+            <div key={`goal-${index}`}>
+              <Goal key={goal.id} goal={goal} onAddGoal={() => handleAddGoal(goal)}/>
+              <br/>
+            </div>
+              ))}
+          <Button disabled={currentPage === 1} onClick={handlePrevPage}>Previous Page</Button>
+          <Button disabled={false} onClick={handleNextPage} style={{marginLeft: '10px'}}>Next Page</Button>
+        </div>
       </div>
+      <Sidebar sidebarOpened={sidebarOpened}/>
     </div>
-    <Sidebar sidebarOpened={sidebarOpened}/>
-    </>
   );
 };
 
