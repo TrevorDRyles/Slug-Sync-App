@@ -77,7 +77,7 @@ const ViewGoal = () => {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              // 'Authorization': `Bearer ${bearerToken}`,
+              'Authorization': `Bearer ${accessToken}`,
             },
           });
           if (!res.ok) {
@@ -198,7 +198,7 @@ const ViewGoal = () => {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`, 
+        'Authorization': `Bearer ${accessToken}`,
       },
     })
       .then((res) => {
@@ -209,7 +209,7 @@ const ViewGoal = () => {
       })
       .then(() => {
         console.log('Goal deleted successfully');
-        navigate('/goals'); 
+        navigate('/goals');
       })
       .catch((err) => {
         console.log('Error deleting goal: ' + err);
