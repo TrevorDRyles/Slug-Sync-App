@@ -74,12 +74,12 @@ export function GoalList() {
 
   const completedGoals = complete.map((goal) => (
     <div key={goal.id} className={classes.goalWrapper}>
-      <GoalCard goalData={goal} />
+      <GoalCard goalData={goal} location={'dashboard'} />
     </div>
   ))
   const incompletedGoals = incomplete.map((goal) => (
     <div key={goal.id} className={classes.goalWrapper}>
-      <GoalCard goalData={goal} />
+      <GoalCard goalData={goal} location={'dashboard'} />
     </div>
   ))
   return (

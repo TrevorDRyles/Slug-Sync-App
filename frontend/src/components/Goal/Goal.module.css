@@ -55,12 +55,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /*margin-top: 100px;*/
+  margin-top: 50px;
   height: 50vh;
 }
 
 .secondToTopContainer {
-  background-color: lightblue;
   width: 50%;
   max-width: 1000px;
   padding: 20px;
