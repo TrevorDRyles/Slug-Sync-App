@@ -106,7 +106,8 @@ test('GET /v0/:goalId/comment with one comment gets comments 200', async () => {
   const goal = await createGoal();
   await createComment(goal);
 
-  const comments = await request.get(`/v0/goal/${goal.body.id}/comment`);
+  const comments = await request.get(`/v0/goal/${goal.body.id}/comment`)
+    .set('Authorization', `Bearer: ${accessToken}`);
   expect(comments.status).toBe(200);
   expect(comments.body.length).toBe(1);
   expect(comments.body[0].user_id).toBe(USER_ID);
@@ -119,7 +120,8 @@ test('GET /v0/:goalId/comment with no comments ' +
   'gets no comments 200', async () => {
   const goal = await createGoal();
 
-  const comments = await request.get(`/v0/goal/${goal.body.id}/comment`);
+  const comments = await request.get(`/v0/goal/${goal.body.id}/comment`)
+    .set('Authorization', `Bearer: ${accessToken}`);
   expect(comments.status).toBe(200);
   expect(comments.body.length).toBe(0);
 });

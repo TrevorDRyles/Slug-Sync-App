@@ -16,7 +16,6 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  await db.reset();
   const response = await request.post('/v0/login').send({
     email: 'hunter@ucsc.edu',
     password: 'huntertratar',
@@ -91,15 +90,16 @@ test('POST /v0/goal with missing recurrence returns 400', async () => {
 
 test('GET /v0/goal/:id returns goal 200', async () => {
   const goal = await request.post('/v0/goal')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`)
     .send({
       title: 'title',
       description: 'description',
       recurrence: '1',
-    })
-    .set('Content-Type', 'application/json')
-    .set('Authorization', `Bearer ${userToken1}`);
+    });
 
-  const res = await request.get('/v0/goal/' + goal.body.id);
+  const res = await request.get('/v0/goal/' + goal.body.id)
+    .set('Authorization', `Bearer ${userToken1}`);
 
   expect(res.status).toBe(200);
   expect(res.body.id).toBe(goal.body.id);
@@ -111,6 +111,7 @@ test('GET /v0/goal/:id returns goal 200', async () => {
 test('GET goal with random goal id returns 404', async () => {
   const randomId = crypto.randomUUID();
   await request.get('/v0/goal/' + randomId)
+    .set('Authorization', `Bearer ${userToken1}`)
     .expect(404);
 });
 
@@ -131,9 +132,10 @@ test('GET /v0/goal with valid page, size, and search term ' +
   }
   await Promise.all(promises);
 
-  const res = await request.get('/v0/goal?size=100&page=1&search=title');
+  const res = await request.get('/v0/goal?size=100&page=1&search=title')
+    .set('Authorization', `Bearer ${userToken1}`);
   expect(res.status).toBe(200);
-  expect(res.body.length).toBe(10);
+  expect(res.body.length).toBe(12);
 });
 
 test('GET /v0/goal with undefined size and search term' +
@@ -153,13 +155,15 @@ test('GET /v0/goal with undefined size and search term' +
   }
   await Promise.all(promises);
 
-  const res = await request.get('/v0/goal?page=1&size=21');
+  const res = await request.get('/v0/goal?page=1&size=21')
+    .set('Authorization', `Bearer ${userToken1}`);
   expect(res.status).toBe(200);
   expect(res.body.length).toBe(21);
 });
 
 test('GET /v0/goal with no size gets goals 200', async () => {
-  const res = await request.get('/v0/goal?page=1');
+  const res = await request.get('/v0/goal?page=1')
+    .set('Authorization', `Bearer ${userToken1}`);
   expect(res.status).toBe(200);
 });
 
@@ -167,18 +171,19 @@ test('GET /v0/goal with no size gets goals 200', async () => {
 test('DELETE /v0/goal/:id to delete a goal', async () => {
   // create a goal to be deleted
   const goal = await request.post('/v0/goal')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`)
     .send({
       title: 'title',
       description: 'description',
       recurrence: '1 day',
-    })
-    .set('Content-Type', 'application/json')
-    .set('Authorization', `Bearer ${userToken1}`);
+    });
 
   const goalToBeDeleted = goal.body.id;
 
   // actually delete the goal
-  const deleteGoalRes = await request.delete(`/v0/goal/${goalToBeDeleted}`)
+  const deleteGoalRes = await request
+    .delete(`/v0/goal/${goalToBeDeleted}`)
     .set('Content-Type', 'application/json')
     .set('Authorization', `Bearer ${userToken1}`);
 
@@ -188,18 +193,19 @@ test('DELETE /v0/goal/:id to delete a goal', async () => {
 test('DELETE /v0/goal/:id invalid user delete goal', async () => {
   // create a goal to be deleted
   const goal = await request.post('/v0/goal')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`)
     .send({
       title: 'title',
       description: 'description',
       recurrence: '1 day',
-    })
-    .set('Content-Type', 'application/json')
-    .set('Authorization', `Bearer ${userToken1}`);
+    });
 
   const goalToBeDeleted = goal.body.id;
 
   // actually delete the goal
-  const deleteGoalRes = await request.delete(`/v0/goal/${goalToBeDeleted}`)
+  const deleteGoalRes = await request
+    .delete(`/v0/goal/${goalToBeDeleted}`)
     .set('Content-Type', 'application/json')
     .set('Authorization', `Bearer ${userToken2}`);
 

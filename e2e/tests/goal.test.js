@@ -14,6 +14,7 @@ const express = require('express');
 
 require('dotenv').config();
 const app = require('../../backend/src/app');
+const {login} = require('./helpers');
 
 let backend;
 let frontend;
@@ -69,6 +70,7 @@ beforeEach(async () => {
     width: 1080,
     height: 780,
   });
+  await login(page);
 });
 
 /**
