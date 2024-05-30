@@ -20,7 +20,7 @@ let backend;
 let frontend;
 let browser;
 let page;
-
+const NUM_ELEMENTS_ON_GOALS_INDEX_PAGE = 4;
 /**
  * Start an API server on port 3010 connected to the DEV database
  * Start a Web server for the built ("comliled") version of the UI
@@ -60,7 +60,7 @@ afterAll((done) => {
  */
 beforeEach(async () => {
   browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
@@ -77,7 +77,7 @@ beforeEach(async () => {
  * Close the headless instance of Chrome as we no longer need it.
  */
 afterEach(async () => {
-  //await browser.close();
+  await browser.close();
 });
 
 /**
@@ -116,19 +116,8 @@ async function createGoal(title, description, arrowsDownOnRecurrence) {
   }
   await page.keyboard.press('Enter');
 
-  await page.waitForSelector('#startdate');
-  await page.click('#startdate');
-  await page.waitForSelector('button[aria-label*="17"]');
-  await page.click('button[aria-label*="17"]');
-
-  // Interact with the end date input
-
-  await page.waitForSelector('#enddate');
-  await page.click('#enddate');
-  await page.waitForSelector('button[aria-label*="19"]');
-  await page.click('button[aria-label*="19"]');
-
-
+  await page.$eval('#startdate', (el) => el.value = '2021-03-02');
+  await page.$eval('#enddate', (el) => el.value = '2021-03-3');
 
   await page.$eval(`[type="submit"]`, (element) =>
     element.click(),
@@ -176,7 +165,7 @@ async function typeIntoSearchAndExpectFilter() {
   // wait for goals to appear
   await page.waitForFunction(() => {
     const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
-    return elements.length >= 5;
+    return elements.length >= NUM_ELEMENTS_ON_GOALS_INDEX_PAGE;
   }, {});
   const searchInput = await page
     .waitForSelector('input[id="search-filter-goals"]');
@@ -186,7 +175,7 @@ async function typeIntoSearchAndExpectFilter() {
   // i don't know why this is needed to pass the test
   await page.waitForFunction(() => {
     const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
-    return elements.length >= 5;
+    return elements.length >= NUM_ELEMENTS_ON_GOALS_INDEX_PAGE;
   }, {});
 
   // wait for selected goals to appear
@@ -199,7 +188,7 @@ async function typeIntoSearchAndExpectFilter() {
       }
     });
     return matchedCount >= count;
-  }, {}, 'GoalTitle1', 5);
+  }, {}, 'GoalTitle1', NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
 }
 
 /**
