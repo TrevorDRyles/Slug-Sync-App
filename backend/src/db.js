@@ -47,7 +47,7 @@ exports.postSignup = async (data) => {
  */
 exports.joinGoal = async (data) => {
   const insert = `
-    INSERT INTO "user_goal"("user_id", "goal_id", "last_checked", "streak")
+    INSERT INTO user_goal("user_id", "goal_id", "last_checked", "streak")
     VALUES ($1, $2, $3, $4)
   `;
   const query = {
@@ -56,6 +56,15 @@ exports.joinGoal = async (data) => {
   };
 
   await pool.query(query);
+
+  // increase goal memberCount field by 1
+  const updateGoalMemberCountByOne = `
+    UPDATE goal
+    SET goal = jsonb_set(goal, '{memberCount}', 
+        to_jsonb((goal->>'memberCount')::int + 1))
+    WHERE id = $1
+  `;
+  await pool.query(updateGoalMemberCountByOne, [data.goal_id]);
 };
 
 exports.getGoal = async (goalId) => {
@@ -162,7 +171,7 @@ exports.completeGoal = async (userId, goalId) => {
   WHERE user_id = $1
   AND goal_id = $2
   RETURNING goal_id`;
-  
+
   const query = {
     text: update,
     values: [userId, goalId],
@@ -171,7 +180,7 @@ exports.completeGoal = async (userId, goalId) => {
   return rows[0];
 };
 /**
- * 
+ *
  * @async
  * @function isMemberInGoal
  * @param {string} userId - The ID of the user/member to check.
@@ -194,7 +203,7 @@ exports.isMemberInGoal = async (userId, goalId) => {
 };
 
 /**
- * 
+ *
  * @async
  * @function deleteMemberGoalByUserAndGoalId
  * @param {string} userId - The ID of the user/member.

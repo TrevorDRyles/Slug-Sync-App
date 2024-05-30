@@ -87,6 +87,7 @@ exports.getPostsByPageAndSize = async function(req, res) {
       description: row.goal.description,
       tag: row.goal.tag,
       comments: rows,
+      memberCount: row.goal.memberCount,
     };
   }));
   res.status(200).json(goals);
@@ -124,7 +125,7 @@ exports.deleteGoal = async (req, res) => {
 exports.joinGoal = async (req, res) => {
   const user = req.user;
   const goalId = req.path.split('/')[3];
-  if (await db.isMemberInGoal(user.id, goalId) == true) {
+  if (await db.isMemberInGoal(user.id, goalId) === true) {
     console.log('user alreaady in goal!');
     return res.status(400).json({message: 'User already in goal!'});
   }
@@ -149,7 +150,7 @@ exports.leaveGoal = async (req, res) => {
   if (goalData == null) {
     return res.status(404).send();
   }
-  
+
   if (goalData.author == user.id) {
     console.log('cannot leave goal as the creator. must delete goal.');
     return res.status(401).send();
