@@ -1,18 +1,28 @@
 
 .grayBackground {
   background-color: var(--mantine-color-gray-2);
-  height: 170vh;
+  height: 140vh;
   width: 100%;
 }
 
-.goalContainer {
+.container {
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
   margin-top: 50px;
-  
-  padding: 100px 50px;
-  background-color: white;
+  margin-left: 50px;
+  padding: 100px 50px 380px 50px;
+  background-color: var(--mantine-color-gray-2);
+}
+
+.containerForView {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-top: 50px;
+  margin-left: 50px;
+  padding: 100px 50px 200px 50px;
+  background-color: var(--mantine-color-gray-2);
 }
 
 .column {
