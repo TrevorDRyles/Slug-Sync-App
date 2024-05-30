@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TextInput, Paper, Button, Textarea, Select, Divider} from '@mantine/core';
+import {TextInput, Paper, Button, Textarea, Select, Divider, Text} from '@mantine/core';
 import {useNavigate} from "react-router-dom";
 import styles from './Goal.module.css';
 import {useDisclosure} from "@mantine/hooks";
@@ -76,8 +76,18 @@ function CreateGoal() {
       <Header toggleSidebar={toggleSidebar}/>
       <div className={styles.container}>
         <div className={`${styles.column} ${styles.goalColumn}`}>
-        <Paper padding="lg" shadow="xs" className={styles.goalPaper} style={{ maxHeight: 900, maxWidth: 900, margin: '0 auto' }}>
-          <div className={styles.goalText}>Create Goal</div>
+        <Paper padding="lg" shadow="lg" className={styles.goalPaper} style={{ maxHeight: 900, maxWidth: 900, margin: '0 auto', borderRadius: '14px' }}>
+          <div className={styles.goalText}>
+            <Text
+              size="xl"
+              fw={900}
+              variant="gradient"
+              gradient={{ from: 'blue', to: 'cyan', deg: 321 }}
+            >
+              Create Goal
+            </Text>
+          </div>
+
           <form onSubmit={handleSubmit}>
             <TextInput
               label="Title"
@@ -98,29 +108,37 @@ function CreateGoal() {
               value={formData.description}
               id={"description"}
               data-testid={"description"}
+              autosize
+              minRows={3}
+              maxRows={6}
             />
-            <Select
-              data={days}
-              label="Recurrence (every x days)"
-              placeholder="1 day"
-              value={formData.recurrence}
-              onChange={(e) => handleChange('recurrence', e)}
-              required
-              style={{ marginBottom: 15 }}
-              id={"recurrence"}
-              data-testid={"recurrence"}
-            />
-            <Select
-              data = {tags}
-              label="Select a tag"
-              placeholder="Select a tag"
-              value={formData.tag}
-              onChange={(e) => handleChange('tag', e)}
-              style={{ marginBottom: 15 }}
-              id={"tag"}
-              data-testid={"tag"}
-              searchable
-            />
+
+            <div style={{ display: 'flex', gap: '15px' }}>
+              <Select
+                data={days}
+                label="Repeat goal every ..."
+                placeholder="1 day"
+                value={formData.recurrence}
+                onChange={(e) => handleChange('recurrence', e)}
+                required
+                style={{ marginBottom: 15 }}
+                id={"recurrence"}
+                data-testid={"recurrence"}
+                flex={1}
+              />
+              <Select
+                data = {tags}
+                label="Select a tag"
+                placeholder="Select a tag"
+                value={formData.tag}
+                onChange={(e) => handleChange('tag', e)}
+                style={{ marginBottom: 15 }}
+                id={"tag"}
+                data-testid={"tag"}
+                flex={1}
+                //searchable
+              />
+            </div>
             <Button data-testid="submit" type="submit" variant="outline" color="blue">
               Submit
             </Button>

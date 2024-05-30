@@ -20,6 +20,7 @@ const ViewGoal = () => {
   const [userNames, setUserNames] = useState({});
   const [error, setError] = useState(null);
   const {accessToken} = useContext(LoginContext)
+  const history = useNavigate();
 
   useEffect(() => {
     fetch(`http://localhost:3010/v0/goal/${id}`, {
@@ -77,7 +78,7 @@ const ViewGoal = () => {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              // 'Authorization': `Bearer ${bearerToken}`,
+              'Authorization': `Bearer ${accessToken}`,
             },
           });
           if (!res.ok) {
@@ -96,7 +97,7 @@ const ViewGoal = () => {
     if (comments.length > 0) {
       fetchUserNames();
     }
-  }, [comments]);
+  }, [accessToken, comments]);
 
   const handleAddComment = () => {
     if (newComment.trim() === '') return;
@@ -198,7 +199,7 @@ const ViewGoal = () => {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`, 
+        'Authorization': `Bearer ${accessToken}`,
       },
     })
       .then((res) => {
@@ -209,7 +210,7 @@ const ViewGoal = () => {
       })
       .then(() => {
         console.log('Goal deleted successfully');
-        navigate('/goals'); 
+        history('/goals');
       })
       .catch((err) => {
         console.log('Error deleting goal: ' + err);
@@ -232,7 +233,7 @@ const ViewGoal = () => {
       })
       .then(() => {
         console.log('Left goal successfully');
-        navigate('/goals');
+        history('/goals');
       })
       .catch((err) => {
         console.log('Error leaving goal: ' + err);
