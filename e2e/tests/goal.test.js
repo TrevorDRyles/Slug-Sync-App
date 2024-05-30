@@ -77,7 +77,7 @@ beforeEach(async () => {
  * Close the headless instance of Chrome as we no longer need it.
  */
 afterEach(async () => {
-  await browser.close();
+  //await browser.close();
 });
 
 /**
@@ -118,16 +118,15 @@ async function createGoal(title, description, arrowsDownOnRecurrence) {
 
   await page.waitForSelector('#startdate');
   await page.click('#startdate');
-  await page.waitForSelector('div[role="dialog"]');
-  await page.click('17');
-  await page.keyboard.press('Enter');
+  await page.waitForSelector('button[aria-label*="17"]');
+  await page.click('button[aria-label*="17"]');
 
   // Interact with the end date input
+
   await page.waitForSelector('#enddate');
   await page.click('#enddate');
-  await page.waitForSelector('div[role="dialog"]'); // Ensure dialog is open
-  await page.click('button[aria-label="May 28, 2024"]');
-  await page.keyboard.press('Enter');
+  await page.waitForSelector('button[aria-label*="19"]');
+  await page.click('button[aria-label*="19"]');
 
 
 

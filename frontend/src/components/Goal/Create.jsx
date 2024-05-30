@@ -187,6 +187,7 @@ function CreateGoal() {
               error={startDateError}
               placeholder="Select start date"
               value={startDate}
+              id={"startdate"}
               data-testid={"startdate"}
               onChange={handleStartDateChange}
             />
@@ -209,6 +210,7 @@ function CreateGoal() {
                 label="End Date"
                 value={endDate}
                 error={endDateError}
+                id={"enddate"}
                 data-testid={"enddate"}
                 onChange={handleEndDateChange}
                 placeholder="Select end date"
