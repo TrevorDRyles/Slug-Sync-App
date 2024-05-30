@@ -80,7 +80,7 @@ it('Loads create goal', async () => {
   const endDateInput = screen.getByTestId('enddate');
   fireEvent.click(endDateInput);
   await waitFor(() => {
-    const dateToSelect = screen.getAllByText('29')[0];
+    const dateToSelect = screen.getAllByText('28')[0];
     fireEvent.click(dateToSelect);
   });
   expect(endDateInput).toBeInTheDocument();
@@ -92,51 +92,56 @@ it('Loads create goal', async () => {
 it('Sets start date error when start date is after end date', async () => {
   renderCreateGoal();
 
-  const endDateInput = screen.getByTestId('enddate');
+  const endDateInput = screen.getByText('Select end date')
   fireEvent.click(endDateInput);
   await waitFor(() => {
-    const dateToSelect = screen.getAllByText('10')[0];
+    expect(screen.getByText('Mo')).toBeInTheDocument();
+    const dateToSelect = screen.getByText('14');
     fireEvent.click(dateToSelect);
   });
 
-  const startDateInput = screen.getByTestId('startdate');
+  await waitFor(() => {
+    expect(screen.queryByText('14')).not.toBeInTheDocument();
+  })
+
+
+  const startDateInput = screen.getByText('Select start date');
   fireEvent.click(startDateInput);
   await waitFor(() => {
-    const dateToSelect = screen.getAllByText('20')[0];
+    expect(screen.getByText('Mo')).toBeDefined();
+    const dateToSelect = screen.getByText('15');
     fireEvent.click(dateToSelect);
   });
 
   await waitFor(() => {
-    screen.debug()
-    expect(screen.getByTestId('Start date must be before end date'));
+    expect(screen.getByText('Start date cannot be after end date')).toBeInTheDocument();
   });
-
 });
 
 it('Sets end date error when end date is before start date', async () => {
   renderCreateGoal();
-
-  const startDateInput = screen.getByTestId('startdate');
+  const startDateInput = screen.getByText('Select start date');
   fireEvent.click(startDateInput);
   await waitFor(() => {
-    const dateToSelect = screen.getAllByText('20')[0];
+    expect(screen.getByText('Mo')).toBeDefined();
+    const dateToSelect = screen.getByText('15');
     fireEvent.click(dateToSelect);
   });
 
-  console.log('Start date set');
+  await waitFor(() => {
+    expect(screen.queryByText('15')).not.toBeInTheDocument();
+  })
+  expect(screen.getByText('May 15, 2024')).toBeInTheDocument();
 
-  const endDateInput = screen.getByTestId('enddate');
+  const endDateInput = screen.getByText('Select end date')
   fireEvent.click(endDateInput);
   await waitFor(() => {
-    const dateToSelect = screen.getAllByText('10')[0];
+    expect(screen.getByText('Mo')).toBeInTheDocument();
+    const dateToSelect = screen.getByText('14');
     fireEvent.click(dateToSelect);
   });
-
-  console.log('End date set');
-
   await waitFor(() => {
-    screen.debug()
-    expect(screen.getByTestId('End date must be after start date'));
+    expect(screen.getByText('End date cannot be before start date')).toBeInTheDocument();
   });
 });
 

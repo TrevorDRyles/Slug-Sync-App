@@ -73,7 +73,7 @@ function CreateGoal() {
   };
 
   const formatDate = (date) => {
-    return date ? date.toISOString().split('T')[0] : '';
+    return date.toISOString().split('T')[0];
   };
 
   const handleChange = (field, value) => {

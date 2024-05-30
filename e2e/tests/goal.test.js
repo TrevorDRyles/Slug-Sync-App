@@ -60,7 +60,7 @@ afterAll((done) => {
  */
 beforeEach(async () => {
   browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
@@ -84,8 +84,6 @@ afterEach(async () => {
  * createGoal
  * @param {string} title
  * @param {string} description
- * @param {string} startdate
- * @param {string} enddate
  * @param {number} arrowsDownOnRecurrence
  * @return {Promise<void>}
  */
@@ -116,15 +114,18 @@ async function createGoal(title, description, arrowsDownOnRecurrence) {
     // Using same var as recurrence because of similar format
     await page.keyboard.press('ArrowDown');
   }
-  await page.waitForSelector('input[placeholder="Select start date"]');
-  await page.click('input[placeholder="Select start date"]');
+  await page.keyboard.press('Enter');
+
+  await page.waitForSelector('#startdate');
+  await page.click('#startdate');
 
   await page.click('div[role="dialog"]'); // Open the calendar dialog
   await page.click('button[aria-label="May 10, 2024"]'); // Select the specific date
+  await page.keyboard.press('Enter');
 
   // Select end date
-  await page.waitForSelector('input[placeholder="Select end date"]');
-  await page.click('input[placeholder="Select end date"]');
+  await page.waitForSelector('#enddate');
+  await page.click('#enddate');
 
   await page.click('div[role="dialog"]'); // Open the calendar dialog
   await page.click('button[aria-label="May 20, 2024"]');
