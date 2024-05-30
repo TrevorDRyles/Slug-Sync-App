@@ -39,7 +39,7 @@ export function UnauthorizedPage() {
           </List>
 
           <Group mt={30}>
-            <Button radius="xl" size="md" className={classes.control} onClick={() => history('/login')}>
+            <Button id={'loginSignup'} radius="xl" size="md" className={classes.control} onClick={() => history('/login')}>
               Login / Sign Up!
             </Button>
           </Group>

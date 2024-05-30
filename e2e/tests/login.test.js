@@ -14,6 +14,7 @@ const express = require('express');
 
 require('dotenv').config();
 const app = require('../../backend/src/app');
+const {login, logout} = require('./helpers');
 
 let backend;
 let frontend;
@@ -80,58 +81,8 @@ afterEach(async () => {
 
 // copied above from starter code
 
-// const EMAIL = 'molly@books.com';
-// const PASSWORD = 'mollymember';
-
-/**
- * checkWorkspacesShow
- * @return {Promise<void>}
- */
-// async function login() {
-//   await page.goto('http://localhost:3000/login');
-//   console.log('login: 1');
-//   const email = await page.waitForSelector('input[type="text"][id="email"]');
-//   await email.type(EMAIL);
-//   console.log('login: 2');
-//   const password = await page.waitForSelector(
-//     'input[type="password"][name="password"]');
-//   await password.type(PASSWORD);
-//   console.log('login: 3');
-//   const submit = await page.waitForSelector('[type="submit"]');
-//   console.log(submit);
-//   // https://stackoverflow.com/questions/70398134/puppeteer-trigger-click-of-button-not-working
-//   console.log('login: 4');
-//   await page.$eval(`[type="submit"]`, (element) =>
-//     element.click(),
-//   );
-//   console.log('login: 4.5');
-//   await page.waitForNavigation();
-//   console.log('login: 5');
-//   // await page.waitForSelector('#welcome');
-//   // console.log('login: 6');
-//   // const content = await page.evaluate((el) =>
-//   // el.textContent.trim(), element);
-//   // console.log('login: 7');
-//   // expect(content).toContain('Welcome to slack');
-// }
-// /**
-//  * checkWorkspacesShow
-//  * @return {Promise<void>}
-//  */
-// async function logout() {
-//   const logout = await page.waitForSelector('#logout');
-//   console.log(logout);
-//   // await logout.click();
-//   await page.$eval(`#logout`, (element) =>
-//     element.click(),
-//   );
-//   await page.waitForSelector('#signIn');
-//   const content = await page.$eval('#signIn', (el) => el.textContent.trim());
-//   expect(content).toBe('Sign in');
-// }
-
-
 test('login logout', async () => {
-
+  await login(page);
+  await logout(page);
 });
 
