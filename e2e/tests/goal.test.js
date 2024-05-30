@@ -105,8 +105,8 @@ async function createGoal(title, description, arrowsDownOnRecurrence) {
     // Move down in the dropdown
     await page.keyboard.press('ArrowDown');
   }
-  // Select the option
   await page.keyboard.press('Enter');
+
   // timesout atm
   await page.waitForSelector('#tag');
   await page.click('#tag');
@@ -118,19 +118,18 @@ async function createGoal(title, description, arrowsDownOnRecurrence) {
 
   await page.waitForSelector('#startdate');
   await page.click('#startdate');
-
-  await page.click('div[role="dialog"]'); // Open the calendar dialog
-  await page.click('button[aria-label="May 10, 2024"]'); // Select the specific date
+  await page.waitForSelector('div[role="dialog"]');
+  await page.click('17');
   await page.keyboard.press('Enter');
 
-  // Select end date
+  // Interact with the end date input
   await page.waitForSelector('#enddate');
   await page.click('#enddate');
+  await page.waitForSelector('div[role="dialog"]'); // Ensure dialog is open
+  await page.click('button[aria-label="May 28, 2024"]');
+  await page.keyboard.press('Enter');
 
-  await page.click('div[role="dialog"]'); // Open the calendar dialog
-  await page.click('button[aria-label="May 20, 2024"]');
 
-  await page.keyboard.press('Enter'); // Select the option
 
   await page.$eval(`[type="submit"]`, (element) =>
     element.click(),
