@@ -66,7 +66,15 @@ const GoalsListing = () => {
 
   useEffect(() => {
     const searchTerm = searchQuery.length > 0 ? '&search=' + searchQuery : ''
-    fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${searchTerm}`)
+    fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${searchTerm}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${userToken}`,
+        },
+      }
+    )
       .then((res) => {
         if (!res.ok) {
           throw new Error('response was not ok in get goals');
@@ -86,7 +94,7 @@ const GoalsListing = () => {
       .catch((err) => {
         alert(err.message);
       });
-    }, [currentPage, searchQuery]);
+    }, [currentPage, searchQuery, userToken]);
 
   // https://chat.openai.com/share/92235a8f-fdb7-4143-9674-69af74f89174
   return (

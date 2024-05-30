@@ -44,19 +44,19 @@ app.get('/v0/goal/completed', auth.check, goal.getAllCompleted);
 
 app.get('/v0/goal/incompleted', auth.check, goal.getAllIncompleted);
 
-app.get('/v0/goal/:id', goal.viewGoal);
+app.get('/v0/goal/:id', auth.check, goal.viewGoal);
 
 app.post('/v0/goal/:id/comment', auth.check, comment.addCommentToGoal);
 
-app.get('/v0/goal/:id/comment', comment.getAllCommentsOnGoal);
+app.get('/v0/goal/:id/comment', auth.check, comment.getAllCommentsOnGoal);
 
-app.get('/v0/user/:id', user.getUserById);
+app.get('/v0/user/:id', auth.check, user.getUserById);
 
 app.delete('/v0/goal/:id', auth.check, goal.deleteGoal);
 
 app.post('/v0/goal/:id/leave', auth.check, goal.leaveGoal);
 
-app.get('/v0/goal', goal.getPostsByPageAndSize);
+app.get('/v0/goal', auth.check, goal.getPostsByPageAndSize);
 
 app.put('/v0/complete/:goal', auth.check, goal.completeGoal);
 

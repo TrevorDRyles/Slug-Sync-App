@@ -66,7 +66,7 @@ test('Get all incompleted goals 200', async () => {
     });
 });
 
-test('Get all completed goals no auth 401', async () => {
+test('Get all completed goals no auth header 401', async () => {
   await request.get('/v0/goal/completed')
     .expect(401);
 });
