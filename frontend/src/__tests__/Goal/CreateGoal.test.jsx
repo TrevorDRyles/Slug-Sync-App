@@ -40,7 +40,7 @@ it('Loads create goal', async () => {
   renderCreateGoal();
   screen.getByText('Title', {exact: false});
   screen.getByText('Description');
-  screen.getByText('Recurrence (every x days)', {exact: false});
+  screen.getByText('Repeat goal every ...', {exact: false});
 
   const title = screen.getByTestId('title', {exact: false});
   fireEvent.change(title, {target: {value: 'Title'}});
@@ -73,7 +73,7 @@ it('Loads create goal with error', async () => {
   renderCreateGoal();
   screen.getByText('Title', {exact: false});
   screen.getByText('Description');
-  screen.getByText('Recurrence (every x days)', {exact: false});
+  screen.getByText('Repeat goal every ...', {exact: false});
 
   const title = screen.getByTestId('title', {exact: false});
   fireEvent.change(title, {target: {value: 'Title'}});
