@@ -1,21 +1,28 @@
+
+.grayBackground {
+  background-color: var(--mantine-color-gray-2);
+  height: 180vh;
+  width: 100%;
+}
+
 .container {
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
   margin-top: 50px;
   margin-left: 50px;
-  padding: 100px 50px 424px 50px;
+  padding: 100px 50px 380px 50px;
   background-color: var(--mantine-color-gray-2);
 }
 
-.goalContainer {
+.containerForView {
   display: flex;
   justify-content: space-around;
   align-items: flex-start;
   margin-top: 50px;
-  
-  padding: 100px 50px;
-  background-color: white;
+  margin-left: 50px;
+  padding: 100px 50px 200px 50px;
+  background-color: var(--mantine-color-gray-2);
 }
 
 .column {
@@ -57,12 +64,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /*margin-top: 100px;*/
+  margin-top: 50px;
   height: 50vh;
 }
 
 .secondToTopContainer {
-  background-color: lightblue;
   width: 50%;
   max-width: 1000px;
   padding: 20px;

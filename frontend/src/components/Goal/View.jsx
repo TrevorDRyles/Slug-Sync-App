@@ -247,7 +247,7 @@ const ViewGoal = () => {
       <div>{error}</div>
       <Header toggleSidebar={toggleSidebar} />
 
-      <div className={styles.container}>
+      <div className={styles.containerForView}>
       <Modal opened={opened} onClose={close} title="Delete Goal">
         <p>Are you sure you would like to delete this goal?</p>
         <Button onClick={handleDelete} fullWidth variant="outline" color="red">
