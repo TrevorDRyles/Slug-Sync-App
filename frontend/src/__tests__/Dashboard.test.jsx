@@ -48,14 +48,18 @@ const mockCompleted = [
     title: "Goal 1",
     "description": "This is a test goal wowsers 123",
     "recurrence": "2 days",
-    "streak": 2
+    "streak": 2,
+    startdate: new Date().toISOString(),
+    enddate: new Date().toISOString()
   },
   {
     id: 2,
     title: "Goal 2",
     "description": "Test goal 2",
     "recurrence": "3 days",
-    "streak": 56
+    "streak": 56,
+    startdate: new Date().toISOString(),
+    enddate: new Date().toISOString()
   },
 ]
 
@@ -65,7 +69,9 @@ const mockIncompleted = [
     title: "Walk a mile",
     "description": "Test goal 3",
     "recurrence": "1 week",
-    "streak": 10
+    "streak": 10,
+    startdate: new Date().toISOString(),
+    enddate: new Date().toISOString()
   }
 ]
 

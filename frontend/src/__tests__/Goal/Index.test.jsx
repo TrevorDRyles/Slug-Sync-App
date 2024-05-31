@@ -129,3 +129,50 @@ it('Ensure no tag if tag not selected', async () => {
     expect(error).toBeDefined();
   }
 });
+
+it('check that filter exists and allows selection', async () => {
+  server.use(...indexHandlers);
+  renderIndex();
+  //const user = userEvent.setup();
+
+  const filterButton = screen.getByLabelText('filter-menu-button', {exact: false});
+  fireEvent.click(filterButton)
+  await waitFor(() => screen.getByText("Productivity", {exact: false}));
+  
+  const getHealth = await waitFor(() => screen.getByLabelText('menu-item-Health', {exact: false}));
+  fireEvent.click(getHealth);
+
+  const getBadge = await waitFor(() => screen.getByLabelText('filter-badge', {exact: false}));
+
+  const getFilterRemoval = await waitFor(() => screen.getByLabelText('remove-filter', {exact: false}));
+  expect(getFilterRemoval).toBeDefined();
+  fireEvent.click(getFilterRemoval);
+
+  try {
+    screen.getByText('filter-badge', {exact: false});
+  } catch (error) {
+    expect(error).toBeDefined();
+  }
+
+
+
+
+  // const sortButton = screen.getByLabelText('sort-button', {exact: false});
+  // expect(sortButton).toBeDefined();
+  // expect(screen.getByLabelText('asc-icon', {exact: false})).toBeDefined();
+  // try{
+  //   screen.getByLabelText('desc-icon', {exact: false});
+  // } catch (error){
+  //   expect(error).toBeDefined();
+  // }
+  
+
+  // fireEvent.click(sortButton);
+  // expect(screen.getByLabelText('desc-icon', {exact: false})).toBeDefined();
+  // try{
+  //   screen.getByLabelText('asc-icon', {exact: false});
+  // } catch (error2){
+  //   expect(error2).toBeDefined();
+  // }
+  
+});
