@@ -5,7 +5,6 @@ import Sidebar from './Sidebar';
 import { useDisclosure } from '@mantine/hooks';
 import {Dashboard} from './Dashboard/Main'
 import { Footer } from './SignIn/Footer';
-import { GoalCard } from './Goal/GoalCard';
 
 import classes from './Home.module.css'
 
@@ -13,7 +12,6 @@ import classes from './Home.module.css'
 function Home() {
 
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
-  
 
 
   return (

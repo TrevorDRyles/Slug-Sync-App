@@ -230,7 +230,7 @@ test('GET /v0/goal with valid filter' +
         tag: 'Athletics' + i,
         startdate: new Date().toISOString(),
         enddate: new Date().toISOString(),
-        memberCount: 1
+        memberCount: 1,
       }));
   }
   for (let i = 1; i <= 5; i++) {

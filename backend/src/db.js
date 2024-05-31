@@ -132,7 +132,7 @@ exports.getAllCompletedGoals = async (userId) => {
     g.goal->>'recurrence' AS recurrence,
     g.goal->>'tag' AS tag,
     g.goal->>'startdate' AS startDate,
-    g.goal->>'startdate' AS endDate,
+    g.goal ->> 'enddate' AS endDate,
     g.goal->>'memberCount' AS memberCount,
     ug.streak AS streak
   FROM goal g
@@ -156,7 +156,7 @@ exports.getAllIncompletedGoals = async (userId) => {
     g.goal->>'recurrence' AS recurrence,
     g.goal->>'tag' AS tag,
     g.goal->>'startdate' AS startDate,
-    g.goal->>'startdate' AS endDate,
+    g.goal ->> 'enddate' AS endDate,
     g.goal->>'memberCount' AS memberCount,
     ug.streak AS streak
   FROM goal g
@@ -238,7 +238,7 @@ exports.getUserInformation = async (userId) => {
     data->>'img' AS img
   FROM "user"
   WHERE id = $1`;
-  
+
   const query = {
     text: select,
     values: [userId],
