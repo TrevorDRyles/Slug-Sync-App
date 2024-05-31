@@ -30,7 +30,6 @@ it('Clicks on home', async() => {
   renderSidebar()
   fireEvent.click(screen.getByLabelText('HomeIcon1'));
   const homeButton = screen.getByLabelText('HomeIcon1').parentElement;
-  screen.debug();
   const isActive = homeButton.getAttribute('data-active');
   expect(isActive).toBe('true');
 })
@@ -39,7 +38,6 @@ it('Clicks on Profile', async() => {
   renderSidebar()
   fireEvent.click(screen.getByLabelText('UserIcon1'));
   const homeButton = screen.getByLabelText('UserIcon1').parentElement;
-  screen.debug();
   const isActive = homeButton.getAttribute('data-active');
   expect(isActive).toBe('true');
 })
@@ -48,7 +46,6 @@ it('Clicks on Settings', async() => {
   renderSidebar()
   fireEvent.click(screen.getByLabelText('SettingsIcon1'));
   const homeButton = screen.getByLabelText('SettingsIcon1').parentElement;
-  screen.debug();
   const isActive = homeButton.getAttribute('data-active');
   expect(isActive).toBe('true');
 })

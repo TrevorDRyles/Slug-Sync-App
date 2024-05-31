@@ -72,6 +72,7 @@ export default function Header() {
   const logout = () => {
     localStorage.removeItem('user')
     setAccessToken('')
+    navigate("/login")
   }
 
   const links = headerItems.map((item) => (
@@ -144,7 +145,7 @@ export default function Header() {
             {accessToken ? (
               <>
               <Text >Hello {userName}! </Text>
-                <Button variant="default" onClick={logout}>Logout</Button>
+                <Button id={'logout'} variant="default" onClick={logout}>Logout</Button>
               </>
             ) : (
               <>

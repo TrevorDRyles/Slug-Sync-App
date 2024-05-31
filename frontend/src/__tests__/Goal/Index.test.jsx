@@ -14,9 +14,15 @@ const INDEX_URL = 'http://localhost:3010/v0/goal';
 
 const server = setupServer();
 
-beforeAll(() => server.listen());
+beforeAll(() => {
+  localStorage.setItem('user', JSON.stringify({accessToken: '1234'}))
+  server.listen()
+});
 afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+afterAll(() => {
+  localStorage.removeItem('user')
+  server.close()
+});
 
 const renderIndex = () => {
   return render(

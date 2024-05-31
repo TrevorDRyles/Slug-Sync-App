@@ -62,7 +62,7 @@ const handleSubmit = (data, type, toggle, setAccessToken, history) => {
           return res.json();
         })
         .then((json) => {
-          setAccessToken(json.accessToken)
+          setAccessToken(json.token)
           localStorage.setItem('user', JSON.stringify(json));
           history('/');
         })
@@ -94,7 +94,7 @@ export default function SignInForm({type, toggle, ...props}) {
   return (
     <Paper radius="md" p="xl" withBorder {...props} style={{minWidth: '500px'}}>
       <Center>
-        <Text size="lg" fw={500}>
+        <Text size="lg" fw={500} aria-label={'welcome'} id={'welcome'}>
           Welcome to SlugSync
         </Text>
       </Center>
