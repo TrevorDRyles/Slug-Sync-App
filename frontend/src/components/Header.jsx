@@ -24,6 +24,7 @@ import {
   ScrollArea,
   rem,
   useMantineTheme,
+  Avatar,
 } from '@mantine/core';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import { IconBrandMantine } from '@tabler/icons-react';
@@ -67,7 +68,8 @@ export default function Header() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
 
-  const {accessToken, setAccessToken, userName} = React.useContext(LoginContext);
+  const {accessToken, setAccessToken, user} = React.useContext(LoginContext);
+  console.log(user)
 
   const logout = () => {
     localStorage.removeItem('user')
@@ -103,9 +105,12 @@ export default function Header() {
         <IconBrandMantine style={{marginRight: "146px"}}/>
 
           <Group h="100%" gap={0} visibleFrom="sm">
-            <a href="/" className={classes.link}>
+            <div onClick={() => navigate('/')}
+              className={classes.link}
+              style={{cursor: 'pointer'}}
+            >
               Home
-            </a>
+            </div>
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
               <HoverCard.Target>
                 <a href="#" className={classes.link}>
@@ -144,7 +149,8 @@ export default function Header() {
           <Group visibleFrom="sm">
             {accessToken ? (
               <>
-              <Text >Hello {userName}! </Text>
+                <Avatar src={user.img} />
+                <Text >Hello {user.name}! </Text>
                 <Button id={'logout'} variant="default" onClick={logout}>Logout</Button>
               </>
             ) : (

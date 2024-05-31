@@ -35,11 +35,15 @@ export function GoalCard({goalData}) {
   const {setRefetch} = React.useContext(RefetchContext)
 
   const formatDate = (dateString) => {
+    // some end dates are null
+    if (!dateString)
+      return 'N/A';
     const date = new Date(dateString);
+
     console.log(date)
     return date.toISOString().split('T')[0];
   };
-  
+
   return(
     <div className={styles.goalPaper}>
       <Paper>

@@ -120,7 +120,7 @@ exports.getMemberByPasswordAndEmail = async (password, email) => {
     name: row.data.name,
     email: row.data.email,
     roles: row.data.roles,
-    avatarURL: row.data.avatarURL,
+    img: row.data.img,
   }));
 };
 
@@ -132,7 +132,7 @@ exports.getAllCompletedGoals = async (userId) => {
     g.goal->>'recurrence' AS recurrence,
     g.goal->>'tag' AS tag,
     g.goal->>'startdate' AS startDate,
-    g.goal->>'startdate' AS endDate,
+    g.goal ->> 'enddate' AS endDate,
     g.goal->>'memberCount' AS memberCount,
     ug.streak AS streak
   FROM goal g
@@ -156,7 +156,7 @@ exports.getAllIncompletedGoals = async (userId) => {
     g.goal->>'recurrence' AS recurrence,
     g.goal->>'tag' AS tag,
     g.goal->>'startdate' AS startDate,
-    g.goal->>'startdate' AS endDate,
+    g.goal ->> 'enddate' AS endDate,
     g.goal->>'memberCount' AS memberCount,
     ug.streak AS streak
   FROM goal g
@@ -228,4 +228,21 @@ exports.leaveGoal = async (userId, goalId) => {
   };
 
   await pool.query(deleteQuery);
+};
+
+exports.getUserInformation = async (userId) => {
+  const select = `SELECT 
+    id,
+    data->>'name' AS name,
+    data->>'email' AS email,
+    data->>'img' AS img
+  FROM "user"
+  WHERE id = $1`;
+
+  const query = {
+    text: select,
+    values: [userId],
+  };
+  const {rows} = await pool.query(query);
+  return rows[0];
 };
