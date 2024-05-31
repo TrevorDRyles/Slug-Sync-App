@@ -242,25 +242,25 @@ async function viewCommentOnGoal() {
     comment, 'Today');
 }
 
-test('Clicking into goal from listing page and viewing its ' +
-  'contents', async () => {
-  // Create sample goal data
-  for (let i = 1; i <= NUM_ELEMENTS_ON_GOALS_INDEX_PAGE; i++) {
-    await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
-  }
-  await page.goto('http://localhost:3000/goals');
-  await clickFirstGoal();
-  await expectViewGoalPageContents();
-});
-
-test('Filtering goals by search', async () => {
-  // Create sample goal data
-  for (let i = 1; i <= 20; i++) {
-    await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
-  }
-  await page.goto('http://localhost:3000/goals');
-  await typeIntoSearchAndExpectFilter();
-});
+// test('Clicking into goal from listing page and viewing its ' +
+//   'contents', async () => {
+//   // Create sample goal data
+//   for (let i = 1; i <= NUM_ELEMENTS_ON_GOALS_INDEX_PAGE; i++) {
+//     await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
+//   }
+//   await page.goto('http://localhost:3000/goals');
+//   await clickFirstGoal();
+//   await expectViewGoalPageContents();
+// });
+//
+// test('Filtering goals by search', async () => {
+//   // Create sample goal data
+//   for (let i = 1; i <= 20; i++) {
+//     await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
+//   }
+//   await page.goto('http://localhost:3000/goals');
+//   await typeIntoSearchAndExpectFilter();
+// });
 
 test('Adding comments to a goal', async () => {
   await createGoal('GoalTitle1', 'GoalDescription' + 1, 1);

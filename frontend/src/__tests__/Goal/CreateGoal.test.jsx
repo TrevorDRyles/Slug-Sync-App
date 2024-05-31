@@ -44,7 +44,7 @@ it('Loads create goal', async () => {
   screen.getByText('Title', { exact: false });
   screen.getByText('Description');
   screen.getByText('Repeat goal every ...', {exact: false});
-  screen.getByText('Recurrence (every x days)', {exact: false});
+  screen.getAllByLabelText('Repeat goal every ...', {exact: false});
   screen.getAllByText('Start Date', {exact: false});
   screen.getAllByText('End Date', {exact: false});
 

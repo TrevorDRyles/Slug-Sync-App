@@ -87,7 +87,7 @@ function CreateGoal() {
     e.preventDefault();
     fetch('http://localhost:3010/v0/goal', {
       method: 'POST',
-      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence + " days", author: userId, tag: formData.tag, comments: [], memberCount: 0, startDate: formData.startDate, endDate: formData.endDate}),
+      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence + " days", author: userId, tag: formData.tag, comments: [], memberCount: 0, startdate: formData.startdate, enddate: formData.enddate}),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userToken}`,
@@ -195,6 +195,7 @@ function CreateGoal() {
               value={endDate}
               error={endDateError}
               data-testid={"enddate"}
+              id={'enddate'}
               onChange={handleEndDateChange}
               placeholder="Select end date"
             />
