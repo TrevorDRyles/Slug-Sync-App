@@ -11,6 +11,7 @@ const pool = new Pool({
 
 exports.createGoal = async (req, res) => {
   const goal = req.body;
+  goal.memberCount = 1;
   const user = req.user;
   goal.author = user['id'];
   // todo: abstract these into db.js?
@@ -46,6 +47,11 @@ exports.getPostsByPageAndSize = async function(req, res) {
     searchTerm = '%';
   }
 
+  let filterTerm = req.query.tag;
+  if (filterTerm === undefined) {
+    filterTerm = '%';
+  }
+
   let size = req.query.size;
   // const user = req.user;
   if (size === undefined) {
@@ -56,18 +62,18 @@ exports.getPostsByPageAndSize = async function(req, res) {
   }
 
   const selectQuery = `
-    SELECT *
-    FROM
-        goal     -- the post's member is the logged in user
-    WHERE goal->>'title' ILIKE $3
-    ORDER BY
-        goal->>'members'
-    DESC
-    LIMIT $2
-    OFFSET $1`;
+SELECT *
+FROM
+    goal     -- the post's member is the logged in user
+WHERE goal->>'title' ILIKE $3 AND goal->>'tag' ILIKE $4
+ORDER BY
+    goal->>'members'
+DESC
+LIMIT $2
+OFFSET $1`;
   const query = {
     text: selectQuery,
-    values: [(pageNum - 1) * size, size, `%${searchTerm}%`],
+    values: [(pageNum - 1) * size, size, `%${searchTerm}%`, `%${filterTerm}%`],
   };
   const result = await pool.query(query);
 
@@ -86,6 +92,8 @@ exports.getPostsByPageAndSize = async function(req, res) {
       recurrence: row.goal.recurrence,
       description: row.goal.description,
       tag: row.goal.tag,
+      startdate: row.goal.startdate,
+      enddate: row.goal.enddate,
       comments: rows,
       memberCount: row.goal.memberCount,
     };
@@ -102,7 +110,16 @@ exports.viewGoal = async (req, res) => {
   if (rows.length === 0) {
     res.status(404).send();
   } else {
-    res.status(200).json({id: rows[0].id, ...rows[0].goal});
+    const result = rows.map((row) => ({
+      id: row.id,
+      title: row.goal.title,
+      recurrence: row.goal.recurrence,
+      description: row.goal.description,
+      startdate: row.goal.startdate,
+      enddate: row.goal.enddate,
+      memberCount: row.goal.memberCount,
+    }));
+    res.status(200).json(result[0]);
   }
 };
 

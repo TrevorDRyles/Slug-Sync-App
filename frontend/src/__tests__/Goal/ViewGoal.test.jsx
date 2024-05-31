@@ -32,6 +32,8 @@ it('Loads view goal recurring every 7 days', async () => {
     description: 'Test Description',
     recurrence: '7 days',
     tag: 'Hobbies',
+    startdate: new Date().toISOString(),
+    enddate: new Date().toISOString()
   };
 
   server.use(
@@ -104,6 +106,8 @@ function renderViewGoalPage() {
     title: 'Test Goal',
     description: 'Test Description',
     recurrence: '1 day',
+    startdate: new Date().toISOString(),
+    enddate: new Date().toISOString()
   };
   server.use(
     http.get('http://localhost:3010/v0/goal/:id', async () => {

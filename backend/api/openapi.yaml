@@ -112,9 +112,18 @@ paths:
           schema:
             additionalProperties: false
             type: number
+        - name: tag
+          in: query
+          description: Tag to filter with
+          required: false
+          schema:
+            additionalProperties: false
+            type: string
+            nullable: true
         - name: search
           in: query
           description: Search term
+          allowEmptyValue: true
           schema:
             additionalProperties: false
             type: string
@@ -363,7 +372,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/GoalWithId'
-  
+
   /goal/incompleted:
     get:
       security:
@@ -378,7 +387,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/GoalWithId'
-  
+
   /complete/{goal}:
     put:
       security:
@@ -428,6 +437,8 @@ components:
         - title
         - description
         - recurrence
+        - startdate
+        - enddate
       properties:
         title:
           type: string
@@ -438,10 +449,12 @@ components:
         recurrence:
           type: string
           description: recurrence of goal
-      example:
-        title: "title"
-        description: "description"
-        recurrence: "1"
+        startdate:
+          type: string
+          description: start date of goal
+        enddate:
+          type: string
+          description: end date of goal
     Comment:
       type: object
       required:
@@ -479,6 +492,9 @@ components:
         - title
         - description
         - recurrence
+        - startdate
+        - enddate
+        - memberCount
       properties:
         id:
           type: string
@@ -493,11 +509,15 @@ components:
         recurrence:
           type: string
           description: recurrence of goal
-      example:
-        id: "1"
-        title: "title"
-        description: "description"
-        recurrence: "1"
+        startdate:
+          type: string
+          description: start date of goal
+        enddate:
+          type: string
+          description: end date of goal
+        memberCount:
+            type: integer
+            description: number of members in the goal
     Goals:
       type: array
       items:

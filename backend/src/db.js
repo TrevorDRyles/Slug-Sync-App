@@ -130,6 +130,10 @@ exports.getAllCompletedGoals = async (userId) => {
     g.goal->>'title' AS title,
     g.goal->>'description' AS description,
     g.goal->>'recurrence' AS recurrence,
+    g.goal->>'tag' AS tag,
+    g.goal->>'startdate' AS startDate,
+    g.goal->>'startdate' AS endDate,
+    g.goal->>'memberCount' AS memberCount,
     ug.streak AS streak
   FROM goal g
   LEFT OUTER JOIN user_goal ug ON g.id = ug.goal_id
@@ -141,7 +145,7 @@ exports.getAllCompletedGoals = async (userId) => {
     values: [userId],
   };
   const {rows} = await pool.query(query);
-  return rows;
+  return rows.map((row) => ({...row, memberCount: parseInt(row.membercount)}));
 };
 
 exports.getAllIncompletedGoals = async (userId) => {
@@ -150,6 +154,10 @@ exports.getAllIncompletedGoals = async (userId) => {
     g.goal->>'title' AS title,
     g.goal->>'description' AS description,
     g.goal->>'recurrence' AS recurrence,
+    g.goal->>'tag' AS tag,
+    g.goal->>'startdate' AS startDate,
+    g.goal->>'startdate' AS endDate,
+    g.goal->>'memberCount' AS memberCount,
     ug.streak AS streak
   FROM goal g
   LEFT OUTER JOIN user_goal ug ON g.id = ug.goal_id
@@ -161,7 +169,7 @@ exports.getAllIncompletedGoals = async (userId) => {
     values: [userId],
   };
   const {rows} = await pool.query(query);
-  return rows;
+  return rows.map((row) => ({...row, memberCount: parseInt(row.membercount)}));
 };
 
 exports.completeGoal = async (userId, goalId) => {
