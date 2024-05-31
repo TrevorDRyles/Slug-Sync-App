@@ -439,6 +439,7 @@ components:
         - recurrence
         - startdate
         - enddate
+        - memberCount
       properties:
         title:
           type: string
