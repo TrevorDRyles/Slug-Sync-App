@@ -140,8 +140,8 @@ const GoalsListing = () => {
                 <Badge 
                   aria-label='filter-badge'
                   leftSection={<IconTag style={{width: 16, height: 16}}/>}
-                  rightSection={ <IconX aria-label='remove-filter' className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}>
-                  
+                  rightSection={ <IconX aria-label='remove-filter' className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}
+                >
                     {filterTag} 
                 </Badge>
               </div>
@@ -149,7 +149,9 @@ const GoalsListing = () => {
           />
           <Menu shadow="md" width={200} transitionProps={{ transition: 'scale-y', duration: 180}}>
             <Menu.Target >
-              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '9%'}}><IconTag style={{width: 20, height: 20}}/></Button>
+              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '9%'}}>
+                <IconTag style={{width: 20, height: 20}}/>
+              </Button>
             </Menu.Target>
 
             <Menu.Dropdown>
@@ -160,6 +162,7 @@ const GoalsListing = () => {
                   <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => handleFilterTag(event.target.textContent)}>
                     <Badge 
                       data-testid={"tag"} 
+                      style={{backgroundColor: 'white', color: '#228be6'}}
                       leftSection={<IconTag style={{width: 16, height: 16}}/>}>
                         {tag}
                     </Badge>
@@ -203,6 +206,7 @@ const Goal = ({ goal, onAddGoal }) => {
             </Text>
             {goal.tag !== '' && goal.tag !== undefined ?
               (<Badge data-testid={"tag"}
+                      style={{backgroundColor: 'white', color: '#228be6'}}
                       leftSection={<IconTag style={{width: 16, height: 16}}/>}>{goal.tag}</Badge>) : (<></>)
             }
           </Group>

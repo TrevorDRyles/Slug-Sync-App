@@ -105,9 +105,12 @@ export default function Header() {
         <IconBrandMantine style={{marginRight: "146px"}}/>
 
           <Group h="100%" gap={0} visibleFrom="sm">
-            <a href="/" className={classes.link}>
+            <div onClick={() => navigate('/')}
+              className={classes.link}
+              style={{cursor: 'pointer'}}
+            >
               Home
-            </a>
+            </div>
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
               <HoverCard.Target>
                 <a href="#" className={classes.link}>
