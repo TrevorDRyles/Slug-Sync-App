@@ -15,7 +15,7 @@ const GoalsListing = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [filterTag, setFilterTag] = useState('');
-  const goalsPerPage = 5;
+  const goalsPerPage = 4;
   const history = useNavigate();
   // const indexOfLastGoal = currentPage * goalsPerPage;
   const userToken = JSON.parse(localStorage.getItem('user')).token;
@@ -135,14 +135,14 @@ const GoalsListing = () => {
               onChange={(event) => handleSearch(event.target.value)}
               style={{marginBottom: '20px', width: '90%'}}
               rightSectionWidth={180}
-            rightSection={filterTag && 
+              rightSection={filterTag &&
               <div style={{ display: 'flex', justifyContent: 'flex-end', width: '95%' }}>
-                <Badge 
+                <Badge
                   aria-label='filter-badge'
                   leftSection={<IconTag style={{width: 16, height: 16}}/>}
                   rightSection={ <IconX aria-label='remove-filter' className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}
                 >
-                    {filterTag} 
+                  {filterTag}
                 </Badge>
               </div>
             }
@@ -160,8 +160,8 @@ const GoalsListing = () => {
               {
                 tags.map((tag, index) => (
                   <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => handleFilterTag(event.target.textContent)}>
-                    <Badge 
-                      data-testid={"tag"} 
+                    <Badge
+                      data-testid={"tag"}
                       style={{backgroundColor: 'white', color: '#228be6'}}
                       leftSection={<IconTag style={{width: 16, height: 16}}/>}>
                         {tag}
@@ -172,9 +172,9 @@ const GoalsListing = () => {
             </Menu.Dropdown>
 
           </Menu>
-          
-          {/* <Button 
-            style={{marginLeft: '8px', width: '9%'}} 
+
+          {/* <Button
+            style={{marginLeft: '8px', width: '9%'}}
             aria-label='sort-button'
             onClick={handleSort}>
               {sort ? <IconSortAscending aria-label='asc-icon' style={{width: 20, height: 20}}/> : <IconSortDescending aria-label='desc-icon' style={{width: 20, height: 20}}/>}
