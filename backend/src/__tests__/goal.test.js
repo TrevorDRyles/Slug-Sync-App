@@ -217,7 +217,7 @@ test('GET /v0/goal with undefined size and search term' +
 });
 
 test('GET /v0/goal with valid filter' +
-  'returns goal data ', async () => {
+  ' returns goal data ', async () => {
   // create sample goal data
   const promises = [];
   for (let i = 1; i <= 5; i++) {
@@ -230,6 +230,7 @@ test('GET /v0/goal with valid filter' +
         tag: 'Athletics' + i,
         startdate: new Date().toISOString(),
         enddate: new Date().toISOString(),
+        memberCount: 1
       }));
   }
   for (let i = 1; i <= 5; i++) {
@@ -242,6 +243,7 @@ test('GET /v0/goal with valid filter' +
         tag: 'Hobbies' + i,
         startdate: new Date().toISOString(),
         enddate: new Date().toISOString(),
+        memberCount: 1,
       }));
   }
   await Promise.all(promises);
