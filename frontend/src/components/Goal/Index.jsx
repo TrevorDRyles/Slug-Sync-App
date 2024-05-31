@@ -65,7 +65,7 @@ const GoalsListing = () => {
   };
 
   useEffect(() => {
-    const searchTerm = searchQuery.length > 0 ? '&search=' + searchQuery : ''
+    const searchTerm = searchQuery.length > 0 ? '&search=' + encodeURIComponent(searchQuery) : ''
     fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${searchTerm}`,
       {
         method: 'GET',

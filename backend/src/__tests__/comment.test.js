@@ -48,6 +48,9 @@ async function createGoal() {
       description: 'description',
       recurrence: '1 day',
       comments: [],
+      startdate: new Date().toISOString(),
+      enddate: new Date().toISOString(),
+      memberCount: 1,
     })
     .set('Content-Type', 'application/json')
     .set('Authorization', `Bearer: ${accessToken}`);

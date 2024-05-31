@@ -85,6 +85,7 @@ paths:
         - name: search
           in: query
           description: Search term
+          allowEmptyValue: true
           schema:
             additionalProperties: false
             type: string
@@ -333,7 +334,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/GoalWithId'
-  
+
   /goal/incompleted:
     get:
       security:
@@ -348,7 +349,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/GoalWithId'
-  
+
   /complete/{goal}:
     put:
       security:
@@ -398,6 +399,9 @@ components:
         - title
         - description
         - recurrence
+        - startdate
+        - enddate
+        - memberCount
       properties:
         title:
           type: string
@@ -408,6 +412,15 @@ components:
         recurrence:
           type: string
           description: recurrence of goal
+        startdate:
+          type: string
+          description: start date of goal
+        enddate:
+          type: string
+          description: end date of goal
+        memberCount:
+            type: integer
+            description: number of members in the goal
       example:
         title: "title"
         description: "description"
@@ -449,6 +462,9 @@ components:
         - title
         - description
         - recurrence
+        - startdate
+        - enddate
+        - memberCount
       properties:
         id:
           type: string
@@ -463,6 +479,15 @@ components:
         recurrence:
           type: string
           description: recurrence of goal
+        startdate:
+          type: string
+          description: start date of goal
+        enddate:
+          type: string
+          description: end date of goal
+        memberCount:
+            type: integer
+            description: number of members in the goal
       example:
         id: "1"
         title: "title"
