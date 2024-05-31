@@ -120,7 +120,7 @@ exports.getMemberByPasswordAndEmail = async (password, email) => {
     name: row.data.name,
     email: row.data.email,
     roles: row.data.roles,
-    avatarURL: row.data.avatarURL,
+    img: row.data.img,
   }));
 };
 
@@ -221,3 +221,20 @@ exports.leaveGoal = async (userId, goalId) => {
 
   await pool.query(deleteQuery);
 };
+
+exports.getUserInformation = async(userId) => {
+  const select = `SELECT 
+    id,
+    data->>'name' AS name,
+    data->>'email' AS email,
+    data->>'img' AS img
+  FROM "user"
+  WHERE id = $1`
+  
+  const query = {
+    text: select,
+    values: [userId]
+  }
+  const {rows} = await pool.query(query)
+  return rows[0]
+}

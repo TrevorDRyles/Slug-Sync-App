@@ -18,6 +18,7 @@ function App() {
 
   const [accessToken, setAccessToken] = React.useState('')
   const [userName, setUserName] = React.useState('')
+  const [user, setUser] = React.useState({})
 
   React.useEffect(() => {
     const user = localStorage.getItem("user");
@@ -25,12 +26,13 @@ function App() {
       const json = JSON.parse(user)
       setAccessToken(json.token)
       setUserName(json.name)
+      setUser(json)
     }
   }, [])
 
   return (
   <MantineProvider theme={{height: '100vh'}} defaultColorScheme='light'>
-    <LoginContext.Provider value={{accessToken, setAccessToken, userName, setUserName}}>
+    <LoginContext.Provider value={{accessToken, setAccessToken, userName, setUserName, user, setUser}}>
       <RefetchProvider>
           <BrowserRouter>
             <Routes>

@@ -13,19 +13,15 @@ beforeAll(async () => {
   request = supertest(server);
   const credentials = {
     'email': 'hunter@ucsc.edu',
-    'password': 'huntertratr',
+    'password': 'huntertratar',
   };
   await request.post('/v0/login')
     .send(credentials)
+    .expect(200)
     .then((res) => {
       accessToken = res.body.token;
     });
   return db.reset();
-});
-
-
-afterEach(async () => {
-  await db.reset();
 });
 
 afterAll((done) => {
@@ -64,3 +60,16 @@ test('GET /v0/user/:userId gets user information without ' +
   await request
     .get(`/v0/user/${USER_ID}`);
 });
+
+test('GET /v0/user gets information about loggeed in user', async() => {
+  await request.get(`/v0/user`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .expect(200)
+    .then(res => {
+      expect(res.body).toBeDefined()
+      expect(res.body.id).toBeDefined()
+      expect(res.body.name).toBe('Hunter')
+      expect(res.body.email).toBe('hunter@ucsc.edu')
+      expect(res.body.img).toBeDefined()
+    })
+})

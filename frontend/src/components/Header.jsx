@@ -24,6 +24,7 @@ import {
   ScrollArea,
   rem,
   useMantineTheme,
+  Avatar,
 } from '@mantine/core';
 import { MantineLogo } from '@mantinex/mantine-logo';
 import { IconBrandMantine } from '@tabler/icons-react';
@@ -67,7 +68,8 @@ export default function Header() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
 
-  const {accessToken, setAccessToken, userName} = React.useContext(LoginContext);
+  const {accessToken, setAccessToken, userName, user} = React.useContext(LoginContext);
+  console.log(user)
 
   const logout = () => {
     localStorage.removeItem('user')
@@ -144,7 +146,8 @@ export default function Header() {
           <Group visibleFrom="sm">
             {accessToken ? (
               <>
-              <Text >Hello {userName}! </Text>
+                <Avatar src={user.img} />
+                <Text >Hello {userName}! </Text>
                 <Button id={'logout'} variant="default" onClick={logout}>Logout</Button>
               </>
             ) : (
