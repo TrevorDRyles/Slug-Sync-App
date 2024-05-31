@@ -205,3 +205,7 @@
 .commentButton {
   align-self: flex-end;
 }
+
+.close:hover {
+  background-color: var(--mantine-color-blue-8);
+}

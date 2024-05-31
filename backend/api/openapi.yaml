@@ -82,6 +82,14 @@ paths:
           schema:
             additionalProperties: false
             type: number
+        - name: tag
+          in: query
+          description: Tag to filter with
+          required: false
+          schema:
+            additionalProperties: false
+            type: string
+            nullable: true
         - name: search
           in: query
           description: Search term
@@ -401,7 +409,6 @@ components:
         - recurrence
         - startdate
         - enddate
-        - memberCount
       properties:
         title:
           type: string
@@ -418,13 +425,6 @@ components:
         enddate:
           type: string
           description: end date of goal
-        memberCount:
-            type: integer
-            description: number of members in the goal
-      example:
-        title: "title"
-        description: "description"
-        recurrence: "1"
     Comment:
       type: object
       required:
@@ -488,11 +488,6 @@ components:
         memberCount:
             type: integer
             description: number of members in the goal
-      example:
-        id: "1"
-        title: "title"
-        description: "description"
-        recurrence: "1"
     Goals:
       type: array
       items:
