@@ -163,30 +163,33 @@ async function expectViewGoalPageContents() {
  */
 async function typeIntoSearchAndExpectFilter() {
   // wait for goals to appear
-  await page.waitForFunction(() => {
+  await page.waitForFunction((count) => {
     const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
-    return elements.length >= NUM_ELEMENTS_ON_GOALS_INDEX_PAGE;
-  }, {});
+    return elements.length >= count;
+  }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
   const searchInput = await page
     .waitForSelector('input[id="search-filter-goals"]');
   await searchInput.type('GoalTitle1');
-
+  await page.waitForFunction((text) =>
+    document.body.innerText.includes(text), {}, 'GoalTitle1');
   // wait for goals to appear post filter
-  // i don't know why this is needed to pass the test
-  await page.waitForFunction(() => {
+  // this is needed to pass the test
+  await page.waitForFunction((count) => {
     const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
-    return elements.length >= NUM_ELEMENTS_ON_GOALS_INDEX_PAGE;
-  }, {});
-
+    return elements.length >= count;
+  }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
+  console.log('made it here');
   // wait for selected goals to appear
   await page.waitForFunction((label, count) => {
     const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
     let matchedCount = 0;
+    console.log('elements: ', elements.length);
     elements.forEach((element) => {
       if (element.textContent.includes(label)) {
         matchedCount++;
       }
     });
+    console.log('matched count: ', matchedCount);
     return matchedCount >= count;
   }, {}, 'GoalTitle1', NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
 }
@@ -242,7 +245,7 @@ async function viewCommentOnGoal() {
 test('Clicking into goal from listing page and viewing its ' +
   'contents', async () => {
   // Create sample goal data
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= NUM_ELEMENTS_ON_GOALS_INDEX_PAGE; i++) {
     await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
   }
   await page.goto('http://localhost:3000/goals');
