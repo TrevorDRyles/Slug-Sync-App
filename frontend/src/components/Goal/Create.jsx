@@ -87,7 +87,7 @@ function CreateGoal() {
     e.preventDefault();
     fetch('http://localhost:3010/v0/goal', {
       method: 'POST',
-      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence + " days", author: userId, tag: formData.tag, comments: [], startdate: formData.startdate, enddate: formData.enddate}),
+      body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence + " days", author: userId, tag: formData.tag, comments: [], startdate: formData.startdate, enddate: formData.enddate, memberCount: 1}),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${userToken}`,

@@ -11,7 +11,6 @@ const pool = new Pool({
 
 exports.createGoal = async (req, res) => {
   const goal = req.body;
-  goal.memberCount = 1;
   const user = req.user;
   goal.author = user['id'];
   // todo: abstract these into db.js?
@@ -153,7 +152,7 @@ exports.joinGoal = async (req, res) => {
   memberGoalData = {
     'member_id': user.id,
     'goal_id': goalId,
-    'lastChecked': new Date(1804, 6, 4).toISOString(), 
+    'lastChecked': new Date(1804, 6, 4).toISOString(),
     'streak': '0',
   };
   await db.joinGoal(memberGoalData);
