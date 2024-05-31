@@ -11,7 +11,6 @@ const pool = new Pool({
 
 exports.createGoal = async (req, res) => {
   const goal = req.body;
-  goal.memberCount = 1;
   const user = req.user;
   goal.author = user['id'];
   // todo: abstract these into db.js?
@@ -147,10 +146,13 @@ exports.joinGoal = async (req, res) => {
     return res.status(400).json({message: 'User already in goal!'});
   }
 
+  // PLEASE READ!!!!
+  // lastchecked must be long to set goal as not completed at the begining
+  // its a bit scuffed and disgusting but it works!
   memberGoalData = {
     'member_id': user.id,
     'goal_id': goalId,
-    'lastChecked': new Date().toISOString(),
+    'lastChecked': new Date(1804, 6, 4).toISOString(),
     'streak': '0',
   };
   await db.joinGoal(memberGoalData);

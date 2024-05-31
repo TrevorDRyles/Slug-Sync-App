@@ -17,7 +17,7 @@ import PropTypes from "prop-types";
 import {LoginContext} from '../../contexts/Login'
 import * as React from 'react'
 
-const handleSubmit = (data, type, toggle, setAccessToken, history) => {
+const handleSubmit = (data, type, toggle, setAccessToken, history, setUser) => {
   if (type === 'register') {
     fetch(`http://localhost:3010/v0/signup`, {
       method: 'post',
@@ -63,6 +63,7 @@ const handleSubmit = (data, type, toggle, setAccessToken, history) => {
         })
         .then((json) => {
           setAccessToken(json.token)
+          setUser(json)
           localStorage.setItem('user', JSON.stringify(json));
           history('/');
         })
@@ -88,7 +89,7 @@ export default function SignInForm({type, toggle, ...props}) {
     },
   });
 
-  const {setAccessToken} = React.useContext(LoginContext);
+  const {setAccessToken, setUser} = React.useContext(LoginContext);
   const history = useNavigate();
 
   return (
@@ -102,7 +103,7 @@ export default function SignInForm({type, toggle, ...props}) {
       <Divider labelPosition="center" my="lg" />
 
 
-      <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle, setAccessToken, history)})}>
+      <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle, setAccessToken, history, setUser)})}>
         <Stack>
           {type === 'register' && (
             <TextInput
