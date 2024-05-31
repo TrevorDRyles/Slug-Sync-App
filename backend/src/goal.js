@@ -150,7 +150,7 @@ exports.joinGoal = async (req, res) => {
   memberGoalData = {
     'member_id': user.id,
     'goal_id': goalId,
-    'lastChecked': new Date().toISOString(),
+    'lastChecked': new Date(1804, 6, 4).toISOString(), //this needs to be a really long time ago to indicate it was not checked when joining 😭
     'streak': '0',
   };
   await db.joinGoal(memberGoalData);
