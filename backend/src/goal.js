@@ -86,6 +86,8 @@ exports.getPostsByPageAndSize = async function(req, res) {
       recurrence: row.goal.recurrence,
       description: row.goal.description,
       tag: row.goal.tag,
+      startdate: row.goal.startdate,
+      enddate: row.goal.enddate,
       comments: rows,
       memberCount: row.goal.memberCount,
     };
@@ -102,7 +104,16 @@ exports.viewGoal = async (req, res) => {
   if (rows.length === 0) {
     res.status(404).send();
   } else {
-    res.status(200).json({id: rows[0].id, ...rows[0].goal});
+    const result = rows.map((row) => ({
+      id: row.id,
+      title: row.goal.title,
+      recurrence: row.goal.recurrence,
+      description: row.goal.description,
+      startdate: row.goal.startdate,
+      enddate: row.goal.enddate,
+      memberCount: row.goal.memberCount,
+    }));
+    res.status(200).json(result[0]);
   }
 };
 

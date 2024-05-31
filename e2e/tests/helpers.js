@@ -42,8 +42,8 @@ module.exports.logout = async function(page) {
   await page.$eval(`#logout`, (element) =>
     element.click(),
   );
-  await page.waitForSelector('#loginSignup');
-  const content = await page.$eval('#loginSignup',
+  await page.waitForSelector('#welcome');
+  const content = await page.$eval('#welcome',
     (el) => el.textContent.trim());
-  expect(content).toBe('Login / Sign Up!');
+  expect(content).toBe('Welcome to SlugSync');
 };
