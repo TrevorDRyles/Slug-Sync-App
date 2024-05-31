@@ -17,7 +17,6 @@ import { RefetchProvider } from './contexts/Refetch.jsx';
 function App() {
 
   const [accessToken, setAccessToken] = React.useState('')
-  const [userName, setUserName] = React.useState('')
   const [user, setUser] = React.useState({})
 
   React.useEffect(() => {
@@ -25,14 +24,13 @@ function App() {
     if (user) {
       const json = JSON.parse(user)
       setAccessToken(json.token)
-      setUserName(json.name)
       setUser(json)
     }
   }, [])
 
   return (
   <MantineProvider theme={{height: '100vh'}} defaultColorScheme='light'>
-    <LoginContext.Provider value={{accessToken, setAccessToken, userName, setUserName, user, setUser}}>
+    <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
       <RefetchProvider>
           <BrowserRouter>
             <Routes>

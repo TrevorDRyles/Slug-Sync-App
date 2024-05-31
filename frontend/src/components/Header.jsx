@@ -68,7 +68,7 @@ export default function Header() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
 
-  const {accessToken, setAccessToken, userName, user} = React.useContext(LoginContext);
+  const {accessToken, setAccessToken, user} = React.useContext(LoginContext);
   console.log(user)
 
   const logout = () => {
@@ -147,7 +147,7 @@ export default function Header() {
             {accessToken ? (
               <>
                 <Avatar src={user.img} />
-                <Text >Hello {userName}! </Text>
+                <Text >Hello {user.name}! </Text>
                 <Button id={'logout'} variant="default" onClick={logout}>Logout</Button>
               </>
             ) : (
