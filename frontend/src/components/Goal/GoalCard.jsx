@@ -36,10 +36,10 @@ export function GoalCard({goalData}) {
     <div className={styles.goalPaper}>
       <Paper>
         <Text aria-label={'goal-title-' + goalData.title} className={styles.goalText}>{goalData.title}</Text>
-        <Divider my="sm" />
+        <Divider my="sm"/>
         <Text>{goalData.description}</Text>
-        <Text style={{ color: 'grey' }}>Recurring every {goalData.recurrence}</Text>
-        <Divider my="sm" />
+        <Text style={{color: 'grey'}}>Recurring every {goalData.recurrence}</Text>
+        <Divider my="sm"/>
         <div className={styles.goalBottom}>
           {goalData.completed ? (
             <Check aria-label="Goal completed"/>
@@ -50,7 +50,7 @@ export function GoalCard({goalData}) {
           )
           }
           <div className={styles.streakCount}>
-            <IconFlame />
+            <IconFlame/>
             <Text>{goalData.streak}</Text>
           </div>
         </div>
