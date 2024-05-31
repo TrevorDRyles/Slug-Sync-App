@@ -1,18 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Card, Text, TextInput, Badge, Group, Paper, Divider} from '@mantine/core';
+import {Button, Card, Text, TextInput, Badge, Group, Menu, Paper, Divider} from '@mantine/core';
 import {Link, useNavigate} from "react-router-dom";
 import styles from './Goal.module.css';
 import Header from "@/components/Header.jsx";
 import {useDisclosure} from "@mantine/hooks";
 import Sidebar from "@/components/Sidebar.jsx";
-import {IconTag} from '@tabler/icons-react';
+import {IconTag, IconSortAscending, IconSortDescending, IconX} from '@tabler/icons-react';
+
+let tags =['Health','Athletics','Productivity','Academics','Social','Hobbies','Finance and Bills','Work','Personal','Other'];
 
 const GoalsListing = () => {
   // https://chat.openai.com/share/5c73d542-08b5-4772-96ab-c9eecd503ba1
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const goalsPerPage = 4;
+  const [filterTag, setFilterTag] = useState('');
+  const goalsPerPage = 5;
   const history = useNavigate();
   // const indexOfLastGoal = currentPage * goalsPerPage;
   const userToken = JSON.parse(localStorage.getItem('user')).token;
@@ -20,6 +23,11 @@ const GoalsListing = () => {
   let [goals, setGoals] = useState([]);
   // let currentGoals = [];
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
+  const [sort, setSort] = useState(1);
+
+  // const handleSort = () => {
+  //   if (sort === 1 ? setSort(0) : setSort(1));
+  // };
 
   const handlePrevPage = () => {
     setCurrentPage(currentPage - 1);
@@ -59,6 +67,10 @@ const GoalsListing = () => {
   //   )
   // }
 
+  const handleFilterTag = (tag) => {
+    let tagText = tag.charAt(0).toUpperCase() + tag.slice(1).toLowerCase();
+    setFilterTag(tagText);
+  };
 
   const handleSearch = (searchTerm) => {
     setSearchQuery(searchTerm);
@@ -66,7 +78,8 @@ const GoalsListing = () => {
 
   useEffect(() => {
     const searchTerm = searchQuery.length > 0 ? '&search=' + encodeURIComponent(searchQuery) : ''
-    fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${searchTerm}`,
+    const filterTerm = filterTag.length > 0 ? '&tag=' + filterTag : ''
+    fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${filterTerm}${searchTerm}`,
       {
         method: 'GET',
         headers: {
@@ -94,7 +107,7 @@ const GoalsListing = () => {
       .catch((err) => {
         alert(err.message);
       });
-    }, [currentPage, searchQuery, userToken]);
+    }, [currentPage, searchQuery, filterTag, userToken]);
 
   // https://chat.openai.com/share/92235a8f-fdb7-4143-9674-69af74f89174
   return (
@@ -114,13 +127,56 @@ const GoalsListing = () => {
               </Text>
             </h1>
           </div>
-          <TextInput
-            id={'search-filter-goals'}
-            placeholder="Search goals..."
-            value={searchQuery}
-            onChange={(event) => handleSearch(event.target.value)}
-            style={{marginBottom: '20px'}}
+        <div style={{ display: 'flex' }}>
+            <TextInput
+              id={'search-filter-goals'}
+              placeholder="Search goals..."
+              value={searchQuery}
+              onChange={(event) => handleSearch(event.target.value)}
+              style={{marginBottom: '20px', width: '90%'}}
+              rightSectionWidth={180}
+            rightSection={filterTag && 
+              <div style={{ display: 'flex', justifyContent: 'flex-end', width: '95%' }}>
+                <Badge 
+                  aria-label='filter-badge'
+                  leftSection={<IconTag style={{width: 16, height: 16}}/>}
+                  rightSection={ <IconX aria-label='remove-filter' className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}>
+                  
+                    {filterTag} 
+                </Badge>
+              </div>
+            }
           />
+          <Menu shadow="md" width={200} transitionProps={{ transition: 'scale-y', duration: 180}}>
+            <Menu.Target >
+              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '9%'}}><IconTag style={{width: 20, height: 20}}/></Button>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Label>Select a tag</Menu.Label>
+
+              {
+                tags.map((tag, index) => (
+                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => handleFilterTag(event.target.textContent)}>
+                    <Badge 
+                      data-testid={"tag"} 
+                      leftSection={<IconTag style={{width: 16, height: 16}}/>}>
+                        {tag}
+                    </Badge>
+                  </Menu.Item>
+                ))
+              }
+            </Menu.Dropdown>
+
+          </Menu>
+          
+          {/* <Button 
+            style={{marginLeft: '8px', width: '9%'}} 
+            aria-label='sort-button'
+            onClick={handleSort}>
+              {sort ? <IconSortAscending aria-label='asc-icon' style={{width: 20, height: 20}}/> : <IconSortDescending aria-label='desc-icon' style={{width: 20, height: 20}}/>}
+          </Button> */ /**Commented out for now since use case of sort by member/date button uncertain */}
+        </div>
           {goals.map((goal, index) => (
             <div key={`goal-${index}`}>
               <Goal key={goal.id} goal={goal} onAddGoal={() => handleAddGoal(goal)}/>

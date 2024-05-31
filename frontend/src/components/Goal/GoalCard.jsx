@@ -36,6 +36,7 @@ export function GoalCard({goalData}) {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
+    console.log(date)
     return date.toISOString().split('T')[0];
   };
   
