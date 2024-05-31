@@ -85,6 +85,10 @@ function CreateGoal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!formData.startdate) {
+      setStartDateError('Start date is required');
+      return;
+    }
     fetch('http://localhost:3010/v0/goal', {
       method: 'POST',
       body: JSON.stringify({title: formData.title, description: formData.description, recurrence: formData.recurrence + " days", author: userId, tag: formData.tag, comments: [], startdate: formData.startdate, enddate: formData.enddate, memberCount: 1}),
