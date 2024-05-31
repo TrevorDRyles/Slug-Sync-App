@@ -24,6 +24,8 @@ app.use(
   swaggerUi.setup(apidoc),
 );
 
+app.get('/v0/user', auth.check, user.getUserInformation);
+
 app.use(
   OpenApiValidator.middleware({
     apiSpec: apiSpec,

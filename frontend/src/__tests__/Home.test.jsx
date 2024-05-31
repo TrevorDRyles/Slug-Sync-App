@@ -10,8 +10,6 @@ import Sidebar from '../components/Sidebar.jsx';
 import { LoginContext, LoginProvider } from '../contexts/Login.jsx';
 import Header from '../components/Header.jsx';
 
-const URL = 'http://localhost:3010/v0/goal';
-
 const server = setupServer();
 
 beforeAll(() => server.listen());
@@ -66,9 +64,9 @@ it('Clicks logout', async() => {
   let loggedout = false
   const accessToken = '1234'
   const setAccessToken = () => {loggedout = true}
-  const userName = 'test username'
+  const user = {'name': 'test username'}
   render(
-    <LoginContext.Provider value={{accessToken, setAccessToken, userName}}>
+    <LoginContext.Provider value={{accessToken, setAccessToken, user}}>
       <BrowserRouter>
         <Header />
       </BrowserRouter>

@@ -9,6 +9,36 @@ servers:
   - url: http://localhost:3010/v0
 
 paths:
+
+  /user:
+    get:
+      security:
+        - bearerAuth: []
+      description: Get logged in user information
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  email:
+                    type: string
+                    format: email
+                  img:
+                    type: string
+                required:
+                  - id
+                  - name
+                  - email
+
+
   /user/{id}:
     get:
       tags:
@@ -409,6 +439,7 @@ components:
         - recurrence
         - startdate
         - enddate
+        - memberCount
       properties:
         title:
           type: string

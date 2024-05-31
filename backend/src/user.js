@@ -1,4 +1,5 @@
 const {Pool} = require('pg');
+const db = require('./db');
 
 const pool = new Pool({
   host: 'localhost',
@@ -18,4 +19,10 @@ exports.getUserById = async (req, res) => {
     return res.status(404).send('User not found');
   }
   res.status(200).json(result.rows[0]);
+};
+
+exports.getUserInformation = async (req, res) => {
+  const {id} = req.user;
+  const user = await db.getUserInformation(id);
+  res.status(200).json(user);
 };
