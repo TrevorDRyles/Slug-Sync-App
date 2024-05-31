@@ -230,19 +230,19 @@ exports.leaveGoal = async (userId, goalId) => {
   await pool.query(deleteQuery);
 };
 
-exports.getUserInformation = async(userId) => {
+exports.getUserInformation = async (userId) => {
   const select = `SELECT 
     id,
     data->>'name' AS name,
     data->>'email' AS email,
     data->>'img' AS img
   FROM "user"
-  WHERE id = $1`
+  WHERE id = $1`;
   
   const query = {
     text: select,
-    values: [userId]
-  }
-  const {rows} = await pool.query(query)
-  return rows[0]
-}
+    values: [userId],
+  };
+  const {rows} = await pool.query(query);
+  return rows[0];
+};

@@ -61,15 +61,15 @@ test('GET /v0/user/:userId gets user information without ' +
     .get(`/v0/user/${USER_ID}`);
 });
 
-test('GET /v0/user gets information about loggeed in user', async() => {
+test('GET /v0/user gets information about loggeed in user', async () => {
   await request.get(`/v0/user`)
     .set('Authorization', `Bearer ${accessToken}`)
     .expect(200)
-    .then(res => {
-      expect(res.body).toBeDefined()
-      expect(res.body.id).toBeDefined()
-      expect(res.body.name).toBe('Hunter')
-      expect(res.body.email).toBe('hunter@ucsc.edu')
-      expect(res.body.img).toBeDefined()
-    })
-})
+    .then((res) => {
+      expect(res.body).toBeDefined();
+      expect(res.body.id).toBeDefined();
+      expect(res.body.name).toBe('Hunter');
+      expect(res.body.email).toBe('hunter@ucsc.edu');
+      expect(res.body.img).toBeDefined();
+    });
+});

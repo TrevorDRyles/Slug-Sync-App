@@ -17,7 +17,11 @@ exports.login = async (req, res) => {
       algorithm: 'HS256',
     },
   );
-  res.status(200).json({token: accessToken, id: user.id, name: user.name, img: user.img});
+  res.status(200).json({
+    token: accessToken, 
+    id: user.id, name: user.name, 
+    img: user.img,
+  });
 };
 
 
