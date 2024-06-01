@@ -159,6 +159,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - edit profile
+      summary: edit profile
+      parameters:
+        - name: id
+          in: path
+          description: Id of member
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      requestBody:
+        description: Profile data to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileWithId'
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileWithId'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Error:

@@ -41,7 +41,7 @@ app.get('/v0/goal/:id', goal.viewGoal);
 
 app.get('/v0/profile/:id', profile.getUserInfo);
 
-app.post('/v0/profile/:id', profile.updateBio);
+app.post('/v0/profile/:id', profile.editProfile);
 
 app.get('/v0/goal', goal.getPostsByPageAndSize);
 
