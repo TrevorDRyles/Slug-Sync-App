@@ -149,7 +149,7 @@ const GoalsListing = () => {
           />
           <Menu shadow="md" width={200} transitionProps={{ transition: 'scale-y', duration: 180}}>
             <Menu.Target >
-              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '9%'}}>
+              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '80px'}}>
                 <IconTag style={{width: 20, height: 20, minWidth: 20, minHeight: 20, flexShrink: 0}}/>
               </Button>
             </Menu.Target>
