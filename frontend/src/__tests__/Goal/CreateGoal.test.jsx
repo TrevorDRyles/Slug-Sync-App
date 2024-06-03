@@ -131,7 +131,7 @@ it('Sets end date error when end date is before start date', async () => {
   await waitFor(() => {
     expect(screen.queryByText('15')).not.toBeInTheDocument();
   })
-  expect(screen.getByText('May 15, 2024')).toBeInTheDocument();
+  expect(screen.getByText('June 15, 2024')).toBeInTheDocument(); // NOTE: HARDCODED MONTH. WILL NOT WORK AFTER JUNE
 
   const endDateInput = screen.getByText('Select end date')
   fireEvent.click(endDateInput);

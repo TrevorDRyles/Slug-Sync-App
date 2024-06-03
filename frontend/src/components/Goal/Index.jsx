@@ -35,7 +35,6 @@ const GoalsListing = () => {
 
   const handleTagSelect = () => {
     setCurrentPage(1); //hacky solution for now
-    console.log('tag selected');
   };
 
   const handleAddGoal = (goal) => {
@@ -78,7 +77,6 @@ const GoalsListing = () => {
   };
 
   useEffect(() => {
-    console.log('useEffect called: ' + currentPage);
     const searchTerm = searchQuery.length > 0 ? '&search=' + encodeURIComponent(searchQuery) : ''
     const filterTerm = filterTag.length > 0 ? '&tag=' + filterTag : ''
     fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${filterTerm}${searchTerm}`,
