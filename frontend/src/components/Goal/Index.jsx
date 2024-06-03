@@ -25,16 +25,17 @@ const GoalsListing = () => {
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
   const [sort, setSort] = useState(1);
 
-  // const handleSort = () => {
-  //   if (sort === 1 ? setSort(0) : setSort(1));
-  // };
-
   const handlePrevPage = () => {
     setCurrentPage(currentPage - 1);
   };
 
   const handleNextPage = () => {
     setCurrentPage(currentPage + 1);
+  };
+
+  const handleTagSelect = () => {
+    setCurrentPage(1); //hacky solution for now
+    console.log('tag selected');
   };
 
   const handleAddGoal = (goal) => {
@@ -77,6 +78,7 @@ const GoalsListing = () => {
   };
 
   useEffect(() => {
+    console.log('useEffect called: ' + currentPage);
     const searchTerm = searchQuery.length > 0 ? '&search=' + encodeURIComponent(searchQuery) : ''
     const filterTerm = filterTag.length > 0 ? '&tag=' + filterTag : ''
     fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${filterTerm}${searchTerm}`,
@@ -159,7 +161,7 @@ const GoalsListing = () => {
 
               {
                 tags.map((tag, index) => (
-                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => handleFilterTag(event.target.textContent)}>
+                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => {handleTagSelect(); handleFilterTag(event.target.textContent);}}>
                     <Badge
                       data-testid={"tag"}
                       style={{backgroundColor: 'white', color: '#228be6'}}
