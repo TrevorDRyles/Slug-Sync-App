@@ -246,3 +246,17 @@ exports.getUserInformation = async (userId) => {
   const {rows} = await pool.query(query);
   return rows[0];
 };
+
+exports.getAllMembersInGoal = async (goalId) => {
+  const query = {
+    text: `
+      SELECT ug.user_id AS "id", u.data->>'name' AS "username"
+      FROM "user_goal" ug
+      JOIN "user" u ON ug.user_id = u.id
+      WHERE ug.goal_id = $1;
+    `,
+    values: [goalId],
+  };
+  const {rows} = await pool.query(query);
+  return rows;
+};
