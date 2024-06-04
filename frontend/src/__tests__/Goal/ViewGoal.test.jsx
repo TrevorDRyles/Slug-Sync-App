@@ -113,8 +113,8 @@ function renderViewGoalPage() {
     http.get('http://localhost:3010/v0/goal/:id', async () => {
       return HttpResponse.json(goalData);
     }),
-    http.get('http://localhost:3010/v0/members', async () => {
-      return HttpResponse.json([]);
+    http.get('http://localhost:3010/v0/goal/:id/members', async () => {
+      return HttpResponse.json([{id: '1', username: 'User1', role: 'Member'}]);
     }),
   );
 
