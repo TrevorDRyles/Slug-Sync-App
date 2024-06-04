@@ -88,7 +88,7 @@ const Profile = () => {
 
           <div className={`${styles.inner_container}`}>
             <Group justify="space-between" mt="md" mb="xs">
-              <Text fw={500}>{userData.name}</Text>
+              <Text fw={500} data-testid={"name"}>{userData.name}</Text>
               <HoverCard width={150} shadow="md">
                 <HoverCard.Target>
                   <Badge color="red">1 Day </Badge>
@@ -99,11 +99,11 @@ const Profile = () => {
               </HoverCard>
             </Group>
 
-            <Text ta="center" size="md" c="dimmed">
+            <Text ta="center" size="md" c="dimmed" data-testid={"bio"}>
               {userData.bio || 'No bio.'}
             </Text>
 
-            <Button variant="outline" size="xs" onClick={handleEditClick} className={styles.editButton}>
+            <Button variant="outline" size="xs" onClick={handleEditClick} className={styles.editButton} data-testid={"edit button"}>
               <IconPencil size={16} />
             </Button>
           </div>
