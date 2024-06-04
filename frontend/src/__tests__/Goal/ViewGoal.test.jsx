@@ -2,7 +2,7 @@ import { it, beforeAll, afterAll } from 'vitest';
 import {waitFor, screen, fireEvent} from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import ViewGoal from "../../components/Goal/View";
-import {BrowserRouter, MemoryRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, MemoryRouter, Route, Routes, useNavigate} from "react-router-dom";
 import { LoginProvider } from '../../contexts/Login.jsx';
 import { render } from "../render";
 import { http, HttpResponse } from 'msw';
@@ -118,19 +118,26 @@ function renderViewGoalPage() {
     }),
   );
 
+  const TestComponent = () => {
+    const navigate = useNavigate();
+    return (
+      <LoginProvider>
+        <RefetchProvider>
+          <ViewGoal />
+        </RefetchProvider>
+      </LoginProvider>
+    );
+  };
+
   render(
     <MemoryRouter initialEntries={['/goal/123']}>
       <Routes>
-        <Route path="/goal/:id" element={
-          <LoginProvider>
-      <RefetchProvider>
-                <ViewGoal/>
-        </RefetchProvider>
-          </LoginProvider>
-        }/>
+        <Route path="/goal/:id" element={<TestComponent />} />
       </Routes>
     </MemoryRouter>
   );
+
+  return { navigate: useNavigate };
 }
 
 it('Adds comment successfully', async () => {
@@ -302,3 +309,100 @@ it('Adds comment unsuccessfully', async () => {
   })
 });
 
+it('Deletes goal successfully', async () => {
+  server.use(
+    ...viewGoalHandlers,
+    http.delete('http://localhost:3010/v0/goal/:id', async () => {
+      return new HttpResponse(null, { status: 200 });
+    })
+  );
+
+  const navigate = renderViewGoalPage().navigate;
+
+  await waitFor(() => {
+    screen.getByText('Test Comment');
+  });
+
+  fireEvent.click(screen.getByText('Delete goal'));
+
+  await waitFor(() => {
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  fireEvent.click(screen.getByText('Yes, confirm delete'));
+});
+
+it('Leaves goal successfully', async () => {
+  server.use(
+    ...viewGoalHandlers,
+    http.post('http://localhost:3010/v0/goal/:id/leave', async () => {
+      return HttpResponse.json({});
+    })
+  );
+
+  const navigate = renderViewGoalPage().navigate;
+
+  await waitFor(() => {
+    screen.getByText('Test Comment');
+  });
+
+  fireEvent.click(screen.getByText('Leave Goal'));
+
+});
+
+it('Handles error when deleting goal', async () => {
+  server.use(
+    ...viewGoalHandlers,
+    http.delete('http://localhost:3010/v0/goal/:id', async () => {
+      return new HttpResponse('Error', { status: 500 });
+    })
+  );
+
+  renderViewGoalPage();
+
+  await waitFor(() => {
+    screen.getByText('Test Comment');
+  });
+
+  fireEvent.click(screen.getByRole('button', { name: 'Delete goal' }));
+
+  await waitFor(() => {
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+  });
+
+  fireEvent.click(screen.getByRole('button', { name: 'Yes, confirm delete' }));
+});
+
+it('Handles error when leaving goal', async () => {
+  server.use(
+    ...viewGoalHandlers,
+    http.post('http://localhost:3010/v0/goal/:id/leave', async () => {
+      return new HttpResponse('Error', { status: 403 });
+    })
+  );
+
+  renderViewGoalPage();
+
+  await waitFor(() => {
+    screen.getByText('Test Comment');
+  });
+
+  fireEvent.click(screen.getByRole('button', { name: 'Leave Goal' }));
+});
+
+it('Handles error when unable to get goal members', async () => {
+  server.use(
+    ...viewGoalHandlers,
+    http.get('http://localhost:3010/v0/goal/:id/members', async () => {
+      return new HttpResponse('Not Found', { status: 404 });
+    })
+  );
+
+  renderViewGoalPage();
+
+  // Other parts of the page should still load
+  await waitFor(() => {
+    screen.getByText('Test Comment');
+    screen.getByText('Test Goal');
+  });
+});
