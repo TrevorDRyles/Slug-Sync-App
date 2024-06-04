@@ -139,6 +139,8 @@ const GoalsListing = () => {
               <div style={{ display: 'flex', justifyContent: 'flex-end', width: '95%' }}>
                 <Badge
                   aria-label='filter-badge'
+                  variant='outline'
+                  style={{backgroundColor: 'white', color: '#228be6'}}
                   leftSection={<IconTag style={{width: 16, height: 16}}/>}
                   rightSection={ <IconX aria-label='remove-filter' className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}
                 >
