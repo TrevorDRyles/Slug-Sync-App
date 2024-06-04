@@ -207,3 +207,24 @@ exports.completeGoal = async (req, res) => {
     res.status(404).send();
   }
 };
+
+exports.getAllMembersInGoal = async (req, res) => {
+  const goalId = req.path.split('/')[3];
+  const goalMembers = await db.getAllMembersInGoal(goalId);
+  console.log(goalMembers);
+
+  // goofy ahh add the role (admin or member)
+  const goalInfo = await db.getGoal(goalId);
+  console.log(goalInfo);
+  const goalAuthorID = goalInfo.author;
+  console.log(goalAuthorID);
+  for (let i = 0; i < goalMembers.length; i++) {
+    if (goalAuthorID == goalMembers[i].id) {
+      goalMembers[i].role = 'author';
+    } else {
+      goalMembers[i].role = 'member';
+    }
+  }
+
+  res.status(200).json(goalMembers);
+};
