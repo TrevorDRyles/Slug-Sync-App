@@ -55,12 +55,14 @@ const headerItems = [
     title: 'Create Goal',
     description: 'Create a goal to track your progress!',
     link: '/createGoal',
+    ariaLabel: 'Create Goal Button'
   },
   {
     icon: IconZoomScan,
     title: 'View Goals',
     description: 'View your goals',
     link: '/goals',
+    ariaLabel: 'View Goal Button'
   },
 ];
 
@@ -79,7 +81,7 @@ export default function Header() {
 
   const links = headerItems.map((item) => (
     <Link to={item.link} key={item.title} className={classes.linkStyle}>
-      <UnstyledButton className={classes.subLink} key={item.title}>
+      <UnstyledButton className={classes.subLink} key={item.title} aria-label={item.ariaLabel}>
         <Group wrap="nowrap" align="flex-start">
           <ThemeIcon size={34} variant="default" radius="md">
             <item.icon style={{ width: rem(22), height: rem(22) }} color={theme.colors.blue[6]} />
@@ -115,7 +117,7 @@ export default function Header() {
               <HoverCard.Target>
                 <a href="#" className={classes.link}>
                   <Center inline>
-                    <Box component="span" mr={5}>
+                    <Box component="span" mr={5} aria-label='Goals dropdown'>
                       Goals
                     </Box>
                     <IconChevronDown
