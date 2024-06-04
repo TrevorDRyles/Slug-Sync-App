@@ -130,6 +130,7 @@ const GoalsListing = () => {
         <div style={{ display: 'flex' }}>
             <TextInput
               id={'search-filter-goals'}
+              aria-label='Search bar input'
               placeholder="Search goals..."
               value={searchQuery}
               onChange={(event) => handleSearch(event.target.value)}
@@ -201,7 +202,7 @@ const Goal = ({ goal, onAddGoal }) => {
       <div>
         <Link aria-label={`goal-link-${goal.id}`} className={styles.goalLink} to={'/goal/' + goal.id}>
           <Group justify="space-between">
-            <Text size="lg" style={{flexGrow: 1}}>
+            <Text size="lg" style={{flexGrow: 1}} aria-label='Goal Title Text'>
               {goal.title}
             </Text>
             {goal.tag !== '' && goal.tag !== undefined ?

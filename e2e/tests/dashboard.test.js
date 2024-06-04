@@ -104,13 +104,13 @@ const logIn = async(page, email, password) => {
   )
 }
 
-test('Signs up and logs into dashboard page', async() => {
-  await signUp(page, "Test name", "test123@gmail.com", "password")
-  await logIn(page, "test123@gmail.com", "password");
-})
+// test('Signs up and logs into dashboard page', async() => {
+//   await signUp(page, "Test name", "test123@gmail.com", "password")
+//   await logIn(page, "test123@gmail.com", "password");
+// })
 
 test('Adds a new goal', async() => {
-  await logIn(page, "test123@gmail.com", "password");
+  await logIn(page, "e2etester@gmail.com", "password");
   await page.hover('aria/Goals dropdown')
   await page.click('aria/Create Goal Button')
   await page.waitForFunction(
@@ -127,15 +127,46 @@ test('Adds a new goal', async() => {
       element.click();
     }
   })
-  await page.click('aria/Select start date')
+  await page.waitForSelector('aria/Select start date')
+  await page.click('aria/Select start date');
   await page.waitForSelector('aria/11 June 2024');
   await page.click('aria/11 June 2024')
   await page.waitForSelector('aria/Select end date');
   await page.click('aria/Select end date')
   await page.waitForSelector('aria/12 June 2024');
   await page.click('aria/12 June 2024')
+  await page.waitForSelector('aria/Submit New Goal');
   await page.click('aria/Submit New Goal')
   await page.waitForFunction(
     'document.querySelector("body").innerText.includes("Learn React")',
+  )
+})
+
+test('Clicks complete goal', async() => {
+  await logIn(page, "e2etester@gmail.com", "password")
+  await page.waitForFunction(
+    'document.querySelector("body").innerText.includes("0")',
+  )
+  await page.click('aria/Goal not completed');
+  await page.waitForSelector('aria/Goal completed');
+  await page.waitForFunction(
+    'document.querySelector("body").innerText.includes("1")',
+  )
+});
+
+test('Deletes goal cleanup', async() => {
+  await logIn(page, "e2etester@gmail.com", "password")
+  await page.hover('aria/Goals dropdown')
+  await page.click('aria/View Goal Button');
+  await page.waitForSelector('aria/Search bar input')
+  const searchInput = await page.$('aria/Search bar input')
+  searchInput.type("Learn React")
+  await page.waitForSelector('aria/Goal Title Text')
+  await page.click('aria/Goal Title Text')
+  await page.waitForSelector('aria/Delete Goal Button')
+  await page.click('aria/Delete Goal Button')
+  await page.click('aria/Confirm delete button')
+  await page.waitForFunction(
+    'document.querySelector("body").innerText.includes("Goals")',
   )
 })

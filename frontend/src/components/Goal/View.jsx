@@ -250,7 +250,7 @@ const ViewGoal = () => {
       <div className={styles.containerForView}>
       <Modal opened={opened} onClose={close} title="Delete Goal">
         <p>Are you sure you would like to delete this goal?</p>
-        <Button onClick={handleDelete} fullWidth variant="outline" color="red">
+        <Button onClick={handleDelete} fullWidth variant="outline" color="red" aria-label='Confirm delete button'>
           Yes, confirm delete
         </Button>
         <br></br>
@@ -300,7 +300,7 @@ const ViewGoal = () => {
                   </Button>
               <br></br>
               <br></br>
-              <Button onClick={open} variant="outline" color="red">
+              <Button onClick={open} variant="outline" color="red" aria-label="Delete Goal Button">
                 Delete goal
               </Button>
               <Button onClick={handleLeave} variant="outline" color="red">
