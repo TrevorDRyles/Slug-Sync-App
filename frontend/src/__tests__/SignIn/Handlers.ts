@@ -1,22 +1,30 @@
 import { http, HttpResponse } from 'msw';
 
-const URL = 'http://localhost:3010/v0/signup';
-
-const successful = new HttpResponse('Success', {
-  status: 200,
-})
-const failure = new HttpResponse('Success', {
-  status: 400,
-})
+const SIGNUP = 'http://localhost:3010/v0/signup';
+const LOGIN = 'http://localhost:3010/v0/login';
 
 export const handlers = [
-  http.post(URL, async() => {
-    return successful
+  http.post(SIGNUP, async() => {
+    return new HttpResponse('Success', {
+      status: 200,
+    })
+  }),
+  http.post(LOGIN, async() => {
+    return new HttpResponse('{"accessToken": "1234"}', {
+      status: 200
+    })
   })
 ]
 
 export const errorHandlers = [
-  http.post(URL, async() => {
-    return failure
+  http.post(SIGNUP, async() => {
+    return new HttpResponse('Failure', {
+      status: 400,
+    })
+  }),
+  http.post(LOGIN, async() => {
+    return new HttpResponse('Failure', {
+      status: 400,
+    })
   })
 ]

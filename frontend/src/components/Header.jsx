@@ -24,8 +24,10 @@ import {
   ScrollArea,
   rem,
   useMantineTheme,
+  Avatar,
 } from '@mantine/core';
 import { MantineLogo } from '@mantinex/mantine-logo';
+import { IconBrandMantine } from '@tabler/icons-react';
 import { useDisclosure } from '@mantine/hooks';
 import {
   IconNotification,
@@ -44,6 +46,8 @@ import classes from './Header.module.css';
 import PropTypes from "prop-types";
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../contexts/Login';
+import * as React from 'react'
 
 const headerItems = [
   {
@@ -60,11 +64,18 @@ const headerItems = [
   },
 ];
 
-export default function Header({ toggleSidebar}) {
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
+export default function Header() {
   const theme = useMantineTheme();
   const navigate = useNavigate();
+
+  const {accessToken, setAccessToken, user} = React.useContext(LoginContext);
+  console.log(user)
+
+  const logout = () => {
+    localStorage.removeItem('user')
+    setAccessToken('')
+    navigate("/login")
+  }
 
   const links = headerItems.map((item) => (
     <Link to={item.link} key={item.title} className={classes.linkStyle}>
@@ -87,17 +98,19 @@ export default function Header({ toggleSidebar}) {
   ));
 
   return (
-    <Box pb={120}>
+    <Box>
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
 
-
-          <Burger aria-label="Burger1" style={{marginRight: "146px"}} opened={drawerOpened} onClick={toggleSidebar}/>
+        <IconBrandMantine style={{marginRight: "146px"}}/>
 
           <Group h="100%" gap={0} visibleFrom="sm">
-            <a href="/" className={classes.link}>
+            <div onClick={() => navigate('/')}
+              className={classes.link}
+              style={{cursor: 'pointer'}}
+            >
               Home
-            </a>
+            </div>
             <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
               <HoverCard.Target>
                 <a href="#" className={classes.link}>
@@ -126,20 +139,6 @@ export default function Header({ toggleSidebar}) {
                 <SimpleGrid cols={2} spacing={0}>
                   {links}
                 </SimpleGrid>
-
-                {/* <div className={classes.dropdownFooter}>
-                  <Group justify="space-between">
-                    <div>
-                      <Text fw={500} fz="sm">
-                        Get started
-                      </Text>
-                      <Text size="xs" c="dimmed">
-                        Their food sources have decreased, and their numbers
-                      </Text>
-                    </div>
-                    <Button variant="default">Get started</Button>
-                  </Group>
-                </div> */}
               </HoverCard.Dropdown>
             </HoverCard>
             {/*<a className={classes.link}>*/}
@@ -148,63 +147,21 @@ export default function Header({ toggleSidebar}) {
           </Group>
 
           <Group visibleFrom="sm">
-            <Button variant="default" onClick={() => navigate("/login")}>Log in</Button>
-            <Button onClick={() => navigate("/login")}>Sign up</Button>
+            {accessToken ? (
+              <>
+                <Avatar src={user.img} />
+                <Text >Hello {user.name}! </Text>
+                <Button id={'logout'} variant="default" onClick={logout}>Logout</Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={() => navigate("/login")}>Login / Sign up</Button>
+              </>
+            )}
           </Group>
 
         </Group>
       </header>
-
-
-      {/* This "drawer" is leftover from the starter template, where on small screen the header is hidden and all items within moved to drawer
-          Do we need this? it's for small screen only. I'm leaving the code here in case anyone wants to do something with it, but right now
-          This code is not doing anything since I disabled the burger that brought it out and replaced it with the current Burger -Arnav*/}
-      <Drawer
-        opened={drawerOpened}
-        onClose={closeDrawer}
-        size="100%"
-        padding="md"
-        title="Navigation"
-        hiddenFrom="sm"
-        zIndex={1000000}
-      >
-        <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
-          <Divider my="sm" />
-
-          <a href="#" className={classes.link}>
-            Home
-          </a>
-          <UnstyledButton className={classes.link} onClick={toggleLinks}>
-            <Center inline>
-              <Box component="span" mr={5}>
-                Features
-              </Box>
-              <IconChevronDown
-                style={{ width: rem(16), height: rem(16) }}
-                color={theme.colors.blue[6]}
-              />
-            </Center>
-          </UnstyledButton>
-          <Collapse in={linksOpened}>{links}</Collapse>
-          {/* <a href="#" className={classes.link}>
-            Learn
-          </a>
-          <a href="#" className={classes.link}>
-            Academy
-          </a> */}
-
-          <Divider my="sm" />
-
-          <Group justify="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
-          </Group>
-        </ScrollArea>
-      </Drawer>
     </Box>
   );
 }
-
-Header.propTypes = {
-  toggleSidebar: PropTypes.func.isRequired,
-};

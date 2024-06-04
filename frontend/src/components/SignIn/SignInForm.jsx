@@ -14,9 +14,10 @@ import {
 } from '@mantine/core';
 import {useNavigate} from "react-router-dom";
 import PropTypes from "prop-types";
+import {LoginContext} from '../../contexts/Login'
 import * as React from 'react'
 
-const handleSubmit = (data, type, toggle, history) => {
+const handleSubmit = (data, type, toggle, setAccessToken, history, setUser) => {
   if (type === 'register') {
     fetch(`http://localhost:3010/v0/signup`, {
       method: 'post',
@@ -62,11 +63,13 @@ const handleSubmit = (data, type, toggle, history) => {
           return res.json();
         })
         .then((json) => {
+          setAccessToken(json.token)
+          setUser(json)
           localStorage.setItem('user', JSON.stringify(json));
-          console.log(JSON.parse(localStorage.getItem('user')).id)
-          history('/')
+          history('/');
         })
         .catch((err) => {
+          console.error(err);
           alert('Error signing in, please try again')
         });
   }
@@ -87,13 +90,13 @@ export default function SignInForm({type, toggle, ...props}) {
     },
   });
 
+  const {setAccessToken, setUser} = React.useContext(LoginContext);
   const history = useNavigate();
-
 
   return (
     <Paper radius="md" p="xl" withBorder {...props} style={{minWidth: '500px'}}>
       <Center>
-        <Text size="lg" fw={500}>
+        <Text size="lg" fw={500} aria-label={'welcome'} id={'welcome'}>
           Welcome to SlugSync
         </Text>
       </Center>
@@ -101,7 +104,7 @@ export default function SignInForm({type, toggle, ...props}) {
       <Divider labelPosition="center" my="lg" />
 
 
-      <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle, history)})}>
+      <form onSubmit={form.onSubmit((data) => {handleSubmit(data, type, toggle, setAccessToken, history, setUser)})}>
         <Stack>
           {type === 'register' && (
             <TextInput

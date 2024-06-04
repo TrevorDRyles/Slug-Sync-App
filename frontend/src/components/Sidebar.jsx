@@ -30,18 +30,18 @@ const sidebarItems = [
   { icon: IconSettings, label: 'Settings', route: '/login', aria: 'SettingsIcon1'},
 ];
 
-export default function Sidebar({ sidebarOpened }) {
-  const [active, setActive] = useState(2);
+export default function Sidebar() {
+  const [active, setActive] = useState(0);
   const navigate = useNavigate();
   const links = sidebarItems.map((link, index) => (
     <NavbarLink {...link}
       key={link.label} 
       active={index === active} 
-      // onClick={() => navigate(link.route)} 
+      onClick={() => setActive(index)} 
     />
   ));
   return (
-    <Collapse in={sidebarOpened}>
+    // <Collapse in={true}>
       <nav className={classes.navbar}>
         <div className={classes.navbarMain}>
           <Stack justify="center" gap={0}>
@@ -53,7 +53,7 @@ export default function Sidebar({ sidebarOpened }) {
           <NavbarLink aria={'LogoutIcon'} icon={IconLogout} label="Logout" />
         </Stack>
       </nav> 
-    </Collapse>
+    // </Collapse>
   );
 }
 NavbarLink.propTypes = {

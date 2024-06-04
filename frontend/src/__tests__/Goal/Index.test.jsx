@@ -5,19 +5,38 @@ import { setupServer } from 'msw/node';
 import {BrowserRouter} from "react-router-dom";
 import { render } from "../render";
 import Index from "@/components/Goal/Index.jsx";
-import {indexHandlers} from "@/__tests__/Goal/Handlers.js";
+import {indexHandlers, indexHandlers2} from "@/__tests__/Goal/Handlers.js";
 import userEvent from '@testing-library/user-event';
 import { indexErrorHandlers } from './Handlers';
+import { LoginProvider } from '../../contexts/Login';
+
+const INDEX_URL = 'http://localhost:3010/v0/goal';
 
 const server = setupServer();
 
-beforeAll(() => server.listen());
+beforeAll(() => {
+  localStorage.setItem('user', JSON.stringify({accessToken: '1234'}))
+  server.listen()
+});
 afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+afterAll(() => {
+  localStorage.removeItem('user')
+  server.close()
+});
+
+const renderIndex = () => {
+  return render(
+    <LoginProvider>
+      <BrowserRouter>
+        <Index />
+      </BrowserRouter>
+    </LoginProvider>
+  )
+}
 
 it('Loads goal index page', async () => {
   server.use(...indexHandlers);
-  render(<BrowserRouter><Index/></BrowserRouter>);
+  renderIndex();
   const goals = screen.getAllByText('Goals', {exact: false});
   expect(goals.length).toBe(2);
   screen.getByText('Previous Page', {exact: false});
@@ -34,7 +53,7 @@ it('Loads goal index page with error', async () => {
   server.use(...indexErrorHandlers);
   let alerted = false;
   window.alert = () => {alerted = true};
-  render(<BrowserRouter><Index/></BrowserRouter>);
+  renderIndex();
   await waitFor(() => {
     expect(alerted).toBeTruthy();
   })
@@ -42,7 +61,7 @@ it('Loads goal index page with error', async () => {
 
 it('Click previous and next', async () => {
   server.use(...indexHandlers);
-  render(<BrowserRouter><Index/></BrowserRouter>);
+  renderIndex();
   await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
   const link = screen.getByText('Run a mile1', {exact: false});
   fireEvent.click(link);
@@ -56,7 +75,7 @@ it('Click previous and next', async () => {
 
 it('Click add goal', async () => {
   server.use(...indexHandlers)
-  render(<BrowserRouter><Index/></BrowserRouter>);
+  renderIndex();
   await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
   await waitFor(() => screen.getAllByText('Add Goal', {exact: false})[0]);
   const link = screen.getAllByText('Add Goal', {exact: false})[0];
@@ -70,7 +89,7 @@ it('Click add goal with error', async () => {
       return HttpResponse.error();
     }),
   );
-  render(<BrowserRouter><Index/></BrowserRouter>);
+  renderIndex();
   await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
   await waitFor(() => screen.getAllByText('Add Goal', {exact: false})[0]);
   const link = screen.getAllByText('Add Goal', {exact: false})[0];
@@ -80,8 +99,80 @@ it('Click add goal with error', async () => {
 it('Search into goals field and click a goal', async () => {
   server.use(...indexHandlers)
 
-  render(<BrowserRouter><Index/></BrowserRouter>);;
+  renderIndex();
   const searchInput = screen.getByPlaceholderText('Search goals...');
   await userEvent.type(searchInput, 'Run a mile6');
   fireEvent.click(screen.getByText('Run a mile6'));
+});
+
+it('check that tag exists', async () => {
+  server.use(...indexHandlers);
+  renderIndex();
+  await waitFor(() => screen.getByText('Athletics', {exact: false}));
+  screen.getByText('run a mile1', {exact: false});
+  screen.getByText('Athletics', {exact: false});
+  expect(screen.getAllByTestId('tag').length).toBe(6);
+});
+
+it('Ensure no tag if tag not selected', async () => {
+  // server.use( //fails because goals.map is not a function?????????????? Find out why!!!!
+  //   http.get(INDEX_URL, async () => {
+  //     return HttpResponse.json({id: '1', content: 'content', recurrence: '1', title: 'title1'});
+  //   }),
+  // );
+  server.use(...indexHandlers2);
+  renderIndex();
+  await waitFor(() => screen.getByText('title1', {exact: false}));
+  try {
+    screen.getAllByTestId('tag');
+  } catch (error) {
+    expect(error).toBeDefined();
+  }
+});
+
+it('check that filter exists and allows selection', async () => {
+  server.use(...indexHandlers);
+  renderIndex();
+  //const user = userEvent.setup();
+
+  const filterButton = screen.getByLabelText('filter-menu-button', {exact: false});
+  fireEvent.click(filterButton)
+  await waitFor(() => screen.getByText("Productivity", {exact: false}));
+  
+  const getHealth = await waitFor(() => screen.getByLabelText('menu-item-Health', {exact: false}));
+  fireEvent.click(getHealth);
+
+  const getBadge = await waitFor(() => screen.getByLabelText('filter-badge', {exact: false}));
+
+  const getFilterRemoval = await waitFor(() => screen.getByLabelText('remove-filter', {exact: false}));
+  expect(getFilterRemoval).toBeDefined();
+  fireEvent.click(getFilterRemoval);
+
+  try {
+    screen.getByText('filter-badge', {exact: false});
+  } catch (error) {
+    expect(error).toBeDefined();
+  }
+
+
+
+
+  // const sortButton = screen.getByLabelText('sort-button', {exact: false});
+  // expect(sortButton).toBeDefined();
+  // expect(screen.getByLabelText('asc-icon', {exact: false})).toBeDefined();
+  // try{
+  //   screen.getByLabelText('desc-icon', {exact: false});
+  // } catch (error){
+  //   expect(error).toBeDefined();
+  // }
+  
+
+  // fireEvent.click(sortButton);
+  // expect(screen.getByLabelText('desc-icon', {exact: false})).toBeDefined();
+  // try{
+  //   screen.getByLabelText('asc-icon', {exact: false});
+  // } catch (error2){
+  //   expect(error2).toBeDefined();
+  // }
+  
 });
