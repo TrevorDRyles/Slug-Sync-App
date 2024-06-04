@@ -259,4 +259,4 @@ exports.getAllMembersInGoal = async (goalId) => {
   };
   const {rows} = await pool.query(query);
   return rows;
-}
+};

@@ -87,7 +87,7 @@ const ViewGoal = () => {
       .catch((err) => {
         console.log("Unable to get goal members: "+ err);
       })
-  }, [accessToken]);
+  }, [accessToken, id]);
 
   // load usernames from the comment
   useEffect(() => {

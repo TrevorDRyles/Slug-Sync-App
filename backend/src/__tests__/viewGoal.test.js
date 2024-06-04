@@ -45,9 +45,9 @@ test('GET /v0/goal/:id/members get goal members', async () => {
     .send()
     .set('Content-Type', 'application/json')
     .set('Authorization', `Bearer ${userToken1}`);
-  expect(goal.body[0]).toHaveProperty("id");
-  expect(goal.body[0]).toHaveProperty("username");
-  expect(goal.body[0]).toHaveProperty("role");
+  expect(goal.body[0]).toHaveProperty('id');
+  expect(goal.body[0]).toHaveProperty('username');
+  expect(goal.body[0]).toHaveProperty('role');
   expect(goal.status).toBe(200);
 });
 
@@ -62,7 +62,8 @@ test('POST /v0/goal/:id/leave leave goal as creator', async () => {
 });
 
 
-test('DELETE /v0/goal/:id/delete attempt to delete goal as a member', async () => {
+test('DELETE /v0/goal/:id/delete attempt to delete ' +
+  'goal as a member', async () => {
   const goal = await request.delete(`/v0/goal/${GOAL_ID}`)
     .send()
     .set('Content-Type', 'application/json')
@@ -80,7 +81,8 @@ test('POST /v0/goal/:id/leave leave goal', async () => {
   expect(goal.status).toBe(200);
 });
 
-test('POST /v0/goal/:id/leave attempt to leave goal a second time', async () => {
+test('POST /v0/goal/:id/leave attempt to leave ' +
+  'goal a second time', async () => {
   const goal = await request.post(`/v0/goal/${GOAL_ID}/leave`)
     .send()
     .set('Content-Type', 'application/json')
@@ -89,7 +91,8 @@ test('POST /v0/goal/:id/leave attempt to leave goal a second time', async () => 
   expect(goal.status).toBe(401);
 });
 
-test('POST /v0/goal/:id/leave attempt to leave goal a second time', async () => {
+test('POST /v0/goal/:id/leave attempt to leave ' +
+  'goal a second time', async () => {
   const goal = await request.post(`/v0/goal/${GOAL_ID}/leave`)
     .send()
     .set('Content-Type', 'application/json')
