@@ -5,7 +5,7 @@ import { setupServer } from 'msw/node';
 import {BrowserRouter} from "react-router-dom";
 import { render } from "../render";
 import Index from "@/components/Goal/Index.jsx";
-import {indexHandlers, indexHandlers2} from "@/__tests__/Goal/Handlers.js";
+import {indexHandlers, indexHandlers2, viewGoalErrorHandlers} from "@/__tests__/Goal/Handlers.js";
 import userEvent from '@testing-library/user-event';
 import { indexErrorHandlers } from './Handlers';
 import { LoginProvider } from '../../contexts/Login';
@@ -47,6 +47,12 @@ it('Loads goal index page', async () => {
   const link = screen.getByText('Run a mile1');
   fireEvent.click(link);
   expect(screen.getAllByText('Members', {exact: false})).toBeDefined();
+  // click next page
+  const nextButton = screen.getByLabelText('Next Page Button');
+  fireEvent.click(nextButton);
+  const prevButton = screen.getByLabelText('Previous Page Button');
+  fireEvent.click(prevButton);
+
 });
 
 it('Loads goal index page with error', async () => {
@@ -75,6 +81,15 @@ it('Click previous and next', async () => {
 
 it('Click add goal', async () => {
   server.use(...indexHandlers)
+  renderIndex();
+  await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
+  await waitFor(() => screen.getAllByText('Add Goal', {exact: false})[0]);
+  const link = screen.getAllByText('Add Goal', {exact: false})[0];
+  fireEvent.click(link);
+});
+
+it('Click add goal with error in add goal', async () => {
+  server.use(...viewGoalErrorHandlers)
   renderIndex();
   await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
   await waitFor(() => screen.getAllByText('Add Goal', {exact: false})[0]);
@@ -138,7 +153,7 @@ it('check that filter exists and allows selection', async () => {
   const filterButton = screen.getByLabelText('filter-menu-button', {exact: false});
   fireEvent.click(filterButton)
   await waitFor(() => screen.getByText("Productivity", {exact: false}));
-  
+
   const getHealth = await waitFor(() => screen.getByLabelText('menu-item-Health', {exact: false}));
   fireEvent.click(getHealth);
 
@@ -165,7 +180,7 @@ it('check that filter exists and allows selection', async () => {
   // } catch (error){
   //   expect(error).toBeDefined();
   // }
-  
+
 
   // fireEvent.click(sortButton);
   // expect(screen.getByLabelText('desc-icon', {exact: false})).toBeDefined();
@@ -174,5 +189,5 @@ it('check that filter exists and allows selection', async () => {
   // } catch (error2){
   //   expect(error2).toBeDefined();
   // }
-  
+
 });

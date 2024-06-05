@@ -2,9 +2,12 @@ import { http, HttpResponse } from 'msw';
 
 const GET_GOALS_URL = 'http://localhost:3010/v0/goal';
 const GET_GOAL_URL = 'http://localhost:3010/v0/goal/:id';
-const GET_MEMBERS_URL = 'http://localhost:3010/v0/members';
+// const GET_MEMBERS_URL = 'http://localhost:3010/v0/members';
 const COMMENTS_URL = 'http://localhost:3010/v0/goal/:id/comment';
 const GET_USER_URL = 'http://localhost:3010/v0/user/:id';
+const GET_GOAL_COUNT_URL = 'http://localhost:3010/v0/goal/count';
+const ADD_GOAL_URL = 'http://localhost:3010/v0/goal/:id/join';
+const GET_MEMBERS_URL = 'http://localhost:3010/v0/goal/:id/members';
 
 const getGoalsData = [
   {id: '1', content: 'content1', recurrence: '1', title: 'Run a mile1', tag: 'Athletics'},
@@ -110,7 +113,32 @@ export const setMultipleComments = (value) => {
 export const indexHandlers = [
     http.get(GET_GOALS_URL, async () => {
       return HttpResponse.json(getGoalsData)
-    })
+    }),
+  http.get(GET_GOAL_COUNT_URL, async () => {
+    return HttpResponse.json(20)
+  }),
+  http.post(ADD_GOAL_URL, async () => {
+    return HttpResponse.json({id: '1', content: 'content', recurrence: '1', title: 'title1'});
+  }),
+  http.get(GET_MEMBERS_URL, async () => {
+    return HttpResponse.json('Not Found', {
+      status: 404,
+    });
+  }),
+];
+
+export const errorInAddGoalHandler = [
+  http.get(GET_GOALS_URL, async () => {
+    return HttpResponse.json(getGoalsData)
+  }),
+  http.get(GET_GOAL_COUNT_URL, async () => {
+    return HttpResponse.json(20)
+  }),
+  http.post(ADD_GOAL_URL, async () => {
+    return new HttpResponse('Not Found', {
+      status: 404,
+    });
+  }),
 ];
 
 export const indexHandlers2 = [
@@ -168,9 +196,13 @@ export const viewGoalErrorHandlers = [
       status: 404,
     });
   }),
-
+  http.get(GET_GOALS_URL, async () => {
+    return HttpResponse.json(getGoalsData)
+  }),
   http.get(GET_MEMBERS_URL, async () => {
-    return HttpResponse.json([]);
+    return new HttpResponse('Not Found', {
+      status: 404,
+    });
   }),
 
   http.get(COMMENTS_URL, async () => {
@@ -185,6 +217,24 @@ export const viewGoalErrorHandlers = [
     });
   }),
 ];
+
+// export const indexErrorsHandlers = [
+//   http.post(ADD_GOAL_URL, async () => {
+//     return HttpResponse.json('Not Found', {
+//       status: 404,
+//     });
+//   }),
+//   http.get(GET_GOALS_URL, async () => {
+//     return HttpResponse.json('Not Found', {
+//       status: 404,
+//     });
+//   }),
+//   http.get(GET_GOAL_COUNT_URL, async () => {
+//     return HttpResponse.json('Not Found', {
+//       status: 404,
+//     });
+//   }),
+// ];
 
 export const invalidUserHandler = [
   http.get(GET_USER_URL, async () => {

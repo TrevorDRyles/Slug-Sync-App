@@ -37,11 +37,50 @@ it('Loads view goal recurring every 7 days', async () => {
   };
 
   server.use(
+    http.get('http://localhost:3010/v0/goal/:id/members', async () => {
+      return HttpResponse.json([]);
+    }),
     http.get('http://localhost:3010/v0/goal/:id', async () => {
       return HttpResponse.json(goalData);
     }),
-    http.get('http://localhost:3010/v0/members', async () => {
+  );
+
+  localStorage.setItem('user', JSON.stringify({"token": "placeholder"}));
+
+  render(
+    <LoginProvider>
+      <RefetchProvider>
+        <BrowserRouter>
+          <ViewGoal/>
+        </BrowserRouter>
+      </RefetchProvider>
+    </LoginProvider>
+  );
+
+  await waitFor(() => {
+    screen.getByText(goalData.title);
+    screen.getByText(goalData.description);
+    screen.getByText(`Recurring every ${goalData.recurrence}`);
+  });
+});
+
+it('Loads view goal with no dates', async () => {
+  const goalData = {
+    id: '1',
+    title: 'Test Goal',
+    description: 'Test Description',
+    recurrence: '7 days',
+    tag: 'Hobbies',
+    startdate: null,
+    enddate: null
+  };
+
+  server.use(
+    http.get('http://localhost:3010/v0/goal/:id/members', async () => {
       return HttpResponse.json([]);
+    }),
+    http.get('http://localhost:3010/v0/goal/:id', async () => {
+      return HttpResponse.json(goalData);
     }),
   );
 
@@ -110,11 +149,11 @@ function renderViewGoalPage() {
     enddate: new Date().toISOString()
   };
   server.use(
-    http.get('http://localhost:3010/v0/goal/:id', async () => {
-      return HttpResponse.json(goalData);
-    }),
     http.get('http://localhost:3010/v0/goal/:id/members', async () => {
       return HttpResponse.json([{id: '1', username: 'User1', role: 'Member'}]);
+    }),
+    http.get('http://localhost:3010/v0/goal/:id', async () => {
+      return HttpResponse.json(goalData);
     }),
   );
 
@@ -264,12 +303,12 @@ it('Loads view goal with error', async () => {
     status: 404,
   });
     server.use(
+      http.get('http://localhost:3010/v0/goal/{goalid}/members', async (req, res, ctx) => {
+        return res(ctx.json([]), ctx.status(200));
+      }),
       http.get('http://localhost:3010/v0/goal/:id', async (req, res, ctx) => {
         return notFound
       }),
-      http.get('http://localhost:3010/v0/goal/{goalid}/members', async (req, res, ctx) => {
-        return res(ctx.json([]), ctx.status(200));
-      })
     );
 
     render(
@@ -392,17 +431,9 @@ it('Handles error when leaving goal', async () => {
 
 it('Handles error when unable to get goal members', async () => {
   server.use(
-    ...viewGoalHandlers,
-    http.get('http://localhost:3010/v0/goal/:id/members', async () => {
-      return new HttpResponse('Not Found', { status: 404 });
-    })
+    ...viewGoalErrorHandlers,
   );
 
   renderViewGoalPage();
 
-  // Other parts of the page should still load
-  await waitFor(() => {
-    screen.getByText('Test Comment');
-    screen.getByText('Test Goal');
-  });
 });

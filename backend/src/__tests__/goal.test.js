@@ -210,10 +210,10 @@ test('GET /v0/goal with undefined size and search term' +
   }
   await Promise.all(promises);
 
-  const res = await request.get('/v0/goal?page=1&size=21')
+  const res = await request.get('/v0/goal?page=1')
     .set('Authorization', `Bearer ${userToken1}`);
   expect(res.status).toBe(200);
-  expect(res.body.length).toBe(21);
+  expect(res.body.length).toBe(20);
 });
 
 test('GET /v0/goal with valid filter' +
@@ -271,4 +271,12 @@ test('GET /v0/goal with valid filter' +
 
     expect(matchingObject).toBeDefined();
   }
+});
+
+// test get goal count
+test('GET /v0/goal/count returns goal count', async () => {
+  const res = await request.get('/v0/goal/count')
+    .set('Authorization', `Bearer ${userToken1}`);
+  expect(res.status).toBe(200);
+  expect(res.body).toBeGreaterThan(1);
 });
