@@ -5,7 +5,12 @@ import { setupServer } from 'msw/node';
 import {BrowserRouter} from "react-router-dom";
 import { render } from "../render";
 import Index from "@/components/Goal/Index.jsx";
-import {indexHandlers, indexHandlers2, viewGoalErrorHandlers} from "@/__tests__/Goal/Handlers.js";
+import {
+  errorInAddGoalHandler,
+  indexHandlers,
+  indexHandlers2,
+  viewGoalErrorHandlers
+} from "@/__tests__/Goal/Handlers.js";
 import userEvent from '@testing-library/user-event';
 import { indexErrorHandlers } from './Handlers';
 import { LoginProvider } from '../../contexts/Login';
@@ -90,6 +95,15 @@ it('Click add goal', async () => {
 
 it('Click add goal with error in add goal', async () => {
   server.use(...viewGoalErrorHandlers)
+  renderIndex();
+  await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
+  await waitFor(() => screen.getAllByText('Add Goal', {exact: false})[0]);
+  const link = screen.getAllByText('Add Goal', {exact: false})[0];
+  fireEvent.click(link);
+});
+
+it('Click add goal with error in add goal handler', async () => {
+  server.use(...errorInAddGoalHandler)
   renderIndex();
   await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
   await waitFor(() => screen.getAllByText('Add Goal', {exact: false})[0]);

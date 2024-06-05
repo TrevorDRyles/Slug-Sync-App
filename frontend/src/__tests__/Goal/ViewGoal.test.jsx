@@ -8,7 +8,7 @@ import { render } from "../render";
 import { http, HttpResponse } from 'msw';
 import {
   goalDataEveryDay,
-  goalDataEveryWeek, invalidCommentHandler, invalidUserHandler, setDate,
+  goalDataEveryWeek, indexHandlers, invalidCommentHandler, invalidUserHandler, setDate,
   setGoalSetting, setMultipleComments,
   viewGoalErrorHandlers,
   viewGoalHandlers
@@ -62,6 +62,32 @@ it('Loads view goal recurring every 7 days', async () => {
     screen.getByText(goalData.description);
     screen.getByText(`Recurring every ${goalData.recurrence}`);
   });
+});
+
+it('Loads view goal recurring every 7 days', async () => {
+  const goalData = {
+    id: '1',
+    title: 'Test Goal',
+    description: 'Test Description',
+    recurrence: '7 days',
+    tag: 'Hobbies',
+    startdate: new Date().toISOString(),
+    enddate: new Date().toISOString()
+  };
+
+  server.use(...indexHandlers);
+
+  localStorage.setItem('user', JSON.stringify({"token": "placeholder"}));
+
+  render(
+    <LoginProvider>
+      <RefetchProvider>
+        <BrowserRouter>
+          <ViewGoal/>
+        </BrowserRouter>
+      </RefetchProvider>
+    </LoginProvider>
+  );
 });
 
 it('Loads view goal with no dates', async () => {
