@@ -74,7 +74,7 @@ const multipleComments = [
     data: {
       content: 'Test Comment 1',
       // .toString() is needed to pass the test to simulate stringification
-      date: new Date().toString(),
+      date: new Date(new Date().setMinutes(new Date().getMinutes() - 10)).toString(),
       user_id: '1e0d7c46-2194-4a30-b8e5-1b0a7c287e80',
     }
   },
@@ -83,7 +83,7 @@ const multipleComments = [
     data: {
       content: 'Test Comment 2',
       // .toString() is needed to pass the test to simulate stringification
-      date: new Date().toString(),
+      date: new Date(new Date().setMinutes(new Date().getMinutes() - 5)).toString(),
       user_id: '1e0d7c46-2194-4a30-b8e5-1b0a7c287e80',
     }
   },
