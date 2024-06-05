@@ -13,9 +13,11 @@ const Profile = () => {
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
   const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
+  const accessToken = JSON.parse(localStorage.getItem('user')).token
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem('user')).id;
+    const accessToken = JSON.parse(localStorage.getItem('user')).token
     if (!userId) {
       console.log('User ID not found in localStorage');
       return;
@@ -25,6 +27,7 @@ const Profile = () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
       },
     })
       .then((res) => {
@@ -54,10 +57,12 @@ const Profile = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify({ id: userId, name, bio }),
       });
       const result = await response.json();
+      console.log(result)
       
       if (response.ok) {
         setUserData((prevData) => ({ ...prevData, name, bio }));
@@ -84,7 +89,7 @@ const Profile = () => {
             />
           </Card.Section>
 
-          <Avatar className={styles.avatar} size="xl" radius="xl"></Avatar>
+          <Avatar className={styles.avatar} src={userData.img} size="xl" radius="xl"></Avatar>
 
           <div className={`${styles.inner_container}`}>
             <Group justify="space-between" mt="md" mb="xs">
@@ -109,7 +114,7 @@ const Profile = () => {
           </div>
         </Card>
 
-        <Paper padding="lg" shadow="sm" withBorder className={`${styles.paper}`}>
+        <Paper padding="lg" shadow="sm" withBorder className={styles.paper}>
           <Title order={1}>Top Goals</Title>
           <Divider my="md" />
           <div className={`${styles.column} ${styles.goalColumn}`}>

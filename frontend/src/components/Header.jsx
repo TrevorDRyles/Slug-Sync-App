@@ -69,7 +69,6 @@ export default function Header() {
   const navigate = useNavigate();
 
   const {accessToken, setAccessToken, user} = React.useContext(LoginContext);
-  console.log(user)
 
   const logout = () => {
     localStorage.removeItem('user')

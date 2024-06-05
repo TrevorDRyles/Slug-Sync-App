@@ -1,8 +1,8 @@
 .container {
+    background-color: var(--mantine-color-gray-2);
     display: flex;
     justify-content: center;
     width: 100%;
-    background-color: lightblue;
     padding: 50px 0px 50px 0px;
   }
 
@@ -42,6 +42,7 @@
     padding: 20px;
     position: relative;
     float: left;
+    margin-top: 40px;
 }
 
 .avatar{

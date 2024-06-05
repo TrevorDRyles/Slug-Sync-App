@@ -477,6 +477,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     post:
+      security:
+        - bearerAuth: []
       tags:
         - edit profile
       summary: edit profile
@@ -645,6 +647,9 @@ components:
       required:
         - email
         - password
+      example:
+        email: "hunter@ucsc.edu"
+        password: "huntertratar"
 
     LoginResponse:
       type: object

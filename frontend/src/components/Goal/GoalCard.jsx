@@ -6,6 +6,7 @@ import * as React from 'react'
 import { RefetchContext } from "../../contexts/Refetch";
 import { IconFlame } from "@tabler/icons-react";
 import '@mantine/dates/styles.css';
+import { Link } from "react-router-dom";
 
 const completeGoal = (goalId, setRefetch) => {
   const item = localStorage.getItem('user')
@@ -40,38 +41,39 @@ export function GoalCard({goalData}) {
       return 'N/A';
     const date = new Date(dateString);
 
-    console.log(date)
     return date.toISOString().split('T')[0];
   };
 
   return(
     <div className={styles.goalPaper}>
       <Paper>
-        <Text aria-label={'goal-title-' + goalData.title} className={styles.goalText}>{goalData.title}</Text>
+        <Link aria-label={'goal-title-' + goalData.title} to={'/goal/' + goalData.id} className={styles.goalLink}>{goalData.title}</Link>
         <Divider my="sm"/>
         <Text>{goalData.description}</Text>
         <Text style={{color: 'grey'}}>Recurring every {goalData.recurrence}</Text>
         <Divider my="sm"/>
         <div className={styles.goalBottom}>
-          {goalData.completed ? (
-            <Check aria-label="Goal completed"/>
-          ) : (
+          {goalData.completed === true ? (
+            <Check aria-label="Goal completed" />
+          ) : goalData.completed === false ? (
             <Button onClick={() => completeGoal(goalData.id, setRefetch)} aria-label="Goal not completed">
               Complete for today!
             </Button>
-          )
-          }
+          ) : (
+            <>
+            </>
+          )}
           <div className={styles.streakCount}>
-            <IconFlame/>
+            <IconFlame />
             <Text>{goalData.streak}</Text>
           </div>
         </div>
         <Grid style={{marginTop: 15}}>
           <Grid.Col span={6}>
-            <Text ta="left" c="dimmed">Start Date: {formatDate(goalData.startdate)}</Text>
+            <Text ta="left" c="dimmed">Start: {formatDate(goalData.startdate)}</Text>
           </Grid.Col>
           <Grid.Col span={6}>
-            <Text ta="center" c="dimmed">End Date: {formatDate(goalData.enddate)}</Text>
+            <Text ta="center" c="dimmed">End: {formatDate(goalData.enddate)}</Text>
           </Grid.Col>
         </Grid>
       </Paper>
@@ -87,7 +89,7 @@ GoalCard.propTypes = {
     recurrence: PropTypes.string.isRequired,
     startdate: PropTypes.string,
     enddate: PropTypes.string,
-    completed: PropTypes.bool.isRequired,
-    streak: PropTypes.number.isRequired,
+    // completed: PropTypes.bool.isRequired,
+    // streak: PropTypes.number.isRequired,
   }).isRequired,
 };

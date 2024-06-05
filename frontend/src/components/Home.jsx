@@ -16,7 +16,6 @@ function Home() {
   if (user) {
     id = JSON.parse(user).id
   }
-  console.log(id)
 
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
 
