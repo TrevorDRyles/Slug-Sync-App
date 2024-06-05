@@ -78,6 +78,9 @@ const ViewGoal = () => {
       },
     })
       .then(res => {
+        if (!res.ok) {
+          throw new Error('Error getting goal members')
+        }
         return res.json();
       })
       .then(data => {
