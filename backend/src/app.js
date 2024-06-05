@@ -49,9 +49,9 @@ app.get('/v0/goal/incompleted', auth.check, goal.getAllIncompleted);
 
 app.get('/v0/goal/:id', auth.check, goal.viewGoal);
 
-app.get('/v0/profile/:id', profile.getUserInfo);
+app.get('/v0/profile/:id', auth.check, profile.getUserInfo);
 
-app.post('/v0/profile/:id', profile.editProfile);
+app.post('/v0/profile/:id', auth.check, profile.editProfile);
 
 app.post('/v0/goal/:id/comment', auth.check, comment.addCommentToGoal);
 

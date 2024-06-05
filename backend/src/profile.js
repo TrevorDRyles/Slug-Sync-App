@@ -22,11 +22,11 @@ exports.getUserInfo = async (req, res) => {
     const userInfo = userInfoResult.rows[0];
 
     const topGoalsQuery = `
-      SELECT mg.member_id AS id, mg.goal_id, mg.data->>'streak' AS streak
-      FROM member_goal mg
-      JOIN "user" u ON mg.member_id = u.id
+      SELECT mg.user_id AS id, mg.goal_id, mg.streak
+      FROM user_goal mg
+      JOIN "user" u ON mg.user_id = u.id
       WHERE u.id = $1
-      ORDER BY (mg.data->>'streak')::int DESC
+      ORDER BY (mg.streak)::int DESC
       LIMIT 3
     `;
 
@@ -45,10 +45,9 @@ exports.getUserInfo = async (req, res) => {
         WHERE id = $1
       `;
       const goalInfoResult = await pool.query(goalInfoQuery, [goal.goal_id]);
+      console.log(goalInfoResult);
       const goalInfo = goalInfoResult.rows[0];
-
-      console.log("Goal Info for Goal ID " + goal.goal_id + ":", goalInfo);
-
+      console.log(goalInfo);
       topGoalsInfo.push({
         goal_id: goal.goal_id,
         title: goalInfo.goal.title,
@@ -56,6 +55,27 @@ exports.getUserInfo = async (req, res) => {
         recurrence: goalInfo.goal.recurrence,
       });
     }
+    const goals = await Promise.all(result.rows.map(async (row) => {
+      // load comments
+      const commentsQuery = `
+          SELECT *
+          FROM comment
+          WHERE goal_id = $1;
+      `;
+      const {rows} = await pool.query(commentsQuery, [row.id]);
+  
+      return {
+        id: row.id,
+        title: row.goal.title,
+        recurrence: row.goal.recurrence,
+        description: row.goal.description,
+        tag: row.goal.tag,
+        startdate: row.goal.startdate,
+        enddate: row.goal.enddate,
+        comments: rows,
+        memberCount: row.goal.memberCount,
+      };
+    }));
     console.log("topgoalsinfo" + JSON.stringify(topGoalsInfo, null, 2));
     res.status(200).json({ id: userInfo.id, name: userInfo.name, bio: userInfo.bio, topGoals: topGoalsInfo });
   } catch (err) {

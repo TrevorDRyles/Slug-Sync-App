@@ -33,7 +33,6 @@ exports.signup = async (req, res) => {
 // check endpoint referenced from authenticated books example
 exports.check = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  console.log(req.headers)
   if (authHeader) {
     const token = authHeader.split(' ')[1];
     jwt.verify(token, process.env.MASTER_SECRET, (err, user) => {

@@ -58,7 +58,7 @@ const Profile = () => {
         body: JSON.stringify({ id: userId, name, bio }),
       });
       const result = await response.json();
-      console.log(response);
+      
       if (response.ok) {
         setUserData((prevData) => ({ ...prevData, name, bio }));
         closeModal();
