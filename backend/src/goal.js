@@ -39,7 +39,7 @@ exports.createGoal = async (req, res) => {
 //   res.status(200).json({id: result.rows[0].id, ...result.rows[0].goal});
 // };
 
-exports.getPostsByPageAndSize = async function(req, res) {
+exports.getGoalsByPageAndSize = async function (req, res) {
   let pageNum = req.query.page;
   let searchTerm = req.query.search;
   if (searchTerm === undefined) {
@@ -206,6 +206,12 @@ exports.completeGoal = async (req, res) => {
   } else {
     res.status(404).send();
   }
+};
+
+exports.getGoalCount = async (req, res) => {
+  const {id} = req.user;
+  const goalCount = await db.getGoalCount(id);
+  res.status(200).json(goalCount);
 };
 
 exports.getAllMembersInGoal = async (req, res) => {
