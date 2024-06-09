@@ -188,7 +188,7 @@ function renderViewGoalPage() {
     return (
       <LoginProvider>
         <RefetchProvider>
-          <ViewGoal />
+          <ViewGoal/>
         </RefetchProvider>
       </LoginProvider>
     );
@@ -197,12 +197,12 @@ function renderViewGoalPage() {
   render(
     <MemoryRouter initialEntries={['/goal/123']}>
       <Routes>
-        <Route path="/goal/:id" element={<TestComponent />} />
+        <Route path="/goal/:id" element={<TestComponent/>}/>
       </Routes>
     </MemoryRouter>
   );
 
-  return { navigate: useNavigate };
+  return {navigate: useNavigate};
 }
 
 it('Adds comment successfully', async () => {
@@ -378,7 +378,7 @@ it('Deletes goal successfully', async () => {
   server.use(
     ...viewGoalHandlers,
     http.delete('http://localhost:3010/v0/goal/:id', async () => {
-      return new HttpResponse(null, { status: 200 });
+      return new HttpResponse(null, {status: 200});
     })
   );
 
@@ -419,7 +419,7 @@ it('Handles error when deleting goal', async () => {
   server.use(
     ...viewGoalHandlers,
     http.delete('http://localhost:3010/v0/goal/:id', async () => {
-      return new HttpResponse('Error', { status: 500 });
+      return new HttpResponse('Error', {status: 500});
     })
   );
 
@@ -429,20 +429,20 @@ it('Handles error when deleting goal', async () => {
     screen.getByText('Test Comment');
   });
 
-  fireEvent.click(screen.getByRole('button', { name: 'Delete goal' }));
+  fireEvent.click(screen.getByRole('button', {name: 'Delete goal'}));
 
   await waitFor(() => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
-  fireEvent.click(screen.getByRole('button', { name: 'Yes, confirm delete' }));
+  fireEvent.click(screen.getByRole('button', {name: 'Yes, confirm delete'}));
 });
 
 it('Handles error when leaving goal', async () => {
   server.use(
     ...viewGoalHandlers,
     http.post('http://localhost:3010/v0/goal/:id/leave', async () => {
-      return new HttpResponse('Error', { status: 403 });
+      return new HttpResponse('Error', {status: 403});
     })
   );
 
@@ -452,7 +452,7 @@ it('Handles error when leaving goal', async () => {
     screen.getByText('Test Comment');
   });
 
-  fireEvent.click(screen.getByRole('button', { name: 'Leave Goal' }));
+  fireEvent.click(screen.getByRole('button', {name: 'Leave Goal'}));
 });
 
 it('Handles error when unable to get goal members', async () => {
