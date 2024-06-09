@@ -28,12 +28,12 @@ function NavbarLink({ icon: Icon, label, active, onClick, aria }) {
 export default function Sidebar() {
   const [active, setActive] = useState(0);
   const navigate = useNavigate();
-  const {user} = React.useContext(LoginContext)
+  const {user} = React.useContext(LoginContext);
 
   const sidebarItems = [
     { icon: IconHome2, label: 'Home', route: '/', aria: 'HomeIcon1' },
     { icon: IconUser, label: 'Profile', route: `/profile/${user.id}`, aria: 'UserIcon1' },
-    // { icon: IconSettings, label: 'Settings', route: '/login', aria: 'SettingsIcon1'},
+    { icon: IconSettings, label: 'Settings', route: '/login', aria: 'SettingsIcon1'},
   ];
 
 
