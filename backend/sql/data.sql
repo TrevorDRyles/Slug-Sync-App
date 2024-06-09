@@ -1,5 +1,4 @@
-
-
+-- please keep all statements on one line! tests will fail if you don't
 INSERT INTO "user"(id, data) VALUES ('1e0d7c46-2194-4a30-b8e5-1b0a7c287e80', jsonb_build_object('name', 'Hunter', 'email', 'hunter@ucsc.edu', 'password', crypt('huntertratar', 'cs'), 'img', 'https://i.pinimg.com/736x/32/7e/db/327edb9a15b304efc264668ada03f725.jpg'));
 INSERT INTO "user"(data) VALUES (jsonb_build_object('name', 'arelyx', 'email', 'arelyx@example.com', 'password', crypt('arelyxuser', 'cs')));
 INSERT INTO goal(id, goal) VALUES ('1e0d7c46-2194-4a30-b8e5-1b0a7c287e81', jsonb_build_object('title', 'Learn React', 'description', 'Learn React', 'recurrence', '1 day', 'author', (SELECT id FROM "user" WHERE data->>'email' = 'hunter@ucsc.edu'), 'memberCount', 1, 'startdate', '2024-05-18 20:09:57.341567', 'enddate', '2024-05-18 20:09:57.341567', 'completed', false, 'tag', 'Academics'));
