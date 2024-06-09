@@ -26,16 +26,16 @@ const GoalsListing = () => {
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
   const [sort, setSort] = useState(1);
 
-  // const handleSort = () => {
-  //   if (sort === 1 ? setSort(0) : setSort(1));
-  // };
-
   const handlePrevPage = () => {
     setCurrentPage(currentPage - 1);
   };
 
   const handleNextPage = () => {
     setCurrentPage(currentPage + 1);
+  };
+
+  const handleTagSelect = () => {
+    setCurrentPage(1); //hacky solution for now
   };
 
   const handleAddGoal = (goal) => {
@@ -161,6 +161,8 @@ const GoalsListing = () => {
               <div style={{ display: 'flex', justifyContent: 'flex-end', width: '95%' }}>
                 <Badge
                   aria-label='filter-badge'
+                  variant='outline'
+                  style={{backgroundColor: 'white', color: '#228be6'}}
                   leftSection={<IconTag style={{width: 16, height: 16}}/>}
                   rightSection={ <IconX aria-label='remove-filter' className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}
                 >
@@ -171,8 +173,8 @@ const GoalsListing = () => {
           />
           <Menu shadow="md" width={200} transitionProps={{ transition: 'scale-y', duration: 180}}>
             <Menu.Target >
-              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '9%'}}>
-                <IconTag style={{width: 20, height: 20}}/>
+              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '80px'}}>
+                <IconTag style={{width: 20, height: 20, minWidth: 20, minHeight: 20, flexShrink: 0}}/>
               </Button>
             </Menu.Target>
 
@@ -181,7 +183,7 @@ const GoalsListing = () => {
 
               {
                 tags.map((tag, index) => (
-                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => handleFilterTag(event.target.textContent)}>
+                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => {handleTagSelect(); handleFilterTag(event.target.textContent);}}>
                     <Badge
                       data-testid={"tag"}
                       style={{backgroundColor: 'white', color: '#228be6'}}
