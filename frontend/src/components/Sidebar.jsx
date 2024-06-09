@@ -33,18 +33,18 @@ export default function Sidebar() {
   const sidebarItems = [
     { icon: IconHome2, label: 'Home', route: '/', aria: 'HomeIcon1' },
     { icon: IconUser, label: 'Profile', route: `/profile/${user.id}`, aria: 'UserIcon1' },
-    { icon: IconSettings, label: 'Settings', route: '/login', aria: 'SettingsIcon1'},
+    // { icon: IconSettings, label: 'Settings', route: '/login', aria: 'SettingsIcon1'},
   ];
 
 
   const links = sidebarItems.map((link, index) => (
     <NavbarLink {...link}
-      key={link.label} 
-      active={index === active} 
+                key={link.label}
+                active={index === active}
       onClick={() => {
         navigate(link.route)
         setActive(index)
-      }} 
+      }}
     />
   ));
   return (
@@ -59,7 +59,7 @@ export default function Sidebar() {
         <Stack justify="center" gap={0}>
           <NavbarLink aria={'LogoutIcon'} icon={IconLogout} label="Logout" />
         </Stack>
-      </nav> 
+      </nav>
     // </Collapse>
   );
 }
