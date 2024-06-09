@@ -60,7 +60,7 @@ afterAll((done) => {
  */
 beforeEach(async () => {
   browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
@@ -76,7 +76,7 @@ beforeEach(async () => {
  * Close the headless instance of Chrome as we no longer need it.
  */
 afterEach(async () => {
-  // await browser.close();
+  await browser.close();
 });
 
 // copied above from starter code

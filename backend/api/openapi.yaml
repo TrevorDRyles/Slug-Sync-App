@@ -221,7 +221,7 @@ paths:
             type: string
             format: uuid
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         200:
           description: Successfully received members
@@ -419,6 +419,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/GoalWithId'
+  /goal/count:
+    get:
+      security:
+        - bearerAuth: [ ]
+      description: Get goal count
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: integer
 
   /complete/{goal}:
     put:

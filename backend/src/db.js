@@ -104,6 +104,12 @@ exports.deleteGoal = async (goalId) => {
 //   return rows;
 // };
 
+exports.getGoalCount = async () => {
+  const select = 'SELECT COUNT(*) FROM goal';
+  const {rows} = await pool.query(select);
+  return parseInt(rows[0].count);
+};
+
 // referenced from cse 186 code trevor ryles
 exports.getMemberByPasswordAndEmail = async (password, email) => {
   const selectQuery = `SELECT *

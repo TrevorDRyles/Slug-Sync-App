@@ -207,7 +207,7 @@
 }
 
 .close:hover {
-  background-color: var(--mantine-color-blue-8);
+  background-color: var(--mantine-color-blue-1);
 }
 
 .removeWrapper {

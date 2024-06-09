@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Paper, Text, Divider, Button, Modal, Table, Badge} from '@mantine/core';
+import {Paper, Text, Divider, Button, Modal, Table, Badge} from '@mantine/core';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './Goal.module.css';
 import Header from "@/components/Header.jsx";
@@ -70,7 +70,7 @@ const ViewGoal = () => {
     setCommentsChanged(false);
   }, [id, commentsChanged, accessToken]);
 
-  useEffect (() => {
+  useEffect(() => {
     // load members
     fetch(`http://localhost:3010/v0/goal/${id}/members`, {
       method: 'GET',
@@ -80,6 +80,9 @@ const ViewGoal = () => {
       },
     })
       .then(res => {
+        if (!res.ok) {
+          throw new Error('Error getting goal members')
+        }
         return res.json();
       })
       .then(data => {
@@ -87,7 +90,7 @@ const ViewGoal = () => {
         setMembers(data);
       })
       .catch((err) => {
-        console.log("Unable to get goal members: "+ err);
+        console.log("Unable to get goal members: " + err);
       })
   }, [accessToken, id]);
 
@@ -344,30 +347,30 @@ const ViewGoal = () => {
         </div>
         <div className={`${styles.column} ${styles.membersColumn}`}>
           <Paper className={styles.membersPaper}>
-          <Table.ScrollContainer minWidth={200}>
-          <Table verticalSpacing="sm">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>Members</Table.Th>
-                <Table.Th>Role</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {members.map((member) => (
-                <Table.Tr key={member.id}>
-                  <Table.Td style={{ textAlign: 'left' }}>
-                    <Text>{member.username}</Text>
-                  </Table.Td>
-                  <Table.Td style={{ textAlign: 'left' }}>
-                  <Badge color={roleColors[member.role.toLowerCase()]} variant="light">
-                    {member.role}
-                  </Badge>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-  </Table.ScrollContainer>
+            <Table.ScrollContainer minWidth={200}>
+              <Table verticalSpacing="sm">
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th>Members</Table.Th>
+                    <Table.Th>Role</Table.Th>
+                  </Table.Tr>
+                </Table.Thead>
+                <Table.Tbody>
+                  {members.map((member) => (
+                    <Table.Tr key={member.id}>
+                      <Table.Td style={{textAlign: 'left'}}>
+                        <Text>{member.username}</Text>
+                      </Table.Td>
+                      <Table.Td style={{textAlign: 'left'}}>
+                        <Badge color={roleColors[member.role.toLowerCase()]} variant="light">
+                          {member.role}
+                        </Badge>
+                      </Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+            </Table.ScrollContainer>
           </Paper>
         </div>
       </div>

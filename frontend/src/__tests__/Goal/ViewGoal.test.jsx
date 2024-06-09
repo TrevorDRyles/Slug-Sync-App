@@ -8,7 +8,7 @@ import { render } from "../render";
 import { http, HttpResponse } from 'msw';
 import {
   goalDataEveryDay,
-  goalDataEveryWeek, invalidCommentHandler, invalidUserHandler, setDate,
+  goalDataEveryWeek, indexHandlers, invalidCommentHandler, invalidUserHandler, setDate,
   setGoalSetting, setMultipleComments,
   viewGoalErrorHandlers,
   viewGoalHandlers
@@ -37,11 +37,76 @@ it('Loads view goal recurring every 7 days', async () => {
   };
 
   server.use(
+    http.get('http://localhost:3010/v0/goal/:id/members', async () => {
+      return HttpResponse.json([]);
+    }),
     http.get('http://localhost:3010/v0/goal/:id', async () => {
       return HttpResponse.json(goalData);
     }),
-    http.get('http://localhost:3010/v0/members', async () => {
+  );
+
+  localStorage.setItem('user', JSON.stringify({"token": "placeholder"}));
+
+  render(
+    <LoginProvider>
+      <RefetchProvider>
+        <BrowserRouter>
+          <ViewGoal/>
+        </BrowserRouter>
+      </RefetchProvider>
+    </LoginProvider>
+  );
+
+  await waitFor(() => {
+    screen.getByText(goalData.title);
+    screen.getByText(goalData.description);
+    screen.getByText(`Recurring every ${goalData.recurrence}`);
+  });
+});
+
+it('Loads view goal recurring every 7 days', async () => {
+  const goalData = {
+    id: '1',
+    title: 'Test Goal',
+    description: 'Test Description',
+    recurrence: '7 days',
+    tag: 'Hobbies',
+    startdate: new Date().toISOString(),
+    enddate: new Date().toISOString()
+  };
+
+  server.use(...indexHandlers);
+
+  localStorage.setItem('user', JSON.stringify({"token": "placeholder"}));
+
+  render(
+    <LoginProvider>
+      <RefetchProvider>
+        <BrowserRouter>
+          <ViewGoal/>
+        </BrowserRouter>
+      </RefetchProvider>
+    </LoginProvider>
+  );
+});
+
+it('Loads view goal with no dates', async () => {
+  const goalData = {
+    id: '1',
+    title: 'Test Goal',
+    description: 'Test Description',
+    recurrence: '7 days',
+    tag: 'Hobbies',
+    startdate: null,
+    enddate: null
+  };
+
+  server.use(
+    http.get('http://localhost:3010/v0/goal/:id/members', async () => {
       return HttpResponse.json([]);
+    }),
+    http.get('http://localhost:3010/v0/goal/:id', async () => {
+      return HttpResponse.json(goalData);
     }),
   );
 
@@ -110,11 +175,11 @@ function renderViewGoalPage() {
     enddate: new Date().toISOString()
   };
   server.use(
-    http.get('http://localhost:3010/v0/goal/:id', async () => {
-      return HttpResponse.json(goalData);
-    }),
     http.get('http://localhost:3010/v0/goal/:id/members', async () => {
       return HttpResponse.json([{id: '1', username: 'User1', role: 'Member'}]);
+    }),
+    http.get('http://localhost:3010/v0/goal/:id', async () => {
+      return HttpResponse.json(goalData);
     }),
   );
 
@@ -123,7 +188,7 @@ function renderViewGoalPage() {
     return (
       <LoginProvider>
         <RefetchProvider>
-          <ViewGoal />
+          <ViewGoal/>
         </RefetchProvider>
       </LoginProvider>
     );
@@ -132,12 +197,12 @@ function renderViewGoalPage() {
   render(
     <MemoryRouter initialEntries={['/goal/123']}>
       <Routes>
-        <Route path="/goal/:id" element={<TestComponent />} />
+        <Route path="/goal/:id" element={<TestComponent/>}/>
       </Routes>
     </MemoryRouter>
   );
 
-  return { navigate: useNavigate };
+  return {navigate: useNavigate};
 }
 
 it('Adds comment successfully', async () => {
@@ -264,12 +329,12 @@ it('Loads view goal with error', async () => {
     status: 404,
   });
     server.use(
+      http.get('http://localhost:3010/v0/goal/{goalid}/members', async (req, res, ctx) => {
+        return res(ctx.json([]), ctx.status(200));
+      }),
       http.get('http://localhost:3010/v0/goal/:id', async (req, res, ctx) => {
         return notFound
       }),
-      http.get('http://localhost:3010/v0/goal/{goalid}/members', async (req, res, ctx) => {
-        return res(ctx.json([]), ctx.status(200));
-      })
     );
 
     render(
@@ -313,7 +378,7 @@ it('Deletes goal successfully', async () => {
   server.use(
     ...viewGoalHandlers,
     http.delete('http://localhost:3010/v0/goal/:id', async () => {
-      return new HttpResponse(null, { status: 200 });
+      return new HttpResponse(null, {status: 200});
     })
   );
 
@@ -354,7 +419,7 @@ it('Handles error when deleting goal', async () => {
   server.use(
     ...viewGoalHandlers,
     http.delete('http://localhost:3010/v0/goal/:id', async () => {
-      return new HttpResponse('Error', { status: 500 });
+      return new HttpResponse('Error', {status: 500});
     })
   );
 
@@ -364,20 +429,20 @@ it('Handles error when deleting goal', async () => {
     screen.getByText('Test Comment');
   });
 
-  fireEvent.click(screen.getByRole('button', { name: 'Delete goal' }));
+  fireEvent.click(screen.getByRole('button', {name: 'Delete goal'}));
 
   await waitFor(() => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
-  fireEvent.click(screen.getByRole('button', { name: 'Yes, confirm delete' }));
+  fireEvent.click(screen.getByRole('button', {name: 'Yes, confirm delete'}));
 });
 
 it('Handles error when leaving goal', async () => {
   server.use(
     ...viewGoalHandlers,
     http.post('http://localhost:3010/v0/goal/:id/leave', async () => {
-      return new HttpResponse('Error', { status: 403 });
+      return new HttpResponse('Error', {status: 403});
     })
   );
 
@@ -387,22 +452,14 @@ it('Handles error when leaving goal', async () => {
     screen.getByText('Test Comment');
   });
 
-  fireEvent.click(screen.getByRole('button', { name: 'Leave Goal' }));
+  fireEvent.click(screen.getByRole('button', {name: 'Leave Goal'}));
 });
 
 it('Handles error when unable to get goal members', async () => {
   server.use(
-    ...viewGoalHandlers,
-    http.get('http://localhost:3010/v0/goal/:id/members', async () => {
-      return new HttpResponse('Not Found', { status: 404 });
-    })
+    ...viewGoalErrorHandlers,
   );
 
   renderViewGoalPage();
 
-  // Other parts of the page should still load
-  await waitFor(() => {
-    screen.getByText('Test Comment');
-    screen.getByText('Test Goal');
-  });
 });

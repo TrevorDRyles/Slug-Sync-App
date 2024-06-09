@@ -35,6 +35,8 @@ app.use(
   }),
 );
 
+app.get('/v0/goal/count', auth.check, goal.getGoalCount);
+
 app.post('/v0/signup', auth.signup);
 
 app.post('/v0/login', auth.login);
@@ -65,7 +67,7 @@ app.delete('/v0/goal/:id', auth.check, goal.deleteGoal);
 
 app.post('/v0/goal/:id/leave', auth.check, goal.leaveGoal);
 
-app.get('/v0/goal', auth.check, goal.getPostsByPageAndSize);
+app.get('/v0/goal', auth.check, goal.getGoalsByPageAndSize);
 
 app.put('/v0/complete/:goal', auth.check, goal.completeGoal);
 
