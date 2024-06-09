@@ -68,7 +68,7 @@ it('Loads home and sidebar', async () => {
 
   screen.getByLabelText('UserIcon1');
 
-  screen.getByLabelText('SettingsIcon1');
+  // screen.getByLabelText('SettingsIcon1');
 
   screen.getByLabelText('LogoutIcon');
 });

@@ -1,3 +1,4 @@
+-- need to all be on one line
 INSERT INTO "user"(id, data)
 VALUES ('1e0d7c46-2194-4a30-b8e5-1b0a7c287e80',
         jsonb_build_object('name', 'Hunter', 'email', 'hunter@ucsc.edu', 'password', crypt('huntertratar', 'cs'), 'img',

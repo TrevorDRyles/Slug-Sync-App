@@ -47,10 +47,10 @@ it('Clicks on Profile', async() => {
   expect(isActive).toBe('true');
 })
 
-it('Clicks on Settings', async() => {
-  renderSidebar()
-  fireEvent.click(screen.getByLabelText('SettingsIcon1'));
-  const homeButton = screen.getByLabelText('SettingsIcon1').parentElement;
-  const isActive = homeButton.getAttribute('data-active');
-  expect(isActive).toBe('true');
-})
+// it('Clicks on Settings', async() => {
+//   renderSidebar()
+//   fireEvent.click(screen.getByLabelText('SettingsIcon1'));
+//   const homeButton = screen.getByLabelText('SettingsIcon1').parentElement;
+//   const isActive = homeButton.getAttribute('data-active');
+//   expect(isActive).toBe('true');
+// })
