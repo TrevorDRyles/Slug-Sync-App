@@ -62,7 +62,7 @@ exports.getUserInfo = async (req, res) => {
     }
     res.status(200).json({
       id: userInfo.id, name: userInfo.name,
-      bio: userInfo.bio, img: userInfo.img, topGoals: topGoalsInfo
+      bio: userInfo.bio, img: userInfo.img, topGoals: topGoalsInfo,
     });
 
     //   const goals = await Promise.all(result.rows.map(async (row) => {
