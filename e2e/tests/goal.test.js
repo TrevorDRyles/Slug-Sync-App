@@ -87,57 +87,47 @@ afterEach(async () => {
  * @param {number} arrowsDownOnRecurrence
  * @return {Promise<void>}
  */
-// async function createGoal(title, description, arrowsDownOnRecurrence) {
-//   // https://chat.openai.com/share/67880247-ed5d-4614-af95-1b17ae8a6d05
-//   await page.goto('http://localhost:3000/createGoal');
-//
-//   const titleInput = await page
-//     .waitForSelector('input[id="title"]');
-//   await titleInput.type(title);
-//
-//   const descriptionInput = await page
-//     .waitForSelector('textarea[id="description"]');
-//   await descriptionInput.type(description);
-//
-//   await page.waitForSelector('#recurrence');
-//   await page.click('#recurrence');
-//   for (let i = 0; i < arrowsDownOnRecurrence; i++) {
-//     // Move down in the dropdown
-//     await page.keyboard.press('ArrowDown');
-//   }
-//   await page.keyboard.press('Enter');
-//
-//   // timesout atm
-//   await page.waitForSelector('#tag');
-//   await page.click('#tag');
-//   for (let i = 0; i < arrowsDownOnRecurrence; i++) {
-//     // Using same var as recurrence because of similar format
-//     await page.keyboard.press('ArrowDown');
-//   }
-//   await page.keyboard.press('Enter');
-//
-//   await page.waitForSelector('#startdate');
-//   await page.click('#startdate');
-//   await page.waitForSelector('[aria-label*="30 May 2024"]');
-//   await page.click('[aria-label*="31 May 2024"]');
-//   // wait for 31 May 2024 to appear on screen
-//   await page.waitForFunction(() =>
-//     document.body.innerText.includes('May 31, 2024'));
-//   await page.waitForSelector('#enddate');
-//   await page.click('#enddate');
-//   await page.waitForSelector('[aria-label*="1 June 2024"]');
-//   await page.click('[aria-label*="1 June 2024"]');
-//   await page.waitForFunction(() =>
-//     document.body.innerText.includes('June 1, 2024'));
-//   await page.$eval(`[type="submit"]`, (element) =>
-//     element.click(),
-//   );
-//   await page.waitForNavigation();
-// }
+async function createGoal(title, description, arrowsDownOnRecurrence) {
+  // https://chat.openai.com/share/67880247-ed5d-4614-af95-1b17ae8a6d05
+  await page.goto('http://localhost:3000/createGoal');
 
-// test('Create goal', async () => {
-//   await createGoal('GoalTitle', 'GoalDescription', 2);
-// });
+  const titleInput = await page
+    .waitForSelector('input[id="title"]');
+  await titleInput.type(title);
+
+  const descriptionInput = await page
+    .waitForSelector('textarea[id="description"]');
+  await descriptionInput.type(description);
+
+  await page.waitForSelector('#recurrence');
+  await page.click('#recurrence');
+  for (let i = 0; i < arrowsDownOnRecurrence; i++) {
+    // Move down in the dropdown
+    await page.keyboard.press('ArrowDown');
+  }
+  await page.keyboard.press('Enter');
+
+  // timesout atm
+  await page.waitForSelector('#tag');
+  await page.click('#tag');
+  for (let i = 0; i < arrowsDownOnRecurrence; i++) {
+    // Using same var as recurrence because of similar format
+    await page.keyboard.press('ArrowDown');
+  }
+  await page.keyboard.press('Enter');
+
+  await page.$eval('#startdate', (el) => el.value = '2021-03-02');
+  await page.$eval('#enddate', (el) => el.value = '2021-03-3');
+
+  await page.$eval(`[type="submit"]`, (element) =>
+    element.click(),
+  );
+  await page.waitForNavigation();
+}
+
+test('Create goal', async () => {
+  await createGoal('GoalTitle', 'GoalDescription', 2);
+});
 
 // /**
 //  * clickFirstGoal
@@ -208,19 +198,18 @@ afterEach(async () => {
  * addCommentToGoal
  * @return {Promise<void>}
  */
-// async function addCommentToGoal() {
-//   const titleInput = await page
-//     .waitForSelector('[aria-label^="Type comment"]');
-//   await titleInput.type('I like this goal');
-//
-//   await page.evaluate(() => {
-//     const postComment = document.querySelector(
-//     '[aria-label^="Post comment"]');
-//     if (postComment) {
-//       postComment.click();
-//     }
-//   });
-// }
+async function addCommentToGoal() {
+  const titleInput = await page
+    .waitForSelector('[aria-label^="Type comment"]');
+  await titleInput.type('I like this goal');
+
+  await page.evaluate(() => {
+    const postComment = document.querySelector('[aria-label^="Post comment"]');
+    if (postComment) {
+      postComment.click();
+    }
+  });
+}
 
 /**
  * verifyTextOnScreenBySelectorAndText
@@ -228,30 +217,30 @@ afterEach(async () => {
  * @param{string} text
  * @return {Promise<void>}
  */
-// async function verifyTextOnScreenBySelectorAndText(selector, text) {
-//   await page.waitForSelector(selector);
-//   await page.waitForFunction(
-//     (selector, text) => {
-//       const element = document.querySelector(selector);
-//       return element && element.innerText.includes(text);
-//     },
-//     {},
-//     selector,
-//     text,
-//   );
-// }
+async function verifyTextOnScreenBySelectorAndText(selector, text) {
+  await page.waitForSelector(selector);
+  await page.waitForFunction(
+    (selector, text) => {
+      const element = document.querySelector(selector);
+      return element && element.innerText.includes(text);
+    },
+    {},
+    selector,
+    text,
+  );
+}
 
 /**
  * viewCommentOnGoal
  * @return {Promise<void>}
  */
-// async function viewCommentOnGoal() {
-//   const comment = '[aria-label^="Comment 1"]';
-//   await verifyTextOnScreenBySelectorAndText(
-//     comment, 'I like this goal');
-//   await verifyTextOnScreenBySelectorAndText(
-//     comment, 'Today');
-// }
+async function viewCommentOnGoal() {
+  const comment = '[aria-label^="Comment 1"]';
+  await verifyTextOnScreenBySelectorAndText(
+    comment, 'I like this goal');
+  await verifyTextOnScreenBySelectorAndText(
+    comment, 'Today');
+}
 
 // test('Clicking into goal from listing page and viewing its ' +
 //   'contents', async () => {
@@ -273,11 +262,11 @@ afterEach(async () => {
 //   await typeIntoSearchAndExpectFilter();
 // });
 
-// test('Adding comments to a goal', async () => {
-//   await createGoal('GoalTitle1', 'GoalDescription' + 1, 1);
-//   await addCommentToGoal();
-//   await viewCommentOnGoal();
-// });
+test('Adding comments to a goal', async () => {
+  await createGoal('GoalTitle1', 'GoalDescription' + 1, 1);
+  await addCommentToGoal();
+  await viewCommentOnGoal();
+});
 
 /**
  * createGoalWithTag
@@ -288,49 +277,45 @@ afterEach(async () => {
  * @param{string} tag
  * @return {Promise<void>}
  */
-// async function createGoalWithTag(title, description, arrowsDownOnRecurrence,
-//   arrowsDownOnTags = 0, tag = undefined) {
-//   // https://chat.openai.com/share/67880247-ed5d-4614-af95-1b17ae8a6d05
-//   await page.goto('http://localhost:3000/createGoal');
-//
-//   const titleInput = await page
-//     .waitForSelector('input[id="title"]');
-//   await titleInput.type(title);
-//
-//   const descriptionInput = await page
-//     .waitForSelector('textarea[id="description"]');
-//   await descriptionInput.type(description);
-//
-//   await page.waitForSelector('#recurrence');
-//   await page.click('#recurrence');
-//   for (let i = 0; i < arrowsDownOnRecurrence; i++) {
-//     await page.keyboard.press('ArrowDown'); // Move down in the dropdown
-//   }
-//   await page.keyboard.press('Enter'); // Select the option
-//
-//   if (arrowsDownOnTags > 0) {
-//     await page.waitForSelector('#tag');
-//     await page.click('#tag');
-//     for (let i = 0; i < arrowsDownOnTags; i++) {
-//       await page.keyboard.press('ArrowDown');
-//     }
-//     await page.keyboard.press('Enter'); // Select the option
-//   }
-//
-//   await page.$eval(`[type="submit"]`, (element) =>
-//     element.click(),
-//   );
-//   await page.waitForNavigation();
-// }
+async function createGoalWithTag(title, description, arrowsDownOnRecurrence,
+                                 arrowsDownOnTags = 0, tag = undefined) {
+  // https://chat.openai.com/share/67880247-ed5d-4614-af95-1b17ae8a6d05
+  await page.goto('http://localhost:3000/createGoal');
+
+  const titleInput = await page
+    .waitForSelector('input[id="title"]');
+  await titleInput.type(title);
+
+  const descriptionInput = await page
+    .waitForSelector('textarea[id="description"]');
+  await descriptionInput.type(description);
+
+  await page.waitForSelector('#recurrence');
+  await page.click('#recurrence');
+  for (let i = 0; i < arrowsDownOnRecurrence; i++) {
+    await page.keyboard.press('ArrowDown'); // Move down in the dropdown
+  }
+  await page.keyboard.press('Enter'); // Select the option
+
+  if (arrowsDownOnTags > 0) {
+    await page.waitForSelector('#tag');
+    await page.click('#tag');
+    for (let i = 0; i < arrowsDownOnTags; i++) {
+      await page.keyboard.press('ArrowDown');
+    }
+    await page.keyboard.press('Enter'); // Select the option
+  }
+
+  await page.$eval(`[type="submit"]`, (element) =>
+    element.click(),
+  );
+  await page.waitForNavigation();
+}
 
 
-// test('Create goals with tags', async () => {
-//   await createGoalWithTag('GoalTitle1', 'GoalDescription', 3, 5);
-//   await createGoalWithTag('GoalTitle2', 'GoalDescription', 4, 4);
-//   // no tag should be selected
-//   await createGoalWithTag('GoalTitle3', 'GoalDescription', 5, 0);
-// });
-
-test('Passing', () => {
-  expect(true).toBe(true);
+test('Create goals with tags', async () => {
+  await createGoalWithTag('GoalTitle1', 'GoalDescription', 3, 5);
+  await createGoalWithTag('GoalTitle2', 'GoalDescription', 4, 4);
+  // no tag should be selected
+  await createGoalWithTag('GoalTitle3', 'GoalDescription', 5, 0);
 });

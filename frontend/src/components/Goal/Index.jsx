@@ -14,6 +14,7 @@ const GoalsListing = () => {
   // https://chat.openai.com/share/5c73d542-08b5-4772-96ab-c9eecd503ba1
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [goalCount, setGoalCount] = useState(0);
   const [filterTag, setFilterTag] = useState('');
   const goalsPerPage = 4;
   const history = useNavigate();
@@ -107,7 +108,28 @@ const GoalsListing = () => {
       .catch((err) => {
         alert(err.message);
       });
-    }, [currentPage, searchQuery, filterTag, userToken]);
+
+    // fetch get all goals
+    fetch(`http://localhost:3010/v0/goal/count`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userToken}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('response was not ok in get goals');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setGoalCount(data);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  }, [currentPage, filterTag, searchQuery, userToken]);
 
   // https://chat.openai.com/share/92235a8f-fdb7-4143-9674-69af74f89174
   return (
@@ -188,8 +210,14 @@ const GoalsListing = () => {
               <br/>
             </div>
               ))}
-          <Button disabled={currentPage === 1} onClick={handlePrevPage}>Previous Page</Button>
-          <Button disabled={false} onClick={handleNextPage} style={{marginLeft: '10px'}}>Next Page</Button>
+          <Button
+            aria-label={'Previous Page Button'}
+            disabled={currentPage === 1} onClick={handlePrevPage}>Previous Page</Button>
+          <Button
+            aria-label={'Next Page Button'}
+            disabled={
+              (currentPage * goalsPerPage) >= goalCount
+            } onClick={handleNextPage} style={{marginLeft: '10px'}}>Next Page</Button>
         </div>
       </div>
       <Sidebar sidebarOpened={sidebarOpened}/>
