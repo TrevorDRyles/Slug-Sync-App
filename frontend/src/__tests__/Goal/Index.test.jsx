@@ -13,7 +13,7 @@ import {
 } from "@/__tests__/Goal/Handlers.js";
 import userEvent from '@testing-library/user-event';
 import { indexErrorHandlers } from './Handlers';
-import { LoginProvider } from '../../contexts/Login';
+import {LoginContext} from '../../contexts/Login';
 
 const INDEX_URL = 'http://localhost:3010/v0/goal';
 
@@ -29,13 +29,20 @@ afterAll(() => {
   server.close()
 });
 
+const accessToken = '1234'
+const setAccessToken = () => {
+}
+const setUser = () => {
+}
+const user = {'name': 'test username'}
+
 const renderIndex = () => {
   return render(
-    <LoginProvider>
+    <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
       <BrowserRouter>
         <Index />
       </BrowserRouter>
-    </LoginProvider>
+    </LoginContext.Provider>
   )
 }
 

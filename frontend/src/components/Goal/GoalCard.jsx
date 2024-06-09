@@ -89,7 +89,7 @@ GoalCard.propTypes = {
     recurrence: PropTypes.string.isRequired,
     startdate: PropTypes.string,
     enddate: PropTypes.string,
-    // completed: PropTypes.bool.isRequired,
-    // streak: PropTypes.number.isRequired,
+    completed: PropTypes.bool.isRequired,
+    streak: PropTypes.number.isRequired,
   }).isRequired,
 };

@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+const {Pool} = require('pg');
 
 const pool = new Pool({
   host: 'localhost',
@@ -35,7 +35,7 @@ exports.getUserInfo = async (req, res) => {
       WHERE user_id = $1
       ORDER BY streak::int DESC
       LIMIT 3
-    `
+    `;
 
     const topGoalsResult = await pool.query(topGoalsQuery, [memberId]);
     const topGoals = topGoalsResult.rows;
@@ -60,17 +60,20 @@ exports.getUserInfo = async (req, res) => {
         streak: goal.streak,
       });
     }
-    res.status(200).json({ id: userInfo.id, name: userInfo.name, bio: userInfo.bio, img: userInfo.img, topGoals: topGoalsInfo });
-  
-  //   const goals = await Promise.all(result.rows.map(async (row) => {
-  //     // load comments
-  //     const commentsQuery = `
-  //         SELECT *
-  //         FROM comment
-  //         WHERE goal_id = $1;
-  //     `;
-  //     const {rows} = await pool.query(commentsQuery, [row.id]);
-  
+    res.status(200).json({
+      id: userInfo.id, name: userInfo.name,
+      bio: userInfo.bio, img: userInfo.img, topGoals: topGoalsInfo
+    });
+
+    //   const goals = await Promise.all(result.rows.map(async (row) => {
+    //     // load comments
+    //     const commentsQuery = `
+    //         SELECT *
+    //         FROM comment
+    //         WHERE goal_id = $1;
+    //     `;
+    //     const {rows} = await pool.query(commentsQuery, [row.id]);
+
   //     return {
   //       id: row.id,
   //       title: row.goal.title,
@@ -83,21 +86,23 @@ exports.getUserInfo = async (req, res) => {
   //       memberCount: row.goal.memberCount,
   //     };
   //   }));
-  //   res.status(200).json({ id: userInfo.id, name: userInfo.name, bio: userInfo.bio, topGoals: topGoalsInfo });
+    //   res.status(200).json({ id: userInfo.id, name: userInfo.name,
+    //   bio: userInfo.bio, topGoals: topGoalsInfo });
   } catch (err) {
     console.error('Error retrieving user profile:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({error: 'Internal server error'});
   }
 };
 
 exports.editProfile = async (req, res) => {
   const userId = req.params.id;
-  const { name, bio } = req.body;
+  const {name, bio} = req.body;
 
   try {
     const updateQuery = `
       UPDATE "user"
-      SET data = jsonb_set(jsonb_set(data, '{name}', $1::jsonb), '{bio}', $2::jsonb)
+      SET data = jsonb_set(jsonb_set(data, '{name}', $1::jsonb),
+                           '{bio}', $2::jsonb)
       WHERE id = $3
     `;
 
@@ -108,9 +113,9 @@ exports.editProfile = async (req, res) => {
 
 
     await pool.query(query);
-    res.status(200).json({ id: userId, name: name, bio: bio});
+    res.status(200).json({id: userId, name: name, bio: bio});
   } catch (err) {
     console.error('Error updating profile:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({error: 'Internal server error'});
   }
 };
