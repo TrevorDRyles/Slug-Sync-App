@@ -78,6 +78,57 @@ it('Loads user profile with all 3 goals', async () => {
   });
 });
 
+it('Loads user profile with error', async () => {
+  const topGoals = [{
+    id: '1',
+    title: 'Test Goal 1',
+    description: 'Test Description 1',
+    recurrence: 1,
+    streak: 1,
+  },
+    {
+      id: '2',
+      title: 'Test Goal 2',
+      description: 'Test Description 2',
+      recurrence: 2,
+      streak: 2,
+    },
+    {
+      id: '3',
+      title: 'Test Goal 3',
+      description: 'Test Description 3',
+      recurrence: 3,
+      streak: 3,
+    }];
+  const userData = {
+    id: '1234',
+    bio: 'its a bio',
+    name: 'me',
+    topGoals,
+  };
+
+  localStorage.setItem('user', JSON.stringify(userData));
+
+  server.use(
+    ...indexHandlers,
+    http.get('http://localhost:3010/v0/profile/:id', async () => {
+      return HttpResponse.json({message: 'error'}, {status: 400});
+    }),
+  );
+  const accessToken = '1234'
+  const setAccessToken = () => {
+  }
+  const user = {id: '1234', token: '1234'}
+  render(
+    <LoginContext.Provider value={{accessToken, setAccessToken, user}}> <RefetchProvider>
+      <BrowserRouter>
+        <Profile/>
+      </BrowserRouter>
+    </RefetchProvider>
+    </LoginContext.Provider>
+  );
+});
+
 it('Doesn\'t load anything because no user id', async () => {
   const topGoals = [{
     id: '1',
