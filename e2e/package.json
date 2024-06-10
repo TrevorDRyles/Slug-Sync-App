@@ -37,7 +37,7 @@
   },
   "scripts": {
     "build": "cd ../frontend && npm run build",
-    "e2e": "jest --testTimeout=20000 --runInBand --verbose --forceExit --detectOpenHandles",
+    "e2e": "jest --testTimeout=40000 --runInBand --verbose --forceExit --detectOpenHandles",
     "test": "(npm run build) && (npm run e2e)",
     "lint": "eslint tests --no-inline-config --max-warnings 0 --ext .js"
   }

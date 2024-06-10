@@ -41,12 +41,12 @@ exports.createGoal = async (req, res) => {
 
 exports.getGoalsByPageAndSize = async function (req, res) {
   let pageNum = req.query.page;
-  let searchTerm = req.query.search;
+  let searchTerm = sanitize(req.query.search);
   if (searchTerm === undefined) {
     searchTerm = '%';
   }
 
-  let filterTerm = req.query.tag;
+  let filterTerm = sanitize(req.query.tag);
   if (filterTerm === undefined) {
     filterTerm = '%';
   }
@@ -241,3 +241,16 @@ exports.getAllMembersInGoal = async (req, res) => {
 
   res.status(200).json(goalMembers);
 };
+
+/**
+ * sanitize
+ * referenced from github copilot
+ * @param{string} input
+ * @return {*}
+ */
+function sanitize(input) {
+  if (!input) {
+    return input;
+  }
+  return input.replace(/[^a-z0-9 ]/gi, '');
+}
