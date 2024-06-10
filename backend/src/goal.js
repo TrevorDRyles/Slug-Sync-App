@@ -114,16 +114,38 @@ exports.viewGoal = async (req, res) => {
   if (rows.length === 0) {
     res.status(404).send();
   } else {
-    const result = rows.map((row) => ({
-      id: row.id,
-      title: row.goal.title,
-      recurrence: row.goal.recurrence,
-      description: row.goal.description,
-      startdate: row.goal.startdate,
-      enddate: row.goal.enddate,
-      memberCount: row.goal.memberCount,
-      streak: row.streak,
-    }));
+    let result;
+    const rowWithLoggedInUserId =
+      rows.find((row) => row.user_id === req.user.id);
+    // if there's a row that has the logged in user id
+    if (rowWithLoggedInUserId) {
+      // then get that record's streak
+      result = {
+        id: rowWithLoggedInUserId.id,
+        title: rowWithLoggedInUserId.goal.title,
+        recurrence: rowWithLoggedInUserId.goal.recurrence,
+        description: rowWithLoggedInUserId.goal.description,
+        startdate: rowWithLoggedInUserId.goal.startdate,
+        enddate: rowWithLoggedInUserId.goal.enddate,
+        memberCount: rowWithLoggedInUserId.goal.memberCount,
+        streak: rowWithLoggedInUserId.streak,
+      };
+      res.status(200).json(result);
+      return;
+    }
+    // otherwise streak is 0
+    result = rows.map((row) => {
+      return {
+        id: row.id,
+        title: row.goal.title,
+        recurrence: row.goal.recurrence,
+        description: row.goal.description,
+        startdate: row.goal.startdate,
+        enddate: row.goal.enddate,
+        memberCount: row.goal.memberCount,
+        streak: 0,
+      };
+    });
     res.status(200).json(result[0]);
   }
 };
