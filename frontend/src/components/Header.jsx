@@ -148,7 +148,7 @@ export default function Header() {
           <Group visibleFrom="sm">
             {accessToken ? (
               <>
-                <Avatar src={user.img} />
+                <Avatar style={{cursor: 'pointer'}} onClick={() => navigate('/profile/' + user.id)} src={user.img}/>
                 <Text >Hello {user.name}! </Text>
                 <Button id={'logout'} variant="default" onClick={logout}>Logout</Button>
               </>
