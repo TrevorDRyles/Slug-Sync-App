@@ -86,7 +86,8 @@ test('Successful Registration', async () => {
   await signUp(page);
 });
 
-test('Deplicate Registration', async () => {
+test('Duplicate Registration', async () => {
+  const email = await signUp(page);
   await page.goto('http://localhost:3000/login');
   await page.waitForFunction(
     `document.querySelector("body").innerText.includes(
@@ -102,7 +103,8 @@ test('Deplicate Registration', async () => {
   const passwordInput = await page.$('#password');
   await passwordInput.type('12345678');
   const emailInput = await page.$('#email');
-  await emailInput.type('test@gmail.com');
+  await emailInput.type(email);
+
   await page.click('aria/Submit Signin Button');
 
   await page.waitForFunction(
