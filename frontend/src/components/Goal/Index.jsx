@@ -8,7 +8,15 @@ import {useDisclosure} from "@mantine/hooks";
 import Sidebar from "@/components/Sidebar.jsx";
 import {IconTag, IconSortAscending, IconSortDescending, IconX} from '@tabler/icons-react';
 
-let tags =['Health','Athletics','Productivity','Academics','Social','Hobbies','Finance and Bills','Work','Personal','Other'];
+let tags = ['Health', 'Athletics', 'Productivity', 'Academics', 'Social', 'Hobbies', 'Finance and Bills', 'Work', 'Personal', 'Other'];
+
+// referenced from github copilot
+function sanitize(input) {
+  // if (!input) {
+  //   return input;
+  // }
+  return input.replace(/[^a-z0-9 ]/gi, '');
+}
 
 const GoalsListing = () => {
   // https://chat.openai.com/share/5c73d542-08b5-4772-96ab-c9eecd503ba1
@@ -78,8 +86,8 @@ const GoalsListing = () => {
   };
 
   useEffect(() => {
-    const searchTerm = searchQuery.length > 0 ? '&search=' + encodeURIComponent(searchQuery) : ''
-    const filterTerm = filterTag.length > 0 ? '&tag=' + filterTag : ''
+    const searchTerm = searchQuery.length > 0 ? '&search=' + sanitize(searchQuery) : ''
+    const filterTerm = filterTag.length > 0 ? '&tag=' + sanitize(filterTag) : ''
     fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${filterTerm}${searchTerm}`,
       {
         method: 'GET',
@@ -119,7 +127,7 @@ const GoalsListing = () => {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error('response was not ok in get goals');
+          throw new Error('response was not ok in get goals count');
         }
         return res.json();
       })
