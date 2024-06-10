@@ -21,7 +21,7 @@ beforeEach(async () => {
   })
     .set('Content-Type', 'application/json');
   userToken1 = response.body.token;
-  console.log(userToken1);
+  // console.log(userToken1);
   userId = response.body.id;
 
   const response2 = await request.post('/v0/login').send({

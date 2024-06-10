@@ -108,10 +108,9 @@ exports.viewGoal = async (req, res) => {
                LEFT OUTER JOIN user_goal ug
                                ON g.id = ug.goal_id
       WHERE ug.goal_id = $1
-        AND g.id = $1
-        AND ug.user_id = $2;
+        AND g.id = $1;
   `;
-  const {rows} = await pool.query(query, [goalId, req.user.id]);
+  const {rows} = await pool.query(query, [goalId]);
   if (rows.length === 0) {
     res.status(404).send();
   } else {
@@ -149,7 +148,7 @@ exports.joinGoal = async (req, res) => {
   const user = req.user;
   const goalId = req.path.split('/')[3];
   if (await db.isMemberInGoal(user.id, goalId) === true) {
-    console.log('user alreaady in goal!');
+    // console.log('user alreaady in goal!');
     return res.status(400).json({message: 'User already in goal!'});
   }
 
@@ -178,12 +177,12 @@ exports.leaveGoal = async (req, res) => {
   }
 
   if (goalData.author == user.id) {
-    console.log('cannot leave goal as the creator. must delete goal.');
+    // console.log('cannot leave goal as the creator. must delete goal.');
     return res.status(401).send();
   }
 
   if (await db.isMemberInGoal(user.id, goalToLeaveId) == false) {
-    console.log('not in the goal anyway'); // hella professional 🥶🥶🥶🥶🥶
+    // console.log('not in the goal anyway'); // hella professional 🥶🥶🥶🥶🥶
     return res.status(401).send();
   }
 
@@ -224,13 +223,13 @@ exports.getGoalCount = async (req, res) => {
 exports.getAllMembersInGoal = async (req, res) => {
   const goalId = req.path.split('/')[3];
   const goalMembers = await db.getAllMembersInGoal(goalId);
-  console.log(goalMembers);
+  // console.log(goalMembers);
 
   // goofy ahh add the role (admin or member)
   const goalInfo = await db.getGoal(goalId);
-  console.log(goalInfo);
+  // console.log(goalInfo);
   const goalAuthorID = goalInfo.author;
-  console.log(goalAuthorID);
+  // console.log(goalAuthorID);
   for (let i = 0; i < goalMembers.length; i++) {
     if (goalAuthorID == goalMembers[i].id) {
       goalMembers[i].role = 'author';

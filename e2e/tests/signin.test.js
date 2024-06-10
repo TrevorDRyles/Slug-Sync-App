@@ -11,7 +11,7 @@ const puppeteer = require('puppeteer');
 const http = require('http');
 const path = require('path');
 const express = require('express');
-const {handleDialog} = require('./helpers');
+const {handleDialog, signUp} = require('./helpers');
 
 require('dotenv').config();
 const app = require('../../backend/src/app');
@@ -29,7 +29,7 @@ let page;
 beforeAll(() => {
   backend = http.createServer(app);
   backend.listen(3010, () => {
-    console.log('Backend Running at http://localhost:3010');
+    // console.log('Backend Running at http://localhost:3010');
   });
   frontend = http.createServer(
     express()
@@ -41,7 +41,7 @@ beforeAll(() => {
       }),
   );
   frontend.listen(3000, () => {
-    console.log('Frontend Running at http://localhost:3000');
+    // console.log('Frontend Running at http://localhost:3000');
   });
 });
 
@@ -64,7 +64,7 @@ beforeEach(async () => {
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
-    console.log('Browser log:', msg.text());
+    // console.log('Browser log:', msg.text());
   });
   await page.setViewport({
     width: 1980,
@@ -83,28 +83,7 @@ afterEach(async () => {
 // creates data and duplicates can't be created without error conflict
 // TODO cleanup after this test when the delete endpoint is implemented
 test('Successful Registration', async () => {
-  await page.goto('http://localhost:3000/login');
-  await page.waitForFunction(
-    `document.querySelector("body").innerText.includes(
-    "Don't have an account? Register")`,
-  );
-  page.click('aria/Switch Signin');
-  await page.waitForFunction(
-    `document.querySelector("body").innerText.includes(
-    "Already have an account? Login")`,
-  );
-  const nameInput = await page.$('#name');
-  await nameInput.type('Test name');
-  const passwordInput = await page.$('#password');
-  await passwordInput.type('12345678');
-  const emailInput = await page.$('#email');
-  await emailInput.type('test@gmail.com');
-  await page.click('aria/Submit Signin Button');
-
-  await page.waitForFunction(
-    'document.querySelector("body").innerText.includes("Register")',
-  );
-  await handleDialog(page, 'Register successful, please log in');
+  await signUp(page);
 });
 
 test('Deplicate Registration', async () => {

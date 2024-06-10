@@ -19,7 +19,7 @@ const Profile = () => {
     const userId = JSON.parse(localStorage.getItem('user')).id;
     const accessToken = JSON.parse(localStorage.getItem('user')).token
     if (!userId) {
-      console.log('User ID not found in localStorage');
+      // console.log('User ID not found in localStorage');
       return;
     }
 
@@ -42,7 +42,7 @@ const Profile = () => {
         setBio(json.bio || '');
       })
       .catch((err) => {
-        console.log('Error getting user info: ' + err);
+        // console.log('Error getting user info: ' + err);
       });
   }, []);
 
@@ -61,7 +61,7 @@ const Profile = () => {
       body: JSON.stringify({id: userId, name, bio}),
     });
     const result = await response.json();
-    console.log(result)
+    // console.log(result)
 
     if (response.ok) {
       setUserData((prevData) => ({...prevData, name, bio}));
