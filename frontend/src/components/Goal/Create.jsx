@@ -107,7 +107,7 @@ function CreateGoal() {
         history(`/goal/${json.id}`);
       })
       .catch((err) => {
-        console.log('Error creating goal: ' + err);
+        // console.log('Error creating goal: ' + err);
       });
   };
 

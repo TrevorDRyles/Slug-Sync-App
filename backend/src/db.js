@@ -213,7 +213,7 @@ exports.isMemberInGoal = async (userId, goalId) => {
     values: [userId, goalId],
   };
   const result = await pool.query(query);
-  console.log(result.rows);
+  // console.log(result.rows);
   return result.rows[0].exists;
 };
 

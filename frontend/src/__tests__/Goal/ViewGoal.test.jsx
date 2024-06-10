@@ -414,13 +414,13 @@ it('Deletes goal successfully', async () => {
     screen.getByText('Test Comment');
   });
 
-  fireEvent.click(screen.getByText('Delete goal'));
+  fireEvent.click(screen.getByLabelText('Delete Goal'));
 
   await waitFor(() => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
-  fireEvent.click(screen.getByText('Yes, confirm delete'));
+  fireEvent.click(screen.getByLabelText('Confirm Delete Goal'));
 });
 
 it('Leaves goal successfully', async () => {
@@ -455,13 +455,13 @@ it('Handles error when deleting goal', async () => {
     screen.getByText('Test Comment');
   });
 
-  fireEvent.click(screen.getByRole('button', {name: 'Delete goal'}));
+  fireEvent.click(screen.getByRole('button', {name: 'Delete Goal'}));
 
   await waitFor(() => {
     expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 
-  fireEvent.click(screen.getByRole('button', {name: 'Yes, confirm delete'}));
+  fireEvent.click(screen.getByRole('button', {name: 'Confirm Delete Goal'}));
 });
 
 it('Handles error when leaving goal', async () => {
