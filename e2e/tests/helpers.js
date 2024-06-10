@@ -47,3 +47,34 @@ module.exports.logout = async function(page) {
     (el) => el.textContent.trim());
   expect(content).toBe('Welcome to SlugSync');
 };
+
+/**
+ * signUp
+ * @param{any} page
+ * @return {Promise<void>}
+ */
+module.exports.signUp = async function (page) {
+  await page.goto('http://localhost:3000/login');
+  await page.waitForFunction(
+    `document.querySelector("body").innerText.includes(
+    "Don't have an account? Register")`,
+  );
+  page.click('aria/Switch Signin');
+  await page.waitForFunction(
+    `document.querySelector("body").innerText.includes(
+    "Already have an account? Login")`,
+  );
+  const nameInput = await page.$('#name');
+  await nameInput.type('Test name');
+  const passwordInput = await page.$('#password');
+  await passwordInput.type('12345678');
+  const emailInput = await page.$('#email');
+  await emailInput.type(`test${crypto.randomUUID()}@gmail.com`);
+  await page.click('aria/Submit Signin Button');
+
+  await page.waitForFunction(
+    'document.querySelector("body").innerText.includes("Register")',
+  );
+  await module.exports.handleDialog(page, 'Register successful, please log in');
+};
+

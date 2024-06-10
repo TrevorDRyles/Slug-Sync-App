@@ -14,7 +14,7 @@ const express = require('express');
 
 require('dotenv').config();
 const app = require('../../backend/src/app');
-const {login} = require('./helpers');
+const {login, signUp} = require('./helpers');
 
 let backend;
 let frontend;
@@ -60,7 +60,7 @@ afterAll((done) => {
  */
 beforeEach(async () => {
   browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
@@ -77,7 +77,7 @@ beforeEach(async () => {
  * Close the headless instance of Chrome as we no longer need it.
  */
 afterEach(async () => {
-  await browser.close();
+  // await browser.close();
 });
 
 /**
@@ -141,7 +141,7 @@ async function createGoal(title, description, arrowsDownOnRecurrence,
 }
 
 test('Create goal', async () => {
-  await createGoal('GoalTitle', 'GoalDescription', 2);
+  await createGoal('GoalTitle', 'GoalDescription', 2, 1);
 });
 
 /**
@@ -271,16 +271,68 @@ test('Clicking into goal from listing page and viewing its ' +
 test('Filtering goals by search', async () => {
   // Create sample goal data
   for (let i = 1; i <= 14; i++) {
-    await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
+    await createGoal('GoalTitle' + i, 'GoalDescription' + i, i, i % 6);
   }
   await page.goto('http://localhost:3000/goals');
   await typeIntoSearchAndExpectFilter();
 });
 
 test('Adding comments to a goal', async () => {
-  await createGoal('GoalTitle1', 'GoalDescription' + 1, 1);
+  await createGoal('GoalTitle1', 'GoalDescription' + 1, 1, 1);
   await addCommentToGoal();
   await viewCommentOnGoal();
 });
 
+test('Delete goal', async () => {
+  const title = crypto.randomUUID();
+  await createGoal(title, 'GoalDescription' + 1, 1, 1);
+  await page.waitForSelector('[aria-label^="Delete Goal"]');
+  await page.click('[aria-label^="Delete Goal"]');
+  // click delete goal
+  await page.waitForSelector('[aria-label^="Confirm Delete Goal"]');
+  await page.click('[aria-label^="Confirm Delete Goal"]');
+  await page.waitForNavigation();
+  await new Promise((r) => setTimeout(r, 1000));
+  // have to slice because hyphens are escaped characters
+  const searchInput = await page
+    .waitForSelector('input[id="search-filter-goals"]');
+  await searchInput.type(title.slice(0, 8));
+  await page.waitForFunction((text) =>
+    !document.body.innerText.includes(text), {}, title);
+});
 
+// test leaving a goal
+test('Leave goal and add goal', async () => {
+  const title = crypto.randomUUID();
+  await createGoal(title, 'GoalDescription' + 1, 1, 1);
+  await signUp(page);
+  const loggedInUserName = 'Test name';
+  await page.keyboard.press('Enter');
+  await new Promise((r) => setTimeout(r, 1000));
+  await page.goto('http://localhost:3000/goals');
+  await new Promise((r) => setTimeout(r, 1000));
+  // search for title of goal
+  const searchInput = await page
+    .waitForSelector('input[id="search-filter-goals"]');
+  await searchInput.type(title.slice(0, 8));
+  await new Promise((r) => setTimeout(r, 1000));
+  // add goal
+  await page.waitForSelector('[aria-label^="Add Goal"]');
+  await page.click('[aria-label^="Add Goal"]');
+  await new Promise((r) => setTimeout(r, 1000));
+  await page.waitForFunction((text) => document.body.innerText
+    .includes(text), {}, loggedInUserName);
+  // leave goal
+  await page.waitForSelector('[aria-label^="Leave Goal"]');
+  await page.click('[aria-label^="Leave Goal"]');
+  await page.waitForNavigation();
+  // search for goal and click on it
+  await searchInput.type(title.slice(0, 8));
+  await new Promise((r) => setTimeout(r, 1000));
+  await page.waitForSelector('[aria-label^="goal-link-"]');
+  await page.click('[aria-label^="goal-link-"]');
+  await new Promise((r) => setTimeout(r, 1000));
+  // confirm name of logged in user is no longer there
+  await page.waitForFunction((text) =>
+    !document.body.innerText.includes(text), {}, title);
+});
