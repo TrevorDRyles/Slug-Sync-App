@@ -56,6 +56,7 @@ const handleSubmit = (data, type, toggle, setAccessToken, history, setUser) => {
       },
     })
         .then((res) => {
+          console.log(res)
           if (!res.ok) {
             throw res;
           }

@@ -125,6 +125,13 @@ export const indexHandlers = [
       status: 404,
     });
   }),
+  http.get(COMMENTS_URL, async () => {
+    if (multipleCommentsSet) {
+      return HttpResponse.json(multipleComments);
+    } else {
+      return HttpResponse.json([comment]);
+    }
+  }),
 ];
 
 export const errorInAddGoalHandler = [

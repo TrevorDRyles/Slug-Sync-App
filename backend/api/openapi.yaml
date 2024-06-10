@@ -461,6 +461,68 @@ paths:
                 additionalProperties: false
 
 
+  /profile/{id}:
+    get:
+      tags:
+        - get profile
+      summary: get profile
+      parameters:
+        - name: id
+          in: path
+          description: Id of member
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileWithId'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - edit profile
+      summary: edit profile
+      parameters:
+        - name: id
+          in: path
+          description: Id of member
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      requestBody:
+        description: Profile data to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileWithId'
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileWithId'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Error:
@@ -597,6 +659,9 @@ components:
       required:
         - email
         - password
+      example:
+        email: "hunter@ucsc.edu"
+        password: "huntertratar"
 
     LoginResponse:
       type: object
@@ -670,6 +735,28 @@ components:
         message:
           type: string
           description: Confirmation message for getting members
+    ProfileWithId:
+      type: object
+      required:
+        - id
+        - name
+        - bio
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id of member
+        name:
+          type: string
+          description: name of member
+        bio:
+          type: string
+          description: description of goal
+      example:
+        id: "1"
+        name: "John Doe"
+        bio: "bio"
+
   securitySchemes:
     bearerAuth:
       type: http

@@ -22,6 +22,8 @@ const ViewGoal = () => {
   const {accessToken} = useContext(LoginContext)
   const history = useNavigate();
 
+  console.log(comments)
+
   useEffect(() => {
     fetch(`http://localhost:3010/v0/goal/${id}`, {
       method: 'GET',
@@ -275,7 +277,6 @@ const ViewGoal = () => {
     <>
       <div>{error}</div>
       <Header toggleSidebar={toggleSidebar} />
-
       <div className={styles.containerForView}>
       <Modal opened={opened} onClose={close} title="Delete Goal">
         <p>Are you sure you would like to delete this goal?</p>
@@ -299,7 +300,7 @@ const ViewGoal = () => {
                       <Text className={styles.commentDate}>{date}</Text>
                       {comments.map((comment, index) => {
                         const userName = userNames[comment.user_id] || 'Loading...';
-                        const avatarSrc = `https://www.clevelanddentalhc.com/wp-content/uploads/2018/03/sample-avatar.jpg`;
+                        const avatarSrc = comment.user_data && comment.user_data.img || 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg';
                         return (
                           <Paper aria-label={`Comment ${index + 1}`} key={`${index}-${comment.id}`} className={styles.comment}>
                             <div className={styles.commentHeader}>
@@ -329,12 +330,14 @@ const ViewGoal = () => {
                   </Button>
               <br></br>
               <br></br>
-              <Button onClick={open} variant="outline" color="red">
-                Delete goal
-              </Button>
-              <Button onClick={handleLeave} variant="outline" color="red">
-                Leave Goal
-              </Button>
+              <div className={styles.removeWrapper}>
+                <Button onClick={open} variant="outline" color="red">
+                  Delete goal
+                </Button>
+                <Button onClick={handleLeave} variant="outline" color="red">
+                  Leave Goal
+                </Button>
+                </div>
                 </div>
               </div>
             </>

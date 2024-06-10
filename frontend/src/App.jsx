@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { LoginContext } from './contexts/Login.jsx';
 import Index from "@/components/Goal/Index.jsx";
 import { RefetchProvider } from './contexts/Refetch.jsx';
+import Profile from "./components/Profile/Profile.jsx";
 
 /**
  * App
@@ -38,7 +39,8 @@ function App() {
               <Route path="/createGoal" default element={<CreateGoal />} />
               <Route path="/goals" default element={<Index />} />
               <Route path="/goal/:id" default element={<ViewGoal />} />
-              <Route path="/" default element={<Home />} />
+              <Route path="/profile/:id" default element={<Profile />} />
+          <Route path="/" default element={<Home />} />
             </Routes>
           </BrowserRouter>
         </RefetchProvider>

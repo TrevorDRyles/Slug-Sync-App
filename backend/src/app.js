@@ -9,6 +9,7 @@ const auth = require('./auth');
 const goal = require('./goal.js');
 const user = require('./user.js');
 const comment = require('./comment.js');
+const profile = require('./profile.js');
 
 const app = express();
 app.use(cors());
@@ -49,6 +50,10 @@ app.get('/v0/goal/completed', auth.check, goal.getAllCompleted);
 app.get('/v0/goal/incompleted', auth.check, goal.getAllIncompleted);
 
 app.get('/v0/goal/:id', auth.check, goal.viewGoal);
+
+app.get('/v0/profile/:id', auth.check, profile.getUserInfo);
+
+app.post('/v0/profile/:id', auth.check, profile.editProfile);
 
 app.post('/v0/goal/:id/comment', auth.check, comment.addCommentToGoal);
 
