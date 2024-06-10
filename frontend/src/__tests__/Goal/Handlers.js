@@ -71,6 +71,12 @@ let comment = {
 const multipleComments = [
   {
     id: '1',
+    user_data: {
+      id: '1e0d7c46-2194-4a30-b8e5-1b0a7c287e80',
+      name: 'Test User',
+      role: 'user',
+      img: 'https://t3.ftcdn.net/jpg/05/16/27/58/360_F_516275801_f3Fsp17x6HQK0xQgDQEELoTuERO4SsWV.jpg',
+    },
     data: {
       content: 'Test Comment 1',
       // .toString() is needed to pass the test to simulate stringification

@@ -51,30 +51,26 @@ const Profile = () => {
   };
 
   const handleSaveClick = async () => {
-    try {
-      const userId = JSON.parse(localStorage.getItem('user')).id;
-      const response = await fetch(`http://localhost:3010/v0/profile/${userId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`
-        },
-        body: JSON.stringify({ id: userId, name, bio }),
-      });
-      const result = await response.json();
-      console.log(result)
-      
-      if (response.ok) {
-        setUserData((prevData) => ({ ...prevData, name, bio }));
-        closeModal();
-      } else {
-        console.error('Failed to update profile:', result.message);
-      }
-    } catch (error) {
-      console.error('Error updating profile:', error);
+    const userId = JSON.parse(localStorage.getItem('user')).id;
+    const response = await fetch(`http://localhost:3010/v0/profile/${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({id: userId, name, bio}),
+    });
+    const result = await response.json();
+    console.log(result)
+
+    if (response.ok) {
+      setUserData((prevData) => ({...prevData, name, bio}));
+      closeModal();
+    } else {
+      console.error('Failed to update profile:', result.message);
     }
   };
-  
+
 
   return (
     <>

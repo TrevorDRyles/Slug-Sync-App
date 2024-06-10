@@ -181,6 +181,52 @@ it('Loads create goal with error', async () => {
   fireEvent.keyDown(recurrence, {key: 'Enter', code: 'Enter'});
   screen.getByText('3 days');
 
+  const startDateInput = screen.getByText('Select start date');
+  fireEvent.click(startDateInput);
+  await waitFor(() => {
+    expect(screen.getByText('Mo')).toBeDefined();
+    const dateToSelect = screen.getByText('15');
+    fireEvent.click(dateToSelect);
+  });
+
+  await waitFor(() => {
+    expect(screen.queryByText('15')).not.toBeInTheDocument();
+  })
+  expect(screen.getByText('June 15, 2024')).toBeInTheDocument(); // NOTE: HARDCODED MONTH. WILL NOT WORK AFTER JUNE
+
+  const selectedOption = screen.getByText('3 days');
+  expect(selectedOption).toBeInTheDocument();
+  const submit = screen.getByTestId('submit');
+  fireEvent.click(submit);
+});
+
+it('Loads create goal with error in start date', async () => {
+  server.use(
+    http.post(URL, async () => {
+      return HttpResponse.json({}, {status: 400});
+    }),
+  );
+  renderCreateGoal();
+  screen.getByText('Title', {exact: false});
+  screen.getByText('Description');
+  screen.getByText('Repeat goal every ...', {exact: false});
+
+  const title = screen.getByTestId('title', {exact: false});
+  fireEvent.change(title, {target: {value: 'Title'}});
+  expect(title.value).toBe('Title');
+
+  const description = screen.getByTestId('description');
+  fireEvent.change(description, {target: {value: 'Description'}});
+  expect(description.value).toBe('Description');
+
+  const recurrence = screen.getByTestId('recurrence');
+  fireEvent.click(recurrence);
+  fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
+  fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
+  fireEvent.keyDown(recurrence, {key: 'ArrowDown', code: 'ArrowDown'});
+  fireEvent.keyDown(recurrence, {key: 'Enter', code: 'Enter'});
+  screen.getByText('3 days');
+
   const selectedOption = screen.getByText('3 days');
   expect(selectedOption).toBeInTheDocument();
   const submit = screen.getByTestId('submit');

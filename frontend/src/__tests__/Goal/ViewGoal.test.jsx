@@ -231,6 +231,24 @@ it('Adds comment successfully', async () => {
   fireEvent.click(screen.getByLabelText('Post comment'));
 });
 
+it('Adds comment successfully', async () => {
+  server.use(...viewGoalHandlers);
+  renderViewGoalPage();
+
+  await waitFor(() => {
+    screen.getByText('Test Comment');
+  });
+
+  // type into comments field by aria label and click enter
+  await waitFor(() => {
+    screen.getByPlaceholderText('Add a comment');
+  })
+
+  const addComment = screen.getByPlaceholderText('Add a comment');
+  fireEvent.change(addComment, {target: {value: 'Test comment'}});
+  fireEvent.click(screen.getByLabelText('Post comment'));
+});
+
 it('Adds comment with no text successfully (nothing\'s added)', async () => {
   server.use(...viewGoalHandlers);
 
