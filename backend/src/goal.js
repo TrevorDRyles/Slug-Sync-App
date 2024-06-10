@@ -108,10 +108,9 @@ exports.viewGoal = async (req, res) => {
                LEFT OUTER JOIN user_goal ug
                                ON g.id = ug.goal_id
       WHERE ug.goal_id = $1
-        AND g.id = $1
-        AND ug.user_id = $2;
+        AND g.id = $1;
   `;
-  const {rows} = await pool.query(query, [goalId, req.user.id]);
+  const {rows} = await pool.query(query, [goalId]);
   if (rows.length === 0) {
     res.status(404).send();
   } else {
