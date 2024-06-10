@@ -12,7 +12,10 @@ exports.getUserInfo = async (req, res) => {
   const memberId = req.params.id;
 
   const userInfoQuery = `
-      SELECT id, data ->> 'name' AS name, data ->> 'bio' AS bio, data ->> 'img' AS img
+      SELECT id,
+             data ->> 'name' AS name,
+             data ->> 'bio'  AS bio,
+             data ->> 'img'  AS img
       FROM "user"
       WHERE id = $1
   `;
