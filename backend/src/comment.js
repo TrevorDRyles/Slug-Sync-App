@@ -10,7 +10,7 @@ const pool = new Pool({
 
 // https://chat.openai.com/share/9c8fe898-ae46-4b7a-8f68-3c01db7db9ed
 exports.addCommentToGoal = async (req, res) => {
-  const {id} = req.user; 
+  const {id} = req.user;
   const {content, date} = req.body;
   const goalId = req.params.id;
 
@@ -43,7 +43,10 @@ exports.addCommentToGoal = async (req, res) => {
 exports.getAllCommentsOnGoal = async (req, res) => {
   const goalId = req.params.id;
   const query = `
-        SELECT * FROM comment WHERE goal_id = $1;
+      SELECT c.goal_id, c.id, c.user_id, c.data, u.data AS user_data
+      FROM comment c
+        JOIN "user" u ON u.id = c.user_id
+        WHERE goal_id = $1;
   `;
   const {rows} = await pool.query(query, [goalId]);
   res.status(200).json(rows);

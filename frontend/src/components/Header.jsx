@@ -69,7 +69,6 @@ export default function Header() {
   const navigate = useNavigate();
 
   const {accessToken, setAccessToken, user} = React.useContext(LoginContext);
-  console.log(user)
 
   const logout = () => {
     localStorage.removeItem('user')
@@ -149,7 +148,7 @@ export default function Header() {
           <Group visibleFrom="sm">
             {accessToken ? (
               <>
-                <Avatar src={user.img} />
+                <Avatar style={{cursor: 'pointer'}} onClick={() => navigate('/profile/' + user.id)} src={user.img}/>
                 <Text >Hello {user.name}! </Text>
                 <Button id={'logout'} variant="default" onClick={logout}>Logout</Button>
               </>

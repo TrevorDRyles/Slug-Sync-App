@@ -1,0 +1,56 @@
+.container {
+    background-color: var(--mantine-color-gray-2);
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 50px 0px 50px 0px;
+  }
+
+.card_container{
+    max-width: 300px;
+    margin: 40px 100px;
+    padding: 20px;
+    position: relative;
+    max-height: 400px;
+    float: left;
+}
+
+.editButton {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.goalColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-content: space-between;
+    text-align: center;
+  }
+
+.inner_container{
+    height: 150px;
+    margin-top: 30px;
+}
+
+.paper{
+    max-height: fit-content;
+    max-width: 600px;
+    width: 100%;
+    margin: 0px 100px;
+    padding: 20px;
+    position: relative;
+    float: left;
+    margin-top: 40px;
+}
+
+.avatar{
+    position: absolute;
+    top: 25%;
+    left: calc(50% - 45px);
+    background-color: rgb(198, 241, 255);
+    border-radius: 50%;
+}
+
+

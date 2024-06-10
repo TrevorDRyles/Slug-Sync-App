@@ -6,6 +6,7 @@ import {BrowserRouter, MemoryRouter, Route, Routes, useNavigate} from "react-rou
 import { LoginProvider } from '../../contexts/Login.jsx';
 import { render } from "../render";
 import { http, HttpResponse } from 'msw';
+import {LoginContext} from '../../contexts/Login';
 import {
   goalDataEveryDay,
   goalDataEveryWeek, indexHandlers, invalidCommentHandler, invalidUserHandler, setDate,
@@ -24,6 +25,13 @@ afterEach(() => {
   setMultipleComments(false);
 });
 afterAll(() => server.close());
+
+const accessToken = '1234'
+const setAccessToken = () => {
+}
+const setUser = () => {
+}
+const user = {'name': 'test username'}
 
 it('Loads view goal recurring every 7 days', async () => {
   const goalData = {
@@ -48,13 +56,13 @@ it('Loads view goal recurring every 7 days', async () => {
   localStorage.setItem('user', JSON.stringify({"token": "placeholder"}));
 
   render(
-    <LoginProvider>
+    <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
       <RefetchProvider>
         <BrowserRouter>
           <ViewGoal/>
         </BrowserRouter>
       </RefetchProvider>
-    </LoginProvider>
+    </LoginContext.Provider>
   );
 
   await waitFor(() => {
@@ -64,7 +72,7 @@ it('Loads view goal recurring every 7 days', async () => {
   });
 });
 
-it('Loads view goal recurring every 7 days', async () => {
+it('Loads view goal recurring every 7 days 2', async () => {
   const goalData = {
     id: '1',
     title: 'Test Goal',
@@ -80,13 +88,13 @@ it('Loads view goal recurring every 7 days', async () => {
   localStorage.setItem('user', JSON.stringify({"token": "placeholder"}));
 
   render(
-    <LoginProvider>
+    <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
       <RefetchProvider>
         <BrowserRouter>
           <ViewGoal/>
         </BrowserRouter>
       </RefetchProvider>
-    </LoginProvider>
+    </LoginContext.Provider>
   );
 });
 
@@ -113,13 +121,13 @@ it('Loads view goal with no dates', async () => {
   localStorage.setItem('user', JSON.stringify({"token":"placeholder"}));
 
   render(
-    <LoginProvider>
+    <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
       <RefetchProvider>
         <BrowserRouter>
           <ViewGoal />
         </BrowserRouter>
       </RefetchProvider>
-    </LoginProvider>
+    </LoginContext.Provider>
   );
 
   await waitFor(() => {
@@ -186,11 +194,11 @@ function renderViewGoalPage() {
   const TestComponent = () => {
     const navigate = useNavigate();
     return (
-      <LoginProvider>
+      <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
         <RefetchProvider>
           <ViewGoal/>
         </RefetchProvider>
-      </LoginProvider>
+      </LoginContext.Provider>
     );
   };
 
@@ -338,13 +346,13 @@ it('Loads view goal with error', async () => {
     );
 
     render(
-      <LoginProvider>
+      <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
         <RefetchProvider>
           <BrowserRouter>
             <ViewGoal />
           </BrowserRouter>
         </RefetchProvider>
-      </LoginProvider>
+      </LoginContext.Provider>
     );
 
     // Check if the loading indicator is shown while the request is pending

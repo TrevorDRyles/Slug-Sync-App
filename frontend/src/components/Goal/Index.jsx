@@ -183,7 +183,10 @@ const GoalsListing = () => {
 
               {
                 tags.map((tag, index) => (
-                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => {handleTagSelect(); handleFilterTag(event.target.textContent);}}>
+                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => {
+                    handleTagSelect();
+                    handleFilterTag(event.target.textContent);
+                  }}>
                     <Badge
                       data-testid={"tag"}
                       style={{backgroundColor: 'white', color: '#228be6'}}
