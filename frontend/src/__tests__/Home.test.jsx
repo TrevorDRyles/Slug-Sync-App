@@ -95,3 +95,45 @@ it('Clicks logout', async() => {
     expect(loggedout).toBeTruthy()
   })
 })
+
+it('Clicks profile', async () => {
+  render(
+    <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
+      <RefetchProvider>
+        <BrowserRouter>
+          <Home/>
+        </BrowserRouter>
+      </RefetchProvider>
+    </LoginContext.Provider>
+  );
+
+  fireEvent.click(screen.getByLabelText('Profile Photo'));
+});
+
+it('Clicks avatar profile photo', async () => {
+  render(
+    <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
+      <RefetchProvider>
+        <BrowserRouter>
+          <Home/>
+        </BrowserRouter>
+      </RefetchProvider>
+    </LoginContext.Provider>
+  );
+
+  fireEvent.click(screen.getByLabelText('Avatar Profile Photo'));
+});
+
+it('Clicks logout when no access token', async () => {
+  render(
+    <LoginContext.Provider value={{setAccessToken, user, setUser}}>
+      <RefetchProvider>
+        <BrowserRouter>
+          <Home/>
+        </BrowserRouter>
+      </RefetchProvider>
+    </LoginContext.Provider>
+  );
+
+  fireEvent.click(screen.getByLabelText('Logout'));
+});
