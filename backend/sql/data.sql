@@ -13,6 +13,4 @@ INSERT INTO user_goal VALUES ((SELECT id FROM "user" WHERE data->>'email' = 'hun
 INSERT INTO user_goal VALUES ((SELECT id FROM "user" WHERE data ->> 'email' = 'hunter@ucsc.edu'), (SELECT id FROM goal WHERE goal ->> 'title' = 'Get your mom a gift on Mothers Day'), '2024-05-17 20:09:57.341567'::timestamp, 22);
 INSERT INTO user_goal VALUES ((SELECT id FROM "user" WHERE data->>'email' = 'hunter@ucsc.edu'), (SELECT id FROM goal WHERE goal->>'title' = 'Learn React'), '2024-04-19 20:09:57.341567'::timestamp, 75);
 INSERT INTO user_goal VALUES ((SELECT id FROM "user" WHERE data->>'email' = 'arelyx@example.com'), (SELECT id FROM goal WHERE goal->>'title' = 'Learn React'), '2024-04-19 20:09:57.341567'::timestamp, 81);
-INSERT INTO user_goal
-VALUES ((SELECT id FROM "user" WHERE data ->> 'email' = 'arelyx@example.com'),
-        (SELECT id FROM goal WHERE goal ->> 'title' = 'Go to the gym'), '2024-04-19 20:09:57.341567'::timestamp, 81);
+INSERT INTO user_goal VALUES ((SELECT id FROM "user" WHERE data ->> 'email' = 'arelyx@example.com'), (SELECT id FROM goal WHERE goal ->> 'title' = 'Go to the gym'), '2024-04-19 20:09:57.341567'::timestamp, 81);

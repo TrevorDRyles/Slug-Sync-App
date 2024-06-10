@@ -39,7 +39,7 @@ exports.createGoal = async (req, res) => {
 //   res.status(200).json({id: result.rows[0].id, ...result.rows[0].goal});
 // };
 
-exports.getGoalsByPageAndSize = async function (req, res) {
+exports.getGoalsByPageAndSize = async function(req, res) {
   let pageNum = req.query.page;
   let searchTerm = sanitize(req.query.search);
   if (searchTerm === undefined) {
