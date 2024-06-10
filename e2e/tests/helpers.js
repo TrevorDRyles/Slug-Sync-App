@@ -1,6 +1,6 @@
 module.exports.handleDialog = (page, message) => {
   return new Promise((resolve) => {
-    page.on('dialog', async (dialog) => {
+    page.once('dialog', async (dialog) => {
       expect(dialog.message()).toBe(message);
       await dialog.accept();
       resolve();
@@ -51,7 +51,7 @@ module.exports.logout = async function(page) {
 /**
  * signUp
  * @param{any} page
- * @return {Promise<void>}
+ * @return {Promise<string>}
  */
 module.exports.signUp = async function (page) {
   await page.goto('http://localhost:3000/login');
@@ -69,12 +69,14 @@ module.exports.signUp = async function (page) {
   const passwordInput = await page.$('#password');
   await passwordInput.type('12345678');
   const emailInput = await page.$('#email');
-  await emailInput.type(`test${crypto.randomUUID()}@gmail.com`);
+  const email = `test${crypto.randomUUID()}@gmail.com`;
+  await emailInput.type(email);
   await page.click('aria/Submit Signin Button');
 
   await page.waitForFunction(
     'document.querySelector("body").innerText.includes("Register")',
   );
   await module.exports.handleDialog(page, 'Register successful, please log in');
+  return email;
 };
 
