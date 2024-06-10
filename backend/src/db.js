@@ -17,7 +17,8 @@ exports.postSignup = async (data) => {
         jsonb_build_object(
           'name', $1::text,
           'email', $2::text,
-          'password', crypt($3, 'cs')
+          'password', crypt($3, 'cs'),
+          'bio', ''
         )
       )
     `;

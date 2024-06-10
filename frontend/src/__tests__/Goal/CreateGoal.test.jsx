@@ -5,11 +5,19 @@ import { setupServer } from 'msw/node';
 import CreateGoal from "../../components/Goal/Create.jsx";
 import {BrowserRouter} from "react-router-dom";
 import { render } from "../render";
-import { LoginProvider } from '../../contexts/Login.jsx';
+import {LoginContext} from '../../contexts/Login';
 
 const URL = 'http://localhost:3010/v0/goal';
 
 const server = setupServer();
+
+const accessToken = '1234'
+const setAccessToken = () => {
+}
+const setUser = () => {
+}
+const user = {'name': 'test username'}
+
 
 beforeAll(() => {
   localStorage.setItem('user', JSON.stringify({accessToken: '1234'}))
@@ -23,11 +31,11 @@ afterAll(() => {
 
 const renderCreateGoal = () => {
   return render(
-    <LoginProvider>
+    <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
       <BrowserRouter>
         <CreateGoal />
       </BrowserRouter>
-    </LoginProvider>
+    </LoginContext.Provider>
   )
 }
 

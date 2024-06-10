@@ -103,9 +103,15 @@ OFFSET $1`;
 exports.viewGoal = async (req, res) => {
   const goalId = req.params.id;
   const query = `
-        SELECT * FROM goal WHERE id = $1;
+      SELECT *
+      FROM goal g
+               LEFT OUTER JOIN user_goal ug
+                               ON g.id = ug.goal_id
+      WHERE ug.goal_id = $1
+        AND g.id = $1
+        AND ug.user_id = $2;
   `;
-  const {rows} = await pool.query(query, [goalId]);
+  const {rows} = await pool.query(query, [goalId, req.user.id]);
   if (rows.length === 0) {
     res.status(404).send();
   } else {
@@ -117,6 +123,7 @@ exports.viewGoal = async (req, res) => {
       startdate: row.goal.startdate,
       enddate: row.goal.enddate,
       memberCount: row.goal.memberCount,
+      streak: row.streak,
     }));
     res.status(200).json(result[0]);
   }
