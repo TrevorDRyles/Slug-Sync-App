@@ -29,7 +29,7 @@ const NUM_ELEMENTS_ON_GOALS_INDEX_PAGE = 4;
 beforeAll(() => {
   backend = http.createServer(app);
   backend.listen(3010, () => {
-    console.log('Backend Running at http://localhost:3010');
+    // console.log('Backend Running at http://localhost:3010');
   });
   frontend = http.createServer(
     express()
@@ -41,7 +41,7 @@ beforeAll(() => {
       }),
   );
   frontend.listen(3000, () => {
-    console.log('Frontend Running at http://localhost:3000');
+    // console.log('Frontend Running at http://localhost:3000');
   });
 });
 
@@ -64,7 +64,7 @@ beforeEach(async () => {
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
-    console.log('Browser log:', msg.text());
+    // console.log('Browser log:', msg.text());
   });
   await page.setViewport({
     width: 1080,
@@ -193,18 +193,18 @@ async function typeIntoSearchAndExpectFilter() {
     const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
     return elements.length >= count;
   }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
-  console.log('made it here');
+  // console.log('made it here');
   // wait for selected goals to appear
   await page.waitForFunction((label, count) => {
     const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
     let matchedCount = 0;
-    console.log('elements: ', elements.length);
+    // console.log('elements: ', elements.length);
     elements.forEach((element) => {
       if (element.textContent.includes(label)) {
         matchedCount++;
       }
     });
-    console.log('matched count: ', matchedCount);
+    // console.log('matched count: ', matchedCount);
     return matchedCount >= count;
   }, {}, 'GoalTitle1', NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
 }

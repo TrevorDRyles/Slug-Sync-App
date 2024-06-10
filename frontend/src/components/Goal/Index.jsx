@@ -64,7 +64,7 @@ const GoalsListing = () => {
         return res.json();
       })
       .catch((err) => {
-        console.log('Error adding goal: ' + err);
+        // console.log('Error adding goal: ' + err);
       });
   };
 

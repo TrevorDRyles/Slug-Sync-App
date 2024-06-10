@@ -23,8 +23,8 @@ module.exports.login = async function(page) {
   const password = await page.waitForSelector(
     'input[id="password"]');
   await password.type(PASSWORD);
-  const submit = await page.waitForSelector('[type="submit"]');
-  console.log(submit);
+  // const submit = await page.waitForSelector('[type="submit"]');
+  // console.log(submit);
   await page.$eval(`[type="submit"]`, (element) =>
     element.click(),
   );

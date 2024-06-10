@@ -22,7 +22,7 @@ const ViewGoal = () => {
   const {accessToken} = useContext(LoginContext)
   const history = useNavigate();
 
-  console.log(comments)
+  // console.log(comments)
 
   useEffect(() => {
     fetch(`http://localhost:3010/v0/goal/${id}`, {
@@ -42,7 +42,7 @@ const ViewGoal = () => {
         setGoalData(json);
       })
       .catch((err) => {
-        console.log('Error getting goal: ' + err);
+        // console.log('Error getting goal: ' + err);
         setError('Error getting goal');
       });
 
@@ -64,7 +64,7 @@ const ViewGoal = () => {
         setComments(json);
       })
       .catch((err) => {
-        console.log('Error getting comments: ' + err);
+        // console.log('Error getting comments: ' + err);
         setError('Error getting comments');
       });
     setCommentsChanged(false);
@@ -86,11 +86,11 @@ const ViewGoal = () => {
         return res.json();
       })
       .then(data => {
-        console.log("Member Data:", data);
+        // console.log("Member Data:", data);
         setMembers(data);
       })
       .catch((err) => {
-        console.log("Unable to get goal members: " + err);
+        // console.log("Unable to get goal members: " + err);
       })
   }, [accessToken, id]);
 
@@ -113,7 +113,7 @@ const ViewGoal = () => {
           const user = await res.json();
           fetchedUserNames[comment.user_id] = user.data.name;
         } catch (err) {
-          console.log('Error getting user: ' + err);
+          // console.log('Error getting user: ' + err);
           setError('Error getting user');
         }
       }));
@@ -147,7 +147,7 @@ const ViewGoal = () => {
         setNewComment('');
       })
       .catch((err) => {
-        console.log('Error adding comment: ' + err);
+        // console.log('Error adding comment: ' + err);
         setError('Error adding comment');
       });
   };
@@ -235,11 +235,11 @@ const ViewGoal = () => {
         return;
       })
       .then(() => {
-        console.log('Goal deleted successfully');
+        // console.log('Goal deleted successfully');
         history('/goals');
       })
       .catch((err) => {
-        console.log('Error deleting goal: ' + err);
+        // console.log('Error deleting goal: ' + err);
       });
   };
 
@@ -258,11 +258,11 @@ const ViewGoal = () => {
         return res.json();
       })
       .then(() => {
-        console.log('Left goal successfully');
+        // console.log('Left goal successfully');
         history('/goals');
       })
       .catch((err) => {
-        console.log('Error leaving goal: ' + err);
+        // console.log('Error leaving goal: ' + err);
       });
   };
 

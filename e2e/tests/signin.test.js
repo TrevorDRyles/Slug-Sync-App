@@ -29,7 +29,7 @@ let page;
 beforeAll(() => {
   backend = http.createServer(app);
   backend.listen(3010, () => {
-    console.log('Backend Running at http://localhost:3010');
+    // console.log('Backend Running at http://localhost:3010');
   });
   frontend = http.createServer(
     express()
@@ -41,7 +41,7 @@ beforeAll(() => {
       }),
   );
   frontend.listen(3000, () => {
-    console.log('Frontend Running at http://localhost:3000');
+    // console.log('Frontend Running at http://localhost:3000');
   });
 });
 
@@ -64,7 +64,7 @@ beforeEach(async () => {
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
-    console.log('Browser log:', msg.text());
+    // console.log('Browser log:', msg.text());
   });
   await page.setViewport({
     width: 1980,
