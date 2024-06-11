@@ -170,6 +170,13 @@ async function expectViewGoalPageContents() {
     return goalLink.innerText;
   });
   expect(goalTitle).toBeDefined();
+  
+  await page.waitForSelector('[aria-label^="streak"]');
+  const goalStreak = await page.evaluate(() => {
+    const goalLink = document.querySelector('[aria-label^="streak"]');
+    return goalLink.innerText;
+  });
+  expect(goalStreak).toBeDefined();
 }
 
 /**
