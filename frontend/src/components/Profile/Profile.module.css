@@ -4,9 +4,9 @@
     justify-content: center;
     width: 100%;
     padding: 50px 0px 50px 0px;
-  }
+}
 
-.card_container{
+.card_container {
     max-width: 300px;
     margin: 40px 100px;
     padding: 20px;
@@ -27,14 +27,14 @@
     gap: 30px;
     align-content: space-between;
     text-align: center;
-  }
+}
 
-.inner_container{
+.inner_container {
     height: 150px;
     margin-top: 30px;
 }
 
-.paper{
+.paper {
     max-height: fit-content;
     max-width: 600px;
     width: 100%;
@@ -45,7 +45,7 @@
     margin-top: 40px;
 }
 
-.avatar{
+.avatar {
     position: absolute;
     top: 25%;
     left: calc(50% - 45px);

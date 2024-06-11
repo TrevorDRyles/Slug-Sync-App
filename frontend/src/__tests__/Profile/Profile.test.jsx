@@ -1,11 +1,11 @@
-import { it, beforeAll, afterAll, stub } from 'vitest';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
-import { http, HttpResponse, rest} from 'msw';
-import { setupServer } from 'msw/node';
+import {it, beforeAll, afterAll, stub} from 'vitest';
+import {fireEvent, screen, waitFor} from '@testing-library/react';
+import {http, HttpResponse, rest} from 'msw';
+import {setupServer} from 'msw/node';
 import Profile from "../../components/Profile/Profile";
-import { RefetchProvider } from '../../contexts/Refetch.jsx';
-import { BrowserRouter } from "react-router-dom";
-import { render } from "../render";
+import {RefetchProvider} from '../../contexts/Refetch.jsx';
+import {BrowserRouter} from "react-router-dom";
+import {render} from "../render";
 import {LoginContext} from "../../contexts/Login.jsx";
 import {indexHandlers} from "@/__tests__/Goal/Handlers.js";
 
