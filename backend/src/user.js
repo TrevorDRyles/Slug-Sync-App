@@ -10,14 +10,17 @@ const pool = new Pool({
 });
 
 /**
- * Retrieves user information by user ID from the database and sends it in the response.
- * 
+ * Retrieves user information by user ID from the database and
+ * sends it in the response.
+ *
  * @async
  * @function getUserById
  * @param {Object} req - The request object.
- * @param {string} req.params.id - The ID of the user to retrieve information for.
+ * @param {string} req.params.id - The ID of the user to
+ * retrieve information for.
  * @param {Object} res - The response object.
- * @returns {Promise<void>} Returns a promise that resolves when the user information is retrieved and sent in the response.
+ * @return {Promise<void>} Returns a promise that resolves
+ * when the user information is retrieved and sent in the response.
  */
 exports.getUserById = async (req, res) => {
   const id = req.params.id;
@@ -32,15 +35,17 @@ exports.getUserById = async (req, res) => {
 };
 
 /**
- * Retrieves user information for the authenticated user from the database and sends it in the response.
- * 
+ * Retrieves user information for the authenticated user from
+ * the database and sends it in the response.
+ *
  * @async
  * @function getUserInformation
  * @param {Object} req - The request object.
  * @param {Object} req.user - The authenticated user object.
  * @param {string} req.user.id - The ID of the authenticated user.
  * @param {Object} res - The response object.
- * @returns {Promise<void>} Returns a promise that resolves when the user information is retrieved and sent in the response.
+ * @return {Promise<void>} Returns a promise that resolves
+ * when the user information is retrieved and sent in the response.
  */
 exports.getUserInformation = async (req, res) => {
   const {id} = req.user;

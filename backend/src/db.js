@@ -17,7 +17,8 @@ const pool = new Pool({
  * @param {string} data.name - The name of the user.
  * @param {string} data.email - The email of the user.
  * @param {string} data.password - The password of the user.
- * @returns {Promise<Error|void>} Returns an error if the transaction fails, otherwise commits the transaction.
+ * @return {Promise<Error|void>} Returns an error if the
+ * transaction fails, otherwise commits the transaction.
  */
 exports.postSignup = async (data) => {
   try {
@@ -55,7 +56,7 @@ exports.postSignup = async (data) => {
  * @param {string} data.member_id - The ID of the user to link to the goal.
  * @param {string} data.goal_id - The ID of the goal to link to the user.
  * @param {Object} data.jsonb - Additional data to be stored in "data"
- * @returns {Promise<Object>} - A Promise that resolves.
+ * @return {Promise<Object>} - A Promise that resolves.
  */
 exports.joinGoal = async (data) => {
   const insert = `
@@ -85,7 +86,8 @@ exports.joinGoal = async (data) => {
  * @async
  * @function getGoal
  * @param {string} goalId - The ID of the goal to retrieve.
- * @returns {Promise<Object|null>} Returns the goal object if found, otherwise returns null.
+ * @return {Promise<Object|null>} Returns the goal object if found,
+ * otherwise returns null.
  */
 exports.getGoal = async (goalId) => {
   const goalQuery = {
@@ -108,7 +110,8 @@ exports.getGoal = async (goalId) => {
  * @async
  * @function deleteGoal
  * @param {string} goalId - The ID of the goal to delete.
- * @returns {Promise<void>} Returns a promise that resolves when the goal is deleted.
+ * @return {Promise<void>} Returns a promise that resolves
+ * when the goal is deleted.
  */
 exports.deleteGoal = async (goalId) => {
   const deleteGoalQuery = {
@@ -128,7 +131,9 @@ exports.deleteGoal = async (goalId) => {
  * @function getMemberByPasswordAndEmail
  * @param {string} password - The password of the user.
  * @param {string} email - The email of the user.
- * @returns {Promise<Object[]>} Returns a promise that resolves to an array of user objects matching the provided email and password.
+ * @return {Promise<Object[]>} Returns a promise that
+ * resolves to an array of user objects matching the
+ * provided email and password.
  */
 exports.getMemberByPasswordAndEmail = async (password, email) => {
   const selectQuery = `SELECT *
@@ -155,8 +160,10 @@ exports.getMemberByPasswordAndEmail = async (password, email) => {
  *
  * @async
  * @function getAllCompletedGoals
- * @param {string} userId - The ID of the user whose completed goals are to be retrieved.
- * @returns {Promise<Object[]>} Returns a promise that resolves to an array of completed goal objects.
+ * @param {string} userId - The ID of the user whose
+ * completed goals are to be retrieved.
+ * @return {Promise<Object[]>} Returns a promise that
+ * resolves to an array of completed goal objects.
  */
 exports.getAllCompletedGoals = async (userId) => {
   const select = `SELECT 
@@ -187,8 +194,10 @@ exports.getAllCompletedGoals = async (userId) => {
  *
  * @async
  * @function getAllIncompletedGoals
- * @param {string} userId - The ID of the user whose incompleted goals are to be retrieved.
- * @return {Promise<Object[]>} Returns a promise that resolves to an array of incompleted goal objects.
+ * @param {string} userId - The ID of the user whose
+ * incompleted goals are to be retrieved.
+ * @return {Promise<Object[]>} Returns a promise that
+ * resolves to an array of incompleted goal objects.
  */
 exports.getAllIncompletedGoals = async (userId) => {
   const select = `SELECT 
@@ -221,7 +230,8 @@ exports.getAllIncompletedGoals = async (userId) => {
  * @function completeGoal
  * @param {string} userId - The ID of the user completing the goal.
  * @param {string} goalId - The ID of the goal to be marked as completed.
- * @returns {Promise<Object>} Returns a promise that resolves to the ID of the completed goal.
+ * @return {Promise<Object>} Returns a promise that resolves to the
+ * ID of the completed goal.
  */
 exports.completeGoal = async (userId, goalId) => {
   const update = `UPDATE user_goal
@@ -287,8 +297,10 @@ exports.leaveGoal = async (userId, goalId) => {
  *
  * @async
  * @function getUserInformation
- * @param {string} userId - The ID of the user whose information is to be retrieved.
- * @returns {Promise<Object>} Returns a promise that resolves to an object containing the user's information (id, name, email, img).
+ * @param {string} userId - The ID of the user whose information
+ * is to be retrieved.
+ * @return {Promise<Object>} Returns a promise that resolves to
+ * an object containing the user's information (id, name, email, img).
  */
 exports.getUserInformation = async (userId) => {
   const select = `SELECT 
@@ -313,7 +325,8 @@ exports.getUserInformation = async (userId) => {
  * @async
  * @function getAllMembersInGoal
  * @param {string} goalId - The ID of the goal to retrieve members for.
- * @returns {Promise<Object[]>} Returns a promise that resolves to an array of objects containing member IDs and usernames.
+ * @return {Promise<Object[]>} Returns a promise that resolves
+ * to an array of objects containing member IDs and usernames.
  */
 exports.getAllMembersInGoal = async (goalId) => {
   const query = {

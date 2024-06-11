@@ -10,7 +10,7 @@ const pool = new Pool({
 
 /**
  * Adds a comment to a specific goal.
- * 
+ *
  * @async
  * @function addCommentToGoal
  * @param {Object} req - The request object.
@@ -22,7 +22,8 @@ const pool = new Pool({
  * @param {Object} req.params - The route parameters.
  * @param {string} req.params.id - The ID of the goal.
  * @param {Object} res - The response object.
- * @returns {Promise<void>} Sends a 404 status if the goal is not found, otherwise adds the comment and sends the newly created comment.
+ * @return {Promise<void>} Sends a 404 status if the goal is not found,
+ * otherwise adds the comment and sends the newly created comment.
  */
 exports.addCommentToGoal = async (req, res) => {
   const {id} = req.user;
@@ -57,14 +58,15 @@ exports.addCommentToGoal = async (req, res) => {
 
 /**
  * Retrieves all comments on a specific goal.
- * 
+ *
  * @async
  * @function getAllCommentsOnGoal
  * @param {Object} req - The request object.
  * @param {Object} req.params - The route parameters.
  * @param {string} req.params.id - The ID of the goal.
  * @param {Object} res - The response object.
- * @returns {Promise<void>} Sends a response with all comments on the specified goal.
+ * @return {Promise<void>} Sends a response with all comments
+ * on the specified goal.
  */
 exports.getAllCommentsOnGoal = async (req, res) => {
   const goalId = req.params.id;
