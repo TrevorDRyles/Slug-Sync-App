@@ -25,6 +25,8 @@ const ViewGoal = () => {
   // console.log(comments)
 
   useEffect(() => {
+    if (!accessToken)
+      return;
     fetch(`http://localhost:3010/v0/goal/${id}`, {
       method: 'GET',
       headers: {
@@ -71,6 +73,8 @@ const ViewGoal = () => {
   }, [id, commentsChanged, accessToken]);
 
   useEffect(() => {
+    if (!accessToken)
+      return;
     // load members
     fetch(`http://localhost:3010/v0/goal/${id}/members`, {
       method: 'GET',

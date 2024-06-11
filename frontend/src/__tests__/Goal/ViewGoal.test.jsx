@@ -72,6 +72,39 @@ it('Loads view goal recurring every 7 days', async () => {
   });
 });
 
+it('Loads view goal recurring every 7 days access token error', async () => {
+  const goalData = {
+    id: '1',
+    title: 'Test Goal',
+    description: 'Test Description',
+    recurrence: '7 days',
+    tag: 'Hobbies',
+    startdate: new Date().toISOString(),
+    enddate: new Date().toISOString()
+  };
+
+  server.use(
+    http.get('http://localhost:3010/v0/goal/:id/members', async () => {
+      return HttpResponse.json([]);
+    }),
+    http.get('http://localhost:3010/v0/goal/:id', async () => {
+      return HttpResponse.json(goalData);
+    }),
+  );
+
+  localStorage.setItem('user', JSON.stringify({"token": "placeholder"}));
+
+  render(
+    <LoginContext.Provider value={{setAccessToken, user, setUser}}>
+      <RefetchProvider>
+        <BrowserRouter>
+          <ViewGoal/>
+        </BrowserRouter>
+      </RefetchProvider>
+    </LoginContext.Provider>
+  );
+});
+
 it('Loads view goal recurring every 7 days 2', async () => {
   const goalData = {
     id: '1',
