@@ -138,6 +138,7 @@ function CreateGoal() {
               style={{ marginBottom: 15 }}
               id={"title"}
               data-testid={"title"}
+              aria-label='Title Input'
             />
             <Textarea
               label="Description"
@@ -151,6 +152,7 @@ function CreateGoal() {
               autosize
               minRows={3}
               maxRows={6}
+              aria-label='Description Input'
             />
             <div style={{ display: 'flex', gap: '15px' }}>
               <Select
@@ -164,6 +166,7 @@ function CreateGoal() {
                 id={"recurrence"}
                 data-testid={"recurrence"}
                 flex={1}
+                aria-label="Repeat goal input"
               />
               <Select
                 data = {tags}
@@ -175,6 +178,7 @@ function CreateGoal() {
                 id={"tag"}
                 data-testid={"tag"}
                 flex={1}
+                aria-label='Tag Input'
                 //searchable
               />
             </div>
@@ -203,7 +207,7 @@ function CreateGoal() {
               onChange={handleEndDateChange}
               placeholder="Select end date"
             />
-            <Button data-testid="submit" type="submit" variant="outline" color="blue">
+            <Button data-testid="submit" type="submit" variant="outline" color="blue" aria-label='Submit New Goal'>
               Submit
             </Button>
           </form>
