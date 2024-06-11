@@ -248,6 +248,7 @@ const Goal = ({ goal, onAddGoal }) => {
             </Text>
             {goal.tag !== '' && goal.tag !== undefined ?
               (<Badge data-testid={"tag"}
+                      aria-label='filter-badge'
                       style={{backgroundColor: 'white', color: '#228be6'}}
                       leftSection={<IconTag style={{width: 16, height: 16}}/>}>{goal.tag}</Badge>) : (<></>)
             }

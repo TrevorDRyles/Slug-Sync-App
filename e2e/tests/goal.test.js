@@ -206,6 +206,40 @@ async function typeIntoSearchAndExpectFilter() {
   }, {}, 'GoalTitle1', NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
 }
 
+async function selectTagAndExpectFilter() {
+
+  // taken from typeIntoSearchAndExpectFilter, waits for goals to appear
+  await page.waitForFunction((count) => {
+    const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
+    return elements.length >= count;
+  }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
+
+  const filterMenu = await page.waitForSelector(`[aria-label^="filter-menu-button"]`);
+  await filterMenu.click();
+
+  for (let i = 0; i < 4; i++) {
+    await page.keyboard.press('ArrowDown');
+  }
+  await page.keyboard.press('Enter');
+
+  await page.waitForFunction((count) => {
+    const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
+    return elements.length >= count;
+  }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
+
+  await page.waitForFunction((label, count) => {
+    const elements = document.querySelectorAll(`[aria-label^="filter-badge"]`);
+    let matchedCount = 0;
+    elements.forEach((element) => {
+      if (element.textContent.includes(label)) {
+        matchedCount++;
+      }
+    });
+    // console.log('matched count: ', matchedCount);
+    return matchedCount >= count;
+  }, {}, 'Academics', NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
+}
+
 /**
  * addCommentToGoal
  * @return {Promise<void>}
@@ -254,6 +288,18 @@ async function viewCommentOnGoal() {
     comment, 'Today');
 }
 
+async function completeGoal() {
+  const completeButton = await page.waitForSelector('[aria-label^="Goal not completed"]');
+
+  await completeButton.click();
+
+  const completedGoal = await page.waitForSelector('[aria-label^="Goal completed"]');
+
+  expect(completedGoal).toBeDefined();
+
+}
+
+
 test('Clicking into goal from listing page and viewing its ' +
   'contents', async () => {
   // Create sample goal data
@@ -274,12 +320,26 @@ test('Filtering goals by search', async () => {
   await typeIntoSearchAndExpectFilter();
 });
 
+test('Filtering goals by tag', async () => {
+  // Create sample goal data
+  for (let i = 1; i <= 14; i++) {
+    await createGoal('GoalTitle' + i, 'GoalDescription' + i, i, i);
+  }
+  await page.goto('http://localhost:3000/goals');
+  await selectTagAndExpectFilter();
+}, 60000);
+
 test('Adding comments to a goal', async () => {
   await createGoal('GoalTitle1', 'GoalDescription' + 1, 1, 1);
   await addCommentToGoal();
   await viewCommentOnGoal();
 });
 
+test('Completing a goal', async () => {
+  await createGoal('GoalTitle1', 'GoalDescription' + 1, 1);
+  await page.goto('http://localhost:3000');
+  await completeGoal();
+});
 test('Delete goal', async () => {
   const title = crypto.randomUUID();
   await createGoal(title, 'GoalDescription' + 1, 1, 1);
