@@ -60,7 +60,7 @@ afterAll((done) => {
  */
 beforeEach(async () => {
   browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
@@ -75,10 +75,10 @@ beforeEach(async () => {
 
 /**
  * Close the headless instance of Chrome as we no longer need it.
- */
-afterEach(async () => {
+ * afterEach(async () => {
   await browser.close();
 });
+ */
 
 /**
  * createGoal
@@ -127,6 +127,7 @@ async function createGoal(title, description, arrowsDownOnRecurrence,
   await page.click('aria/12 June 2024')
   await page.waitForSelector('aria/Submit New Goal');
   await page.click('aria/Submit New Goal')
+  await page.waitForNavigation();
 }
 
 test('Create goal', async () => {
@@ -159,7 +160,7 @@ async function expectViewGoalPageContents() {
     return goalLink.innerText;
   });
   expect(goalTitle).toBeDefined();
-  
+
   await page.waitForSelector('[aria-label^="streak"]');
   const goalStreak = await page.evaluate(() => {
     const goalLink = document.querySelector('[aria-label^="streak"]');
