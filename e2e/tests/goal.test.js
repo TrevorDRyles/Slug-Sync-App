@@ -117,26 +117,16 @@ async function createGoal(title, description, arrowsDownOnRecurrence,
   }
   await page.keyboard.press('Enter');
 
-  await page.waitForSelector('#startdate');
-  await page.click('#startdate');
-  await new Promise((r) => setTimeout(r, 1000));
-  // click the text 15 on screen
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Enter');
-  // wait one second
-  await page.waitForSelector('#enddate');
-  await page.click('#enddate');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('ArrowRight');
-  await page.keyboard.press('Enter');
-
-  await page.$eval(`[type="submit"]`, (element) =>
-    element.click(),
-  );
+  await page.waitForSelector('aria/Select start date');
+  await page.click('aria/Select start date');
+  await page.waitForSelector('aria/11 June 2024');
+  await page.click('aria/11 June 2024');
+  await page.waitForSelector('aria/Select end date');
+  await page.click('aria/Select end date');
+  await page.waitForSelector('aria/12 June 2024');
+  await page.click('aria/12 June 2024');
+  await page.waitForSelector('aria/Submit New Goal');
+  await page.click('aria/Submit New Goal');
   await page.waitForNavigation();
 }
 
@@ -170,6 +160,13 @@ async function expectViewGoalPageContents() {
     return goalLink.innerText;
   });
   expect(goalTitle).toBeDefined();
+
+  await page.waitForSelector('[aria-label^="streak"]');
+  const goalStreak = await page.evaluate(() => {
+    const goalLink = document.querySelector('[aria-label^="streak"]');
+    return goalLink.innerText;
+  });
+  expect(goalStreak).toBeDefined();
 }
 
 /**
