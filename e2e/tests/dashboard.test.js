@@ -51,7 +51,7 @@ afterAll((done) => {
  */
 beforeEach(async () => {
   browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
@@ -156,6 +156,7 @@ test('Deletes goal cleanup', async() => {
   await page.waitForSelector('aria/Search bar input')
   const searchInput = await page.$('aria/Search bar input')
   searchInput.type("Learn React")
+  await new Promise((r) => setTimeout(r, 1000));
   await page.waitForSelector('aria/Goal Title Text')
   await page.click('aria/Goal Title Text')
   await page.waitForSelector('aria/Delete Goal')
