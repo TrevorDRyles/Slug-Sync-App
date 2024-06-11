@@ -125,6 +125,21 @@ exports.deleteGoal = async (goalId) => {
 };
 
 /**
+ * Retrieves goal count from the database.
+ *
+ * @async
+ * @function getGoalCount
+ * @return {Promise<number>} Returns a promise that
+ * resolves to an integer representing the goal count.
+ */
+exports.getGoalCount = async () => {
+  const select = 'SELECT COUNT(*) FROM goal';
+  const {rows} = await pool.query(select);
+  return parseInt(rows[0].count);
+};
+
+
+/**
  * Retrieves a user from the database by their email and password.
  *
  * @async
@@ -188,6 +203,7 @@ exports.getAllCompletedGoals = async (userId) => {
   const {rows} = await pool.query(query);
   return rows.map((row) => ({...row, memberCount: parseInt(row.membercount)}));
 };
+
 
 /**
  * Retrieves all incompleted goals for a specific user from the database.

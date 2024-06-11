@@ -28,7 +28,7 @@ const completeGoal = (goalId, setRefetch) => {
       setRefetch(true)
     })
     .catch(err => {
-      console.error(err)
+      // console.error(err)
     })
   }
 

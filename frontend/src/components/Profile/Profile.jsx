@@ -81,7 +81,7 @@ const Profile = () => {
       setUserData((prevData) => ({...prevData, name, bio}));
       closeModal();
     } else {
-      console.error('Failed to update profile:', result.message);
+      // console.error('Failed to update profile:', result.message);
     }
   };
 
