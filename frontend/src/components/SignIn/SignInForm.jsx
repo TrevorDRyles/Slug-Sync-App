@@ -69,7 +69,7 @@ const handleSubmit = (data, type, toggle, setAccessToken, history, setUser) => {
           history('/');
         })
         .catch((err) => {
-          console.error(err);
+          // console.error(err);
           alert('Error signing in, please try again')
         });
   }

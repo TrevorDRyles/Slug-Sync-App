@@ -2,11 +2,12 @@
   "name": "slug-sync",
   "version": "3.0.0",
   "description": "Slug sync",
-  "author": "David Harrison <dcharris@ucsc.edu>",
+  "author": "Slug Sync Team",
   "license": "UNLICENSED",
   "repository": "none",
   "devDependencies": {
-    "bestzip": "*"
+    "bestzip": "*",
+    "jsdoc": "^4.0.3"
   },
   "scripts": {
     "install-backend": "cd backend && npm install",
@@ -16,7 +17,8 @@
     "install-e2e": "cd e2e && npm install",
     "start": "(npm run start-backend) & (npm run start-frontend)",
     "zip": "bestzip SlugSync.Submission.zip e2e/tests/* frontend/src/* backend/sql/* backend/src/* backend/api/*",
-    "postinstall": "(npm run install-backend) && (npm run install-frontend) && (npm run install-e2e)"
+    "postinstall": "(npm run install-backend) && (npm run install-frontend) && (npm run install-e2e)",
+    "doc": "jsdoc -c jsdoc.json --readme ./README.md"
   },
   "dependencies": {
     "@types/react-dates": "^21.8.6"

@@ -29,7 +29,7 @@ const fetchIncompletedGoals = (setIncomplete) => {
       setIncomplete(updatedJson);
     })
     .catch((err) => {
-      console.error(err)
+      // console.error(err)
     })
 }
 
@@ -56,7 +56,7 @@ const fetchCompletedGoals = (setComplete) => {
       setComplete(updatedJson)
     })
     .catch(err => {
-      console.error(err)
+      // console.error(err)
     })
 }
 

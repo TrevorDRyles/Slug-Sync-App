@@ -20,14 +20,16 @@ afterAll(() => server.close());
 
 const renderSidebar = () => {
   const accessToken = '1234'
-  const setAccessToken = () => {loggedout = true}
+  const setAccessToken = () => {
+    loggedout = true
+  }
   const user = {'name': 'test username'}
   return render(
     <LoginContext.Provider value={{accessToken, setAccessToken, user}}>
-        <MemoryRouter>
-          <Sidebar />
+      <MemoryRouter>
+        <Sidebar/>
       </MemoryRouter>
-      </LoginContext.Provider>
+    </LoginContext.Provider>
   )
 }
 

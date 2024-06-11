@@ -203,7 +203,7 @@ function CreateGoal() {
               onChange={handleEndDateChange}
               placeholder="Select end date"
             />
-            <Button data-testid="submit" type="submit" variant="outline" color="blue">
+            <Button data-testid="submit" type="submit" variant="outline" color="blue" aria-label='Submit New Goal'>
               Submit
             </Button>
           </form>

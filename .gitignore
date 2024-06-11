@@ -11,3 +11,4 @@ frontend/dist/*
 dataSource.xml
 backend/coverage
 frontend/coverage
+docs
