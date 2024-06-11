@@ -9,6 +9,18 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD,
 });
 
+/**
+ * Creates a new goal in the database based on the provided request body.
+ * 
+ * @async
+ * @function createGoal
+ * @param {Object} req - The request object.
+ * @param {Object} req.body - The body of the request containing the details of the goal to be created.
+ * @param {Object} req.user - The authenticated user object.
+ * @param {string} req.user.id - The ID of the authenticated user who creates the goal.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the goal is successfully created.
+ */
 exports.createGoal = async (req, res) => {
   const goal = req.body;
   const user = req.user;
@@ -39,6 +51,20 @@ exports.createGoal = async (req, res) => {
 //   res.status(200).json({id: result.rows[0].id, ...result.rows[0].goal});
 // };
 
+/**
+ * Retrieves posts (goals) based on page number, size, search term, and tag filter from the database.
+ * 
+ * @async
+ * @function getPostsByPageAndSize
+ * @param {Object} req - The request object.
+ * @param {Object} req.query - The query parameters from the request.
+ * @param {number} req.query.page - The page number of the posts to retrieve.
+ * @param {string} req.query.search - The search term to filter posts by title (optional).
+ * @param {string} req.query.tag - The tag term to filter posts by tag (optional).
+ * @param {number} req.query.size - The number of posts per page (optional, default is 20).
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the posts are retrieved and sent in the response.
+ */
 exports.getPostsByPageAndSize = async function(req, res) {
   let pageNum = req.query.page;
   let searchTerm = req.query.search;
@@ -100,6 +126,16 @@ OFFSET $1`;
   res.status(200).json(goals);
 };
 
+/**
+ * Retrieves details of a specific goal from the database and sends it in the response.
+ * 
+ * @async
+ * @function viewGoal
+ * @param {Object} req - The request object.
+ * @param {string} req.params.id - The ID of the goal to be viewed.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the goal details are retrieved and sent in the response.
+ */
 exports.viewGoal = async (req, res) => {
   const goalId = req.params.id;
   const query = `
@@ -122,6 +158,18 @@ exports.viewGoal = async (req, res) => {
   }
 };
 
+/**
+ * Deletes a goal from the database if the authenticated user is the author of the goal.
+ * 
+ * @async
+ * @function deleteGoal
+ * @param {Object} req - The request object.
+ * @param {string} req.params.id - The ID of the goal to be deleted.
+ * @param {Object} req.user - The authenticated user object.
+ * @param {string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the goal is successfully deleted.
+ */
 exports.deleteGoal = async (req, res) => {
   const goalId = req.params.id;
   const user = req.user;
@@ -138,6 +186,19 @@ exports.deleteGoal = async (req, res) => {
   res.status(200).send();
 };
 
+/**
+ * Allows a user to join a goal if they are not already a member.
+ * 
+ * @async
+ * @function joinGoal
+ * @param {Object} req - The request object.
+ * @param {Object} req.user - The authenticated user object.
+ * @param {string} req.user.id - The ID of the authenticated user.
+ * @param {Object} req.path - The path object from the request.
+ * @param {string} req.path.split('/')[3] - The ID of the goal to join extracted from the request path.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the user successfully joins the goal.
+ */
 exports.joinGoal = async (req, res) => {
   const user = req.user;
   const goalId = req.path.split('/')[3];
@@ -160,6 +221,19 @@ exports.joinGoal = async (req, res) => {
   res.status(200).json({message: 'Successfully joined goal!'});
 };
 
+/**
+ * Allows a user to leave a goal if they are a member of it.
+ * 
+ * @async
+ * @function leaveGoal
+ * @param {Object} req - The request object.
+ * @param {Object} req.user - The authenticated user object.
+ * @param {string} req.user.id - The ID of the authenticated user.
+ * @param {Object} req.path - The path object from the request.
+ * @param {string} req.path.split('/')[3] - The ID of the goal to leave extracted from the request path.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the user successfully leaves the goal.
+ */
 exports.leaveGoal = async (req, res) => {
   const user = req.user;
   const goalToLeaveId = req.path.split('/')[3];
@@ -185,18 +259,53 @@ exports.leaveGoal = async (req, res) => {
   res.status(200).json({'message': 'Successfully left the goal'});
 };
 
+/**
+ * Retrieves all completed goals for the authenticated user from the database and sends them in the response.
+ * 
+ * @async
+ * @function getAllCompleted
+ * @param {Object} req - The request object.
+ * @param {Object} req.user - The authenticated user object.
+ * @param {string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the completed goals are retrieved and sent in the response.
+ */
 exports.getAllCompleted = async (req, res) => {
   const {id} = req.user;
   const goals = await db.getAllCompletedGoals(id);
   res.status(200).json(goals);
 };
 
+/**
+ * Retrieves all incompleted goals for the authenticated user from the database and sends them in the response.
+ * 
+ * @async
+ * @function getAllIncompleted
+ * @param {Object} req - The request object.
+ * @param {Object} req.user - The authenticated user object.
+ * @param {string} req.user.id - The ID of the authenticated user.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the incompleted goals are retrieved and sent in the response.
+ */
 exports.getAllIncompleted = async (req, res) => {
   const {id} = req.user;
   const goals = await db.getAllIncompletedGoals(id);
   res.status(200).json(goals);
 };
 
+/**
+ * Marks a goal as completed for the authenticated user in the database.
+ * 
+ * @async
+ * @function completeGoal
+ * @param {Object} req - The request object.
+ * @param {Object} req.user - The authenticated user object.
+ * @param {string} req.user.id - The ID of the authenticated user.
+ * @param {Object} req.params - The parameters object from the request.
+ * @param {string} req.params.goal - The ID of the goal to mark as completed.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the goal is successfully marked as completed, or when an error occurs.
+ */
 exports.completeGoal = async (req, res) => {
   const {id} = req.user;
   const goalId = req.params.goal;
@@ -208,6 +317,17 @@ exports.completeGoal = async (req, res) => {
   }
 };
 
+/**
+ * Retrieves all members of a specific goal from the database and sends them in the response.
+ * 
+ * @async
+ * @function getAllMembersInGoal
+ * @param {Object} req - The request object.
+ * @param {Object} req.path - The path object from the request.
+ * @param {string} req.path.split('/')[3] - The ID of the goal to get members from extracted from the request path.
+ * @param {Object} res - The response object.
+ * @returns {Promise<void>} Returns a promise that resolves when the members of the goal are retrieved and sent in the response.
+ */
 exports.getAllMembersInGoal = async (req, res) => {
   const goalId = req.path.split('/')[3];
   const goalMembers = await db.getAllMembersInGoal(goalId);

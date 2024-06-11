@@ -3,7 +3,7 @@
   "type": "module",
   "version": "3.0.0",
   "description": "Slug Sync - Frontend",
-  "author": "David Harrison <dcharris@ucsc.edu>",
+  "author": "Slug Sync Team",
   "license": "UNLICENSED",
   "repository": "none",
   "dependencies": {

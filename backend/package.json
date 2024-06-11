@@ -2,7 +2,7 @@
   "name": "slug-sync-backend",
   "version": "2.0.0",
   "description": "slug sync - Backend",
-  "author": "David Harrison <dcharris@ucsc.edu>",
+  "author": "Slug Sync Team",
   "license": "UNLICENSED",
   "repository": "none",
   "devDependencies": {
