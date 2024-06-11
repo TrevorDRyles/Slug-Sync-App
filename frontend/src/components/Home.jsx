@@ -11,6 +11,12 @@ import classes from './Home.module.css'
 
 function Home() {
 
+  let id;
+  const user = localStorage.getItem('user')
+  if (user) {
+    id = JSON.parse(user).id
+  }
+
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
 
 

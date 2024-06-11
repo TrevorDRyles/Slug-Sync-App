@@ -11,7 +11,7 @@ const pool = new Pool({
 
 /**
  * Creates a new goal in the database based on the provided request body.
- * 
+ *
  * @async
  * @function createGoal
  * @param {Object} req - The request object.
@@ -52,10 +52,10 @@ exports.createGoal = async (req, res) => {
 // };
 
 /**
- * Retrieves posts (goals) based on page number, size, search term, and tag filter from the database.
- * 
+ * Retrieves goals based on page number, size, search term, and tag filter from the database.
+ *
  * @async
- * @function getPostsByPageAndSize
+ * @function getGoalsByPageAndSize
  * @param {Object} req - The request object.
  * @param {Object} req.query - The query parameters from the request.
  * @param {number} req.query.page - The page number of the posts to retrieve.
@@ -65,14 +65,14 @@ exports.createGoal = async (req, res) => {
  * @param {Object} res - The response object.
  * @returns {Promise<void>} Returns a promise that resolves when the posts are retrieved and sent in the response.
  */
-exports.getPostsByPageAndSize = async function(req, res) {
+exports.getGoalsByPageAndSize = async function (req, res) {
   let pageNum = req.query.page;
-  let searchTerm = req.query.search;
+  let searchTerm = sanitize(req.query.search);
   if (searchTerm === undefined) {
     searchTerm = '%';
   }
 
-  let filterTerm = req.query.tag;
+  let filterTerm = sanitize(req.query.tag);
   if (filterTerm === undefined) {
     filterTerm = '%';
   }
@@ -128,7 +128,7 @@ OFFSET $1`;
 
 /**
  * Retrieves details of a specific goal from the database and sends it in the response.
- * 
+ *
  * @async
  * @function viewGoal
  * @param {Object} req - The request object.
@@ -139,28 +139,56 @@ OFFSET $1`;
 exports.viewGoal = async (req, res) => {
   const goalId = req.params.id;
   const query = `
-        SELECT * FROM goal WHERE id = $1;
+      SELECT *
+      FROM goal g
+               LEFT OUTER JOIN user_goal ug
+                               ON g.id = ug.goal_id
+      WHERE ug.goal_id = $1
+        AND g.id = $1;
   `;
   const {rows} = await pool.query(query, [goalId]);
   if (rows.length === 0) {
     res.status(404).send();
   } else {
-    const result = rows.map((row) => ({
-      id: row.id,
-      title: row.goal.title,
-      recurrence: row.goal.recurrence,
-      description: row.goal.description,
-      startdate: row.goal.startdate,
-      enddate: row.goal.enddate,
-      memberCount: row.goal.memberCount,
-    }));
+    let result;
+    const rowWithLoggedInUserId =
+      rows.find((row) => row.user_id === req.user.id);
+    // if there's a row that has the logged in user id
+    if (rowWithLoggedInUserId) {
+      // then get that record's streak
+      result = {
+        id: rowWithLoggedInUserId.id,
+        title: rowWithLoggedInUserId.goal.title,
+        recurrence: rowWithLoggedInUserId.goal.recurrence,
+        description: rowWithLoggedInUserId.goal.description,
+        startdate: rowWithLoggedInUserId.goal.startdate,
+        enddate: rowWithLoggedInUserId.goal.enddate,
+        memberCount: rowWithLoggedInUserId.goal.memberCount,
+        streak: rowWithLoggedInUserId.streak,
+      };
+      res.status(200).json(result);
+      return;
+    }
+    // otherwise streak is 0
+    result = rows.map((row) => {
+      return {
+        id: row.id,
+        title: row.goal.title,
+        recurrence: row.goal.recurrence,
+        description: row.goal.description,
+        startdate: row.goal.startdate,
+        enddate: row.goal.enddate,
+        memberCount: row.goal.memberCount,
+        streak: 0,
+      };
+    });
     res.status(200).json(result[0]);
   }
 };
 
 /**
  * Deletes a goal from the database if the authenticated user is the author of the goal.
- * 
+ *
  * @async
  * @function deleteGoal
  * @param {Object} req - The request object.
@@ -188,7 +216,7 @@ exports.deleteGoal = async (req, res) => {
 
 /**
  * Allows a user to join a goal if they are not already a member.
- * 
+ *
  * @async
  * @function joinGoal
  * @param {Object} req - The request object.
@@ -203,7 +231,7 @@ exports.joinGoal = async (req, res) => {
   const user = req.user;
   const goalId = req.path.split('/')[3];
   if (await db.isMemberInGoal(user.id, goalId) === true) {
-    console.log('user alreaady in goal!');
+    // console.log('user alreaady in goal!');
     return res.status(400).json({message: 'User already in goal!'});
   }
 
@@ -223,7 +251,7 @@ exports.joinGoal = async (req, res) => {
 
 /**
  * Allows a user to leave a goal if they are a member of it.
- * 
+ *
  * @async
  * @function leaveGoal
  * @param {Object} req - The request object.
@@ -245,12 +273,12 @@ exports.leaveGoal = async (req, res) => {
   }
 
   if (goalData.author == user.id) {
-    console.log('cannot leave goal as the creator. must delete goal.');
+    // console.log('cannot leave goal as the creator. must delete goal.');
     return res.status(401).send();
   }
 
   if (await db.isMemberInGoal(user.id, goalToLeaveId) == false) {
-    console.log('not in the goal anyway'); // hella professional 🥶🥶🥶🥶🥶
+    // console.log('not in the goal anyway'); // hella professional 🥶🥶🥶🥶🥶
     return res.status(401).send();
   }
 
@@ -261,7 +289,7 @@ exports.leaveGoal = async (req, res) => {
 
 /**
  * Retrieves all completed goals for the authenticated user from the database and sends them in the response.
- * 
+ *
  * @async
  * @function getAllCompleted
  * @param {Object} req - The request object.
@@ -278,7 +306,7 @@ exports.getAllCompleted = async (req, res) => {
 
 /**
  * Retrieves all incompleted goals for the authenticated user from the database and sends them in the response.
- * 
+ *
  * @async
  * @function getAllIncompleted
  * @param {Object} req - The request object.
@@ -295,7 +323,7 @@ exports.getAllIncompleted = async (req, res) => {
 
 /**
  * Marks a goal as completed for the authenticated user in the database.
- * 
+ *
  * @async
  * @function completeGoal
  * @param {Object} req - The request object.
@@ -318,8 +346,23 @@ exports.completeGoal = async (req, res) => {
 };
 
 /**
+ * Gets the total count of goals
+ *
+ * @async
+ * @function getGoalCount
+ * @param req
+ * @param res
+ * @return {Promise<void>}
+ */
+exports.getGoalCount = async (req, res) => {
+  const {id} = req.user;
+  const goalCount = await db.getGoalCount(id);
+  res.status(200).json(goalCount);
+};
+
+/**
  * Retrieves all members of a specific goal from the database and sends them in the response.
- * 
+ *
  * @async
  * @function getAllMembersInGoal
  * @param {Object} req - The request object.
@@ -331,13 +374,13 @@ exports.completeGoal = async (req, res) => {
 exports.getAllMembersInGoal = async (req, res) => {
   const goalId = req.path.split('/')[3];
   const goalMembers = await db.getAllMembersInGoal(goalId);
-  console.log(goalMembers);
+  // console.log(goalMembers);
 
   // goofy ahh add the role (admin or member)
   const goalInfo = await db.getGoal(goalId);
-  console.log(goalInfo);
+  // console.log(goalInfo);
   const goalAuthorID = goalInfo.author;
-  console.log(goalAuthorID);
+  // console.log(goalAuthorID);
   for (let i = 0; i < goalMembers.length; i++) {
     if (goalAuthorID == goalMembers[i].id) {
       goalMembers[i].role = 'author';
@@ -348,3 +391,16 @@ exports.getAllMembersInGoal = async (req, res) => {
 
   res.status(200).json(goalMembers);
 };
+
+/**
+ * sanitize
+ * referenced from github copilot
+ * @param{string} input
+ * @return {*}
+ */
+function sanitize(input) {
+  if (!input) {
+    return input;
+  }
+  return input.replace(/[^a-z0-9 ]/gi, '');
+}

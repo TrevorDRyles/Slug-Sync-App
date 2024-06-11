@@ -25,7 +25,7 @@ const pool = new Pool({
  * @returns {Promise<void>} Sends a 404 status if the goal is not found, otherwise adds the comment and sends the newly created comment.
  */
 exports.addCommentToGoal = async (req, res) => {
-  const {id} = req.user; 
+  const {id} = req.user;
   const {content, date} = req.body;
   const goalId = req.params.id;
 
@@ -69,7 +69,10 @@ exports.addCommentToGoal = async (req, res) => {
 exports.getAllCommentsOnGoal = async (req, res) => {
   const goalId = req.params.id;
   const query = `
-        SELECT * FROM comment WHERE goal_id = $1;
+      SELECT c.goal_id, c.id, c.user_id, c.data, u.data AS user_data
+      FROM comment c
+        JOIN "user" u ON u.id = c.user_id
+        WHERE goal_id = $1;
   `;
   const {rows} = await pool.query(query, [goalId]);
   res.status(200).json(rows);

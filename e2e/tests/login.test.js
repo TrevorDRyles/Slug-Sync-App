@@ -29,7 +29,7 @@ let page;
 beforeAll(() => {
   backend = http.createServer(app);
   backend.listen(3010, () => {
-    console.log('Backend Running at http://localhost:3010');
+    // console.log('Backend Running at http://localhost:3010');
   });
   frontend = http.createServer(
     express()
@@ -41,7 +41,7 @@ beforeAll(() => {
       }),
   );
   frontend.listen(3000, () => {
-    console.log('Frontend Running at http://localhost:3000');
+    // console.log('Frontend Running at http://localhost:3000');
   });
 });
 
@@ -60,11 +60,11 @@ afterAll((done) => {
  */
 beforeEach(async () => {
   browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
-    console.log('Browser log:', msg.text());
+    // console.log('Browser log:', msg.text());
   });
   await page.setViewport({
     width: 1980,
@@ -76,7 +76,7 @@ beforeEach(async () => {
  * Close the headless instance of Chrome as we no longer need it.
  */
 afterEach(async () => {
-  // await browser.close();
+  await browser.close();
 });
 
 // copied above from starter code

@@ -24,3 +24,7 @@
   flex-direction: column;
   align-items: center;
 }
+
+.grayBackground {
+  background-color: var(--mantine-color-gray-2);
+}

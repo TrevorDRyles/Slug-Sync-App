@@ -10,7 +10,7 @@ const pool = new Pool({
 
 /**
  * Handles user signup by inserting a new user into the database.
- * 
+ *
  * @async
  * @function postSignup
  * @param {Object} data - The user data to be inserted.
@@ -28,7 +28,8 @@ exports.postSignup = async (data) => {
         jsonb_build_object(
           'name', $1::text,
           'email', $2::text,
-          'password', crypt($3, 'cs')
+          'password', crypt($3, 'cs'),
+          'bio', ''
         )
       )
     `;
@@ -54,7 +55,7 @@ exports.postSignup = async (data) => {
  * @param {string} data.member_id - The ID of the user to link to the goal.
  * @param {string} data.goal_id - The ID of the goal to link to the user.
  * @param {Object} data.jsonb - Additional data to be stored in "data"
- * @return {Promise<Object>} - A Promise that resolves.
+ * @returns {Promise<Object>} - A Promise that resolves.
  */
 exports.joinGoal = async (data) => {
   const insert = `
@@ -80,7 +81,7 @@ exports.joinGoal = async (data) => {
 
 /**
  * Retrieves a goal from the database by its ID.
- * 
+ *
  * @async
  * @function getGoal
  * @param {string} goalId - The ID of the goal to retrieve.
@@ -103,7 +104,7 @@ exports.getGoal = async (goalId) => {
 
 /**
  * Deletes a goal from the database by its ID.
- * 
+ *
  * @async
  * @function deleteGoal
  * @param {string} goalId - The ID of the goal to delete.
@@ -122,7 +123,7 @@ exports.deleteGoal = async (goalId) => {
 
 /**
  * Retrieves a user from the database by their email and password.
- * 
+ *
  * @async
  * @function getMemberByPasswordAndEmail
  * @param {string} password - The password of the user.
@@ -151,7 +152,7 @@ exports.getMemberByPasswordAndEmail = async (password, email) => {
 
 /**
  * Retrieves all completed goals for a specific user from the database.
- * 
+ *
  * @async
  * @function getAllCompletedGoals
  * @param {string} userId - The ID of the user whose completed goals are to be retrieved.
@@ -183,11 +184,11 @@ exports.getAllCompletedGoals = async (userId) => {
 
 /**
  * Retrieves all incompleted goals for a specific user from the database.
- * 
+ *
  * @async
  * @function getAllIncompletedGoals
  * @param {string} userId - The ID of the user whose incompleted goals are to be retrieved.
- * @returns {Promise<Object[]>} Returns a promise that resolves to an array of incompleted goal objects.
+ * @return {Promise<Object[]>} Returns a promise that resolves to an array of incompleted goal objects.
  */
 exports.getAllIncompletedGoals = async (userId) => {
   const select = `SELECT 
@@ -215,7 +216,7 @@ exports.getAllIncompletedGoals = async (userId) => {
 
 /**
  * Marks a goal as completed for a specific user in the database.
- * 
+ *
  * @async
  * @function completeGoal
  * @param {string} userId - The ID of the user completing the goal.
@@ -257,7 +258,7 @@ exports.isMemberInGoal = async (userId, goalId) => {
     values: [userId, goalId],
   };
   const result = await pool.query(query);
-  console.log(result.rows);
+  // console.log(result.rows);
   return result.rows[0].exists;
 };
 
@@ -283,7 +284,7 @@ exports.leaveGoal = async (userId, goalId) => {
 
 /**
  * Retrieves user information from the database by user ID.
- * 
+ *
  * @async
  * @function getUserInformation
  * @param {string} userId - The ID of the user whose information is to be retrieved.
@@ -308,7 +309,7 @@ exports.getUserInformation = async (userId) => {
 
 /**
  * Retrieves all members associated with a specific goal from the database.
- * 
+ *
  * @async
  * @function getAllMembersInGoal
  * @param {string} goalId - The ID of the goal to retrieve members for.
