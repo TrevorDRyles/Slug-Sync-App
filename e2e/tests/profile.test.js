@@ -65,8 +65,8 @@ beforeEach(async () => {
 });
 
 /**
-   * Close the headless instance of Chrome as we no longer need it.
-   */
+ * Close the headless instance of Chrome as we no longer need it.
+ */
 afterEach(async () => {
   await browser.close();
 });
