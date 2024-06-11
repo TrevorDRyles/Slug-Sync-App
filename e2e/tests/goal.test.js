@@ -300,8 +300,6 @@ async function completeGoal() {
 
   expect(completedGoal).toBeDefined();
 
-  
-
 }
 
 
@@ -342,6 +340,7 @@ test('Adding comments to a goal', async () => {
 
 test('Completing a goal', async () => {
   await createGoal('GoalTitle1', 'GoalDescription' + 1, 1);
+  await page.goto('http://localhost:3000');
   await completeGoal();
 });
 
