@@ -151,13 +151,13 @@ it('Loads view goal with no dates', async () => {
     }),
   );
 
-  localStorage.setItem('user', JSON.stringify({"token":"placeholder"}));
+  localStorage.setItem('user', JSON.stringify({"token": "placeholder"}));
 
   render(
     <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
       <RefetchProvider>
         <BrowserRouter>
-          <ViewGoal />
+          <ViewGoal/>
         </BrowserRouter>
       </RefetchProvider>
     </LoginContext.Provider>
