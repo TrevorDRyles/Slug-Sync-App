@@ -104,11 +104,6 @@ const logIn = async(page, email, password) => {
   )
 }
 
-// test('Signs up and logs into dashboard page', async() => {
-//   await signUp(page, "Test name", "test123@gmail.com", "password")
-//   await logIn(page, "test123@gmail.com", "password");
-// })
-
 test('Adds a new goal', async() => {
   await logIn(page, "e2etester@gmail.com", "password");
   await page.hover('aria/Goals dropdown')
