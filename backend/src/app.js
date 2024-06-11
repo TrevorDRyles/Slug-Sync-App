@@ -72,7 +72,7 @@ app.get('/v0/goal', auth.check, goal.getGoalsByPageAndSize);
 app.put('/v0/complete/:goal', auth.check, goal.completeGoal);
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  // console.error(err.stack);
   res.status(err.status).json({
     message: err.message,
     errors: err.errors,

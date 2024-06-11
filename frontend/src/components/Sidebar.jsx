@@ -14,7 +14,7 @@ import classes from './Sidebar.module.css';
 import PropTypes from "prop-types";
 import { Collapse } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
-import { LoginContext } from '../contexts/Login';
+import {LoginContext} from '../contexts/Login';
 import * as React from 'react'
 
 function NavbarLink({ icon: Icon, label, active, onClick, aria }) {
@@ -31,8 +31,8 @@ export default function Sidebar() {
   const {user} = React.useContext(LoginContext);
 
   const sidebarItems = [
-    { icon: IconHome2, label: 'Home', route: '/', aria: 'HomeIcon1' },
-    { icon: IconUser, label: 'Profile', route: `/profile/${user.id}`, aria: 'UserIcon1' },
+    {icon: IconHome2, label: 'Home', route: '/', aria: 'HomeIcon1'},
+    {icon: IconUser, label: 'Profile', route: `/profile/${user.id}`, aria: 'UserIcon1'},
     // { icon: IconSettings, label: 'Settings', route: '/login', aria: 'SettingsIcon1'},
   ];
 
@@ -41,10 +41,10 @@ export default function Sidebar() {
     <NavbarLink {...link}
                 key={link.label}
                 active={index === active}
-      onClick={() => {
-        navigate(link.route)
-        setActive(index)
-      }}
+                onClick={() => {
+                  navigate(link.route)
+                  setActive(index)
+                }}
     />
   ));
   return (

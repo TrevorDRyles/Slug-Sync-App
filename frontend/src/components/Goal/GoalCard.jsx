@@ -6,7 +6,7 @@ import * as React from 'react'
 import { RefetchContext } from "../../contexts/Refetch";
 import { IconFlame } from "@tabler/icons-react";
 import '@mantine/dates/styles.css';
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 const completeGoal = (goalId, setRefetch) => {
   const item = localStorage.getItem('user')
@@ -28,7 +28,7 @@ const completeGoal = (goalId, setRefetch) => {
       setRefetch(true)
     })
     .catch(err => {
-      console.error(err)
+      // console.error(err)
     })
   }
 
@@ -47,14 +47,15 @@ export function GoalCard({goalData}) {
   return(
     <div className={styles.goalPaper}>
       <Paper>
-        <Link aria-label={'goal-title-' + goalData.title} to={'/goal/' + goalData.id} className={styles.goalLink}>{goalData.title}</Link>
+        <Link aria-label={'goal-title-' + goalData.title} to={'/goal/' + goalData.id}
+              className={styles.goalLink}>{goalData.title}</Link>
         <Divider my="sm"/>
         <Text>{goalData.description}</Text>
         <Text style={{color: 'grey'}}>Recurring every {goalData.recurrence}</Text>
         <Divider my="sm"/>
         <div className={styles.goalBottom}>
           {goalData.completed === true ? (
-            <Check aria-label="Goal completed" />
+            <Check aria-label="Goal completed"/>
           ) : goalData.completed === false ? (
             <Button onClick={() => completeGoal(goalData.id, setRefetch)} aria-label="Goal not completed">
               Complete for today!
@@ -64,7 +65,7 @@ export function GoalCard({goalData}) {
             </>
           )}
           <div className={styles.streakCount}>
-            <IconFlame />
+            <IconFlame/>
             <Text>{goalData.streak}</Text>
           </div>
         </div>

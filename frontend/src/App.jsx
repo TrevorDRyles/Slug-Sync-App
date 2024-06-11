@@ -39,8 +39,8 @@ function App() {
               <Route path="/createGoal" default element={<CreateGoal />} />
               <Route path="/goals" default element={<Index />} />
               <Route path="/goal/:id" default element={<ViewGoal />} />
-              <Route path="/profile/:id" default element={<Profile />} />
-          <Route path="/" default element={<Home />} />
+              <Route path="/profile/:id" default element={<Profile/>}/>
+              <Route path="/" default element={<Home/>}/>
             </Routes>
           </BrowserRouter>
         </RefetchProvider>

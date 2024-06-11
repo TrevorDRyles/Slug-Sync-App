@@ -334,13 +334,13 @@ const ViewGoal = () => {
                   </Button>
               <br></br>
               <br></br>
-              <div className={styles.removeWrapper}>
-                <Button aria-label={'Delete Goal'} onClick={open} variant="outline" color="red">
-                  Delete goal
-                </Button>
-                <Button aria-label={'Leave Goal'} onClick={handleLeave} variant="outline" color="red">
-                  Leave Goal
-                </Button>
+                  <div className={styles.removeWrapper}>
+                    <Button aria-label={'Delete Goal'} onClick={open} variant="outline" color="red">
+                      Delete goal
+                    </Button>
+                    <Button aria-label={'Leave Goal'} onClick={handleLeave} variant="outline" color="red">
+                      Leave Goal
+                    </Button>
                 </div>
                 </div>
               </div>

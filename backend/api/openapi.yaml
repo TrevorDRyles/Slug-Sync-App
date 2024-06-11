@@ -490,7 +490,7 @@ paths:
                 $ref: '#/components/schemas/Error'
     post:
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       tags:
         - edit profile
       summary: edit profile
