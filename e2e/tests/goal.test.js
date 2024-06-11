@@ -240,40 +240,6 @@ async function selectTagAndExpectFilter() {
   }, {}, 'Academics', NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
 }
 
-async function selectTagAndExpectFilter() {
-
-  // taken from typeIntoSearchAndExpectFilter, waits for goals to appear
-  await page.waitForFunction((count) => {
-    const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
-    return elements.length >= count;
-  }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
-
-  const filterMenu = await page.waitForSelector(`[aria-label^="filter-menu-button"]`);
-  await filterMenu.click();
-
-  for (let i = 0; i < 4; i++) {
-    await page.keyboard.press('ArrowDown');
-  }
-  await page.keyboard.press('Enter');
-
-  await page.waitForFunction((count) => {
-    const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
-    return elements.length >= count;
-  }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
-
-  await page.waitForFunction((label, count) => {
-    const elements = document.querySelectorAll(`[aria-label^="filter-badge"]`);
-    let matchedCount = 0;
-    elements.forEach((element) => {
-      if (element.textContent.includes(label)) {
-        matchedCount++;
-      }
-    });
-    console.log('matched count: ', matchedCount);
-    return matchedCount >= count;
-  }, {}, 'Academics', NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
-}
-
 /**
  * addCommentToGoal
  * @return {Promise<void>}
