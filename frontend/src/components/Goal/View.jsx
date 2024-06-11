@@ -341,7 +341,7 @@ const ViewGoal = () => {
                     <Button aria-label={'Leave Goal'} onClick={handleLeave} variant="outline" color="red">
                       Leave Goal
                     </Button>
-                </div>
+                  </div>
                 </div>
               </div>
             </>
