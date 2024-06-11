@@ -14,7 +14,7 @@ const express = require('express');
 
 require('dotenv').config();
 const app = require('../../backend/src/app');
-const {login} = require('./helpers');
+const {login, signUp} = require('./helpers');
 
 let backend;
 let frontend;
@@ -29,7 +29,7 @@ const NUM_ELEMENTS_ON_GOALS_INDEX_PAGE = 4;
 beforeAll(() => {
   backend = http.createServer(app);
   backend.listen(3010, () => {
-    console.log('Backend Running at http://localhost:3010');
+    // console.log('Backend Running at http://localhost:3010');
   });
   frontend = http.createServer(
     express()
@@ -41,7 +41,7 @@ beforeAll(() => {
       }),
   );
   frontend.listen(3000, () => {
-    console.log('Frontend Running at http://localhost:3000');
+    // console.log('Frontend Running at http://localhost:3000');
   });
 });
 
@@ -64,7 +64,7 @@ beforeEach(async () => {
   });
   page = await browser.newPage();
   page.on('console', (msg) => {
-    console.log('Browser log:', msg.text());
+    // console.log('Browser log:', msg.text());
   });
   await page.setViewport({
     width: 1080,
@@ -117,31 +117,21 @@ async function createGoal(title, description, arrowsDownOnRecurrence,
   }
   await page.keyboard.press('Enter');
 
-  await page.waitForSelector('#startdate');
-  await page.click('#startdate');
-  await new Promise((r) => setTimeout(r, 1000));
-  // click the text 15 on screen
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Enter');
-  // wait one second
-  await page.waitForSelector('#enddate');
-  await page.click('#enddate');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('Tab');
-  await page.keyboard.press('ArrowRight');
-  await page.keyboard.press('Enter');
-
-  await page.$eval(`[type="submit"]`, (element) =>
-    element.click(),
-  );
+  await page.waitForSelector('aria/Select start date');
+  await page.click('aria/Select start date');
+  await page.waitForSelector('aria/11 June 2024');
+  await page.click('aria/11 June 2024');
+  await page.waitForSelector('aria/Select end date');
+  await page.click('aria/Select end date');
+  await page.waitForSelector('aria/12 June 2024');
+  await page.click('aria/12 June 2024');
+  await page.waitForSelector('aria/Submit New Goal');
+  await page.click('aria/Submit New Goal');
   await page.waitForNavigation();
 }
 
 test('Create goal', async () => {
-  await createGoal('GoalTitle', 'GoalDescription', 2);
+  await createGoal('GoalTitle', 'GoalDescription', 2, 1);
 });
 
 /**
@@ -170,6 +160,13 @@ async function expectViewGoalPageContents() {
     return goalLink.innerText;
   });
   expect(goalTitle).toBeDefined();
+
+  await page.waitForSelector('[aria-label^="streak"]');
+  const goalStreak = await page.evaluate(() => {
+    const goalLink = document.querySelector('[aria-label^="streak"]');
+    return goalLink.innerText;
+  });
+  expect(goalStreak).toBeDefined();
 }
 
 /**
@@ -193,20 +190,54 @@ async function typeIntoSearchAndExpectFilter() {
     const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
     return elements.length >= count;
   }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
-  console.log('made it here');
+  // console.log('made it here');
   // wait for selected goals to appear
   await page.waitForFunction((label, count) => {
     const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
     let matchedCount = 0;
-    console.log('elements: ', elements.length);
+    // console.log('elements: ', elements.length);
     elements.forEach((element) => {
       if (element.textContent.includes(label)) {
         matchedCount++;
       }
     });
-    console.log('matched count: ', matchedCount);
+    // console.log('matched count: ', matchedCount);
     return matchedCount >= count;
   }, {}, 'GoalTitle1', NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
+}
+
+async function selectTagAndExpectFilter() {
+
+  // taken from typeIntoSearchAndExpectFilter, waits for goals to appear
+  await page.waitForFunction((count) => {
+    const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
+    return elements.length >= count;
+  }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
+
+  const filterMenu = await page.waitForSelector(`[aria-label^="filter-menu-button"]`);
+  await filterMenu.click();
+
+  for (let i = 0; i < 4; i++) {
+    await page.keyboard.press('ArrowDown');
+  }
+  await page.keyboard.press('Enter');
+
+  await page.waitForFunction((count) => {
+    const elements = document.querySelectorAll(`[aria-label^="goal-link-"]`);
+    return elements.length >= count;
+  }, {}, NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
+
+  await page.waitForFunction((label, count) => {
+    const elements = document.querySelectorAll(`[aria-label^="filter-badge"]`);
+    let matchedCount = 0;
+    elements.forEach((element) => {
+      if (element.textContent.includes(label)) {
+        matchedCount++;
+      }
+    });
+    // console.log('matched count: ', matchedCount);
+    return matchedCount >= count;
+  }, {}, 'Academics', NUM_ELEMENTS_ON_GOALS_INDEX_PAGE);
 }
 
 async function selectTagAndExpectFilter() {
@@ -317,7 +348,7 @@ test('Clicking into goal from listing page and viewing its ' +
 test('Filtering goals by search', async () => {
   // Create sample goal data
   for (let i = 1; i <= 14; i++) {
-    await createGoal('GoalTitle' + i, 'GoalDescription' + i, i);
+    await createGoal('GoalTitle' + i, 'GoalDescription' + i, i, i % 6);
   }
   await page.goto('http://localhost:3000/goals');
   await typeIntoSearchAndExpectFilter();
@@ -333,7 +364,7 @@ test('Filtering goals by tag', async () => {
 }, 60000);
 
 test('Adding comments to a goal', async () => {
-  await createGoal('GoalTitle1', 'GoalDescription' + 1, 1);
+  await createGoal('GoalTitle1', 'GoalDescription' + 1, 1, 1);
   await addCommentToGoal();
   await viewCommentOnGoal();
 });
@@ -343,4 +374,56 @@ test('Completing a goal', async () => {
   await page.goto('http://localhost:3000');
   await completeGoal();
 });
+test('Delete goal', async () => {
+  const title = crypto.randomUUID();
+  await createGoal(title, 'GoalDescription' + 1, 1, 1);
+  await page.waitForSelector('[aria-label^="Delete Goal"]');
+  await page.click('[aria-label^="Delete Goal"]');
+  // click delete goal
+  await page.waitForSelector('[aria-label^="Confirm Delete Goal"]');
+  await page.click('[aria-label^="Confirm Delete Goal"]');
+  await page.waitForNavigation();
+  await new Promise((r) => setTimeout(r, 1000));
+  // have to slice because hyphens are escaped characters
+  const searchInput = await page
+    .waitForSelector('input[id="search-filter-goals"]');
+  await searchInput.type(title.slice(0, 8));
+  await page.waitForFunction((text) =>
+    !document.body.innerText.includes(text), {}, title);
+});
 
+// test leaving a goal
+test('Leave goal and add goal', async () => {
+  const title = crypto.randomUUID();
+  await createGoal(title, 'GoalDescription' + 1, 1, 1);
+  await signUp(page);
+  const loggedInUserName = 'Test name';
+  await page.keyboard.press('Enter');
+  await new Promise((r) => setTimeout(r, 1000));
+  await page.goto('http://localhost:3000/goals');
+  await new Promise((r) => setTimeout(r, 1000));
+  // search for title of goal
+  const searchInput = await page
+    .waitForSelector('input[id="search-filter-goals"]');
+  await searchInput.type(title.slice(0, 8));
+  await new Promise((r) => setTimeout(r, 1000));
+  // add goal
+  await page.waitForSelector('[aria-label^="Add Goal"]');
+  await page.click('[aria-label^="Add Goal"]');
+  await new Promise((r) => setTimeout(r, 1000));
+  await page.waitForFunction((text) => document.body.innerText
+    .includes(text), {}, loggedInUserName);
+  // leave goal
+  await page.waitForSelector('[aria-label^="Leave Goal"]');
+  await page.click('[aria-label^="Leave Goal"]');
+  await page.waitForNavigation();
+  // search for goal and click on it
+  await searchInput.type(title.slice(0, 8));
+  await new Promise((r) => setTimeout(r, 1000));
+  await page.waitForSelector('[aria-label^="goal-link-"]');
+  await page.click('[aria-label^="goal-link-"]');
+  await new Promise((r) => setTimeout(r, 1000));
+  // confirm name of logged in user is no longer there
+  await page.waitForFunction((text) =>
+    !document.body.innerText.includes(text), {}, title);
+});

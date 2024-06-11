@@ -8,6 +8,18 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD,
 });
 
+/**
+ * Handles user signup by inserting a new user into the database.
+ *
+ * @async
+ * @function postSignup
+ * @param {Object} data - The user data to be inserted.
+ * @param {string} data.name - The name of the user.
+ * @param {string} data.email - The email of the user.
+ * @param {string} data.password - The password of the user.
+ * @return {Promise<Error|void>} Returns an error if the
+ * transaction fails, otherwise commits the transaction.
+ */
 exports.postSignup = async (data) => {
   try {
     await pool.query('BEGIN');
@@ -68,6 +80,15 @@ exports.joinGoal = async (data) => {
   await pool.query(updateGoalMemberCountByOne, [data.goal_id]);
 };
 
+/**
+ * Retrieves a goal from the database by its ID.
+ *
+ * @async
+ * @function getGoal
+ * @param {string} goalId - The ID of the goal to retrieve.
+ * @return {Promise<Object|null>} Returns the goal object if found,
+ * otherwise returns null.
+ */
 exports.getGoal = async (goalId) => {
   const goalQuery = {
     text: `
@@ -83,6 +104,15 @@ exports.getGoal = async (goalId) => {
   }
 };
 
+/**
+ * Deletes a goal from the database by its ID.
+ *
+ * @async
+ * @function deleteGoal
+ * @param {string} goalId - The ID of the goal to delete.
+ * @return {Promise<void>} Returns a promise that resolves
+ * when the goal is deleted.
+ */
 exports.deleteGoal = async (goalId) => {
   const deleteGoalQuery = {
     text: `
@@ -94,23 +124,32 @@ exports.deleteGoal = async (goalId) => {
   await pool.query(deleteGoalQuery);
 };
 
-// referenced from cse 186 code trevor ryles
-// exports.selectAllUsers = async () => {
-//   const select = 'SELECT * FROM "user"';
-//   const query = {
-//     text: select,
-//   };
-//   const {rows} = await pool.query(query);
-//   return rows;
-// };
-
+/**
+ * Retrieves goal count from the database.
+ *
+ * @async
+ * @function getGoalCount
+ * @return {Promise<number>} Returns a promise that
+ * resolves to an integer representing the goal count.
+ */
 exports.getGoalCount = async () => {
   const select = 'SELECT COUNT(*) FROM goal';
   const {rows} = await pool.query(select);
   return parseInt(rows[0].count);
 };
 
-// referenced from cse 186 code trevor ryles
+
+/**
+ * Retrieves a user from the database by their email and password.
+ *
+ * @async
+ * @function getMemberByPasswordAndEmail
+ * @param {string} password - The password of the user.
+ * @param {string} email - The email of the user.
+ * @return {Promise<Object[]>} Returns a promise that
+ * resolves to an array of user objects matching the
+ * provided email and password.
+ */
 exports.getMemberByPasswordAndEmail = async (password, email) => {
   const selectQuery = `SELECT *
   FROM "user"
@@ -131,6 +170,16 @@ exports.getMemberByPasswordAndEmail = async (password, email) => {
   }));
 };
 
+/**
+ * Retrieves all completed goals for a specific user from the database.
+ *
+ * @async
+ * @function getAllCompletedGoals
+ * @param {string} userId - The ID of the user whose
+ * completed goals are to be retrieved.
+ * @return {Promise<Object[]>} Returns a promise that
+ * resolves to an array of completed goal objects.
+ */
 exports.getAllCompletedGoals = async (userId) => {
   const select = `SELECT 
     g.id, 
@@ -155,6 +204,17 @@ exports.getAllCompletedGoals = async (userId) => {
   return rows.map((row) => ({...row, memberCount: parseInt(row.membercount)}));
 };
 
+
+/**
+ * Retrieves all incompleted goals for a specific user from the database.
+ *
+ * @async
+ * @function getAllIncompletedGoals
+ * @param {string} userId - The ID of the user whose
+ * incompleted goals are to be retrieved.
+ * @return {Promise<Object[]>} Returns a promise that
+ * resolves to an array of incompleted goal objects.
+ */
 exports.getAllIncompletedGoals = async (userId) => {
   const select = `SELECT 
     g.id, 
@@ -179,6 +239,16 @@ exports.getAllIncompletedGoals = async (userId) => {
   return rows.map((row) => ({...row, memberCount: parseInt(row.membercount)}));
 };
 
+/**
+ * Marks a goal as completed for a specific user in the database.
+ *
+ * @async
+ * @function completeGoal
+ * @param {string} userId - The ID of the user completing the goal.
+ * @param {string} goalId - The ID of the goal to be marked as completed.
+ * @return {Promise<Object>} Returns a promise that resolves to the
+ * ID of the completed goal.
+ */
 exports.completeGoal = async (userId, goalId) => {
   const update = `UPDATE user_goal
   SET last_checked = CURRENT_TIMESTAMP,
@@ -194,6 +264,7 @@ exports.completeGoal = async (userId, goalId) => {
   const {rows} = await pool.query(query);
   return rows[0];
 };
+
 /**
  *
  * @async
@@ -213,7 +284,7 @@ exports.isMemberInGoal = async (userId, goalId) => {
     values: [userId, goalId],
   };
   const result = await pool.query(query);
-  console.log(result.rows);
+  // console.log(result.rows);
   return result.rows[0].exists;
 };
 
@@ -237,6 +308,16 @@ exports.leaveGoal = async (userId, goalId) => {
   await pool.query(deleteQuery);
 };
 
+/**
+ * Retrieves user information from the database by user ID.
+ *
+ * @async
+ * @function getUserInformation
+ * @param {string} userId - The ID of the user whose information
+ * is to be retrieved.
+ * @return {Promise<Object>} Returns a promise that resolves to
+ * an object containing the user's information (id, name, email, img).
+ */
 exports.getUserInformation = async (userId) => {
   const select = `SELECT 
     id,
@@ -254,6 +335,15 @@ exports.getUserInformation = async (userId) => {
   return rows[0];
 };
 
+/**
+ * Retrieves all members associated with a specific goal from the database.
+ *
+ * @async
+ * @function getAllMembersInGoal
+ * @param {string} goalId - The ID of the goal to retrieve members for.
+ * @return {Promise<Object[]>} Returns a promise that resolves
+ * to an array of objects containing member IDs and usernames.
+ */
 exports.getAllMembersInGoal = async (goalId) => {
   const query = {
     text: `

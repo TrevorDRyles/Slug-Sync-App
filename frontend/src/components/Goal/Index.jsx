@@ -64,7 +64,7 @@ const GoalsListing = () => {
         return res.json();
       })
       .catch((err) => {
-        console.log('Error adding goal: ' + err);
+        // console.log('Error adding goal: ' + err);
       });
   };
 
@@ -258,7 +258,7 @@ const Goal = ({ goal, onAddGoal }) => {
         <Text style={{color: 'grey'}}>Recurring every {goal.recurrence}</Text>
         <Text style={{color: 'grey'}}>Members: {goal.memberCount}</Text>
         <Divider my="sm"/>
-        <Button onClick={onAddGoal} style={{marginLeft: '10px'}}>Add Goal</Button>
+        <Button aria-label={'Add Goal'} onClick={onAddGoal} style={{marginLeft: '10px'}}>Add Goal</Button>
       </div>
     </Card>
   );

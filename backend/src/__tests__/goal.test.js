@@ -155,6 +155,32 @@ test('GET /v0/goal/:id returns goal 200', async () => {
   expect(res.body.recurrence).toBe(goal.body.recurrence);
 });
 
+test('GET /v0/goal/:id as non creator returns goal 200', async () => {
+  const goal = await request.post('/v0/goal')
+    .set('Content-Type', 'application/json')
+    .set('Authorization', `Bearer ${userToken1}`)
+    .send({
+      title: 'title',
+      description: 'description',
+      recurrence: '1',
+      startdate: '2024-05-10',
+      enddate: '2024-05-20',
+      memberCount: 1,
+    });
+
+  const res = await request.get('/v0/goal/' + goal.body.id)
+    .set('Authorization', `Bearer ${userToken2}`);
+
+  expect(res.status).toBe(200);
+  expect(res.body.id).toBe(goal.body.id);
+  expect(res.body.title).toBe(goal.body.title);
+  expect(res.body.description).toBe(goal.body.description);
+  expect(res.body.startdate).toBe(goal.body.startdate);
+  expect(res.body.enddate).toBe(goal.body.enddate);
+  expect(res.body.recurrence).toBe(goal.body.recurrence);
+  expect(res.body.streak).toBe(0);
+});
+
 test('GET goal with random goal id returns 404', async () => {
   const randomId = crypto.randomUUID();
   await request.get('/v0/goal/' + randomId)

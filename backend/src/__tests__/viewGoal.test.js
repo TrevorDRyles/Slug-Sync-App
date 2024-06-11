@@ -57,7 +57,7 @@ test('POST /v0/goal/:id/leave leave goal as creator', async () => {
     .set('Content-Type', 'application/json')
     .set('Authorization', `Bearer ${userToken1}`);
 
-  console.log(goal.body);
+  // console.log(goal.body);
   expect(goal.status).toBe(401);
 });
 
@@ -77,7 +77,7 @@ test('POST /v0/goal/:id/leave leave goal', async () => {
     .set('Content-Type', 'application/json')
     .set('Authorization', `Bearer ${userToken2}`);
 
-  console.log(goal.body);
+  // console.log(goal.body);
   expect(goal.status).toBe(200);
 });
 
@@ -123,7 +123,7 @@ test('POST /v0/goal/:id leave a goal that does not exist', async () => {
     .set('Content-Type', 'application/json')
     .set('Authorization', `Bearer ${userToken2}`);
 
-  console.log(goal.body);
+  // console.log(goal.body);
   expect(goal.status).toBe(404);
 });
 
@@ -133,7 +133,7 @@ test('POST /v0/goal/:id/join join a goal', async () => {
     .set('Content-Type', 'application/json')
     .set('Authorization', `Bearer ${userToken2}`);
 
-  console.log(goal.body);
+  // console.log(goal.body);
   expect(goal.status).toBe(200);
 });
 
@@ -143,6 +143,6 @@ test('POST /v0/goal/:id/join join a goal while already in it', async () => {
     .set('Content-Type', 'application/json')
     .set('Authorization', `Bearer ${userToken2}`);
 
-  console.log(goal.body);
+  // console.log(goal.body);
   expect(goal.status).toBe(400);
 });

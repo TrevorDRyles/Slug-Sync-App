@@ -1,25 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { Button, HoverCard, Card, Avatar, Image, Text, Badge, Group, Title, Divider, Paper, Modal, TextInput } from '@mantine/core';
-import { IconPencil } from '@tabler/icons-react';
-import { GoalCard } from '../Goal/GoalCard';
+import React, {useState, useEffect} from 'react';
+import {
+  Button,
+  HoverCard,
+  Card,
+  Avatar,
+  Image,
+  Text,
+  Badge,
+  Group,
+  Title,
+  Divider,
+  Paper,
+  Modal,
+  TextInput
+} from '@mantine/core';
+import {IconPencil} from '@tabler/icons-react';
+import {GoalCard} from '../Goal/GoalCard';
 import styles from './Profile.module.css';
-import { useDisclosure } from '@mantine/hooks';
+import {useDisclosure} from '@mantine/hooks';
 import Header from '@/components/Header.jsx';
 import Sidebar from '@/components/Sidebar.jsx';
 
 const Profile = () => {
   const [userData, setUserData] = useState({});
-  const [sidebarOpened, { toggle: toggleSidebar }] = useDisclosure(false);
+  const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
-  const [modalOpened, { open: openModal, close: closeModal }] = useDisclosure(false);
+  const [modalOpened, {open: openModal, close: closeModal}] = useDisclosure(false);
   const accessToken = JSON.parse(localStorage.getItem('user')).token
 
   useEffect(() => {
     const userId = JSON.parse(localStorage.getItem('user')).id;
     const accessToken = JSON.parse(localStorage.getItem('user')).token
     if (!userId) {
-      console.log('User ID not found in localStorage');
+      // console.log('User ID not found in localStorage');
       return;
     }
 
@@ -42,7 +56,7 @@ const Profile = () => {
         setBio(json.bio || '');
       })
       .catch((err) => {
-        console.log('Error getting user info: ' + err);
+        // console.log('Error getting user info: ' + err);
       });
   }, []);
 
@@ -61,20 +75,20 @@ const Profile = () => {
       body: JSON.stringify({id: userId, name, bio}),
     });
     const result = await response.json();
-    console.log(result)
+    // console.log(result)
 
     if (response.ok) {
       setUserData((prevData) => ({...prevData, name, bio}));
       closeModal();
     } else {
-      console.error('Failed to update profile:', result.message);
+      // console.error('Failed to update profile:', result.message);
     }
   };
 
 
   return (
     <>
-      <Header toggleSidebar={toggleSidebar} />
+      <Header toggleSidebar={toggleSidebar}/>
       <div className={styles.container}>
         <Card className={`${styles.card_container}`} shadow="sm" padding="lg" radius="md" withBorder>
           <Card.Section>
@@ -104,25 +118,26 @@ const Profile = () => {
               {userData.bio || 'No bio.'}
             </Text>
 
-            <Button variant="outline" size="xs" onClick={handleEditClick} className={styles.editButton} data-testid={"edit button"}>
-              <IconPencil size={16} />
+            <Button variant="outline" size="xs" onClick={handleEditClick} className={styles.editButton}
+                    data-testid={"edit button"}>
+              <IconPencil size={16}/>
             </Button>
           </div>
         </Card>
 
         <Paper padding="lg" shadow="sm" withBorder className={styles.paper}>
           <Title order={1}>Top Goals</Title>
-          <Divider my="md" />
+          <Divider my="md"/>
           <div className={`${styles.column} ${styles.goalColumn}`}>
             {userData.topGoals?.length === 0 ? (
               <div>Looking kinda empty there...</div>
             ) : (
-              userData.topGoals?.map((goal, index) => <GoalCard key={index} goalData={goal} />)
+              userData.topGoals?.map((goal, index) => <GoalCard key={index} goalData={goal}/>)
             )}
           </div>
         </Paper>
 
-        <Sidebar sidebarOpened={sidebarOpened} />
+        <Sidebar sidebarOpened={sidebarOpened}/>
       </div>
 
       <Modal opened={modalOpened} onClose={closeModal} title="Edit Profile">
