@@ -65,7 +65,7 @@ export function GoalCard({goalData}) {
           )}
           <div className={styles.streakCount}>
             <IconFlame />
-            <Text>{goalData.streak}</Text>
+            <Text aria-label={'streak'}>{goalData.streak}</Text>
           </div>
         </div>
         <Grid style={{marginTop: 15}}>
