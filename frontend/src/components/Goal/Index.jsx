@@ -8,12 +8,21 @@ import {useDisclosure} from "@mantine/hooks";
 import Sidebar from "@/components/Sidebar.jsx";
 import {IconTag, IconSortAscending, IconSortDescending, IconX} from '@tabler/icons-react';
 
-let tags =['Health','Athletics','Productivity','Academics','Social','Hobbies','Finance and Bills','Work','Personal','Other'];
+let tags = ['Health', 'Athletics', 'Productivity', 'Academics', 'Social', 'Hobbies', 'Finance and Bills', 'Work', 'Personal', 'Other'];
+
+// referenced from github copilot
+function sanitize(input) {
+  // if (!input) {
+  //   return input;
+  // }
+  return input.replace(/[^a-z0-9 ]/gi, '');
+}
 
 const GoalsListing = () => {
   // https://chat.openai.com/share/5c73d542-08b5-4772-96ab-c9eecd503ba1
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [goalCount, setGoalCount] = useState(0);
   const [filterTag, setFilterTag] = useState('');
   const goalsPerPage = 4;
   const history = useNavigate();
@@ -25,16 +34,16 @@ const GoalsListing = () => {
   const [sidebarOpened, {toggle: toggleSidebar}] = useDisclosure(false);
   const [sort, setSort] = useState(1);
 
-  // const handleSort = () => {
-  //   if (sort === 1 ? setSort(0) : setSort(1));
-  // };
-
   const handlePrevPage = () => {
     setCurrentPage(currentPage - 1);
   };
 
   const handleNextPage = () => {
     setCurrentPage(currentPage + 1);
+  };
+
+  const handleTagSelect = () => {
+    setCurrentPage(1); //hacky solution for now
   };
 
   const handleAddGoal = (goal) => {
@@ -55,7 +64,7 @@ const GoalsListing = () => {
         return res.json();
       })
       .catch((err) => {
-        console.log('Error adding goal: ' + err);
+        // console.log('Error adding goal: ' + err);
       });
   };
 
@@ -77,8 +86,8 @@ const GoalsListing = () => {
   };
 
   useEffect(() => {
-    const searchTerm = searchQuery.length > 0 ? '&search=' + encodeURIComponent(searchQuery) : ''
-    const filterTerm = filterTag.length > 0 ? '&tag=' + filterTag : ''
+    const searchTerm = searchQuery.length > 0 ? '&search=' + sanitize(searchQuery) : ''
+    const filterTerm = filterTag.length > 0 ? '&tag=' + sanitize(filterTag) : ''
     fetch(`http://localhost:3010/v0/goal?page=${currentPage}&size=${goalsPerPage}${filterTerm}${searchTerm}`,
       {
         method: 'GET',
@@ -107,7 +116,28 @@ const GoalsListing = () => {
       .catch((err) => {
         alert(err.message);
       });
-    }, [currentPage, searchQuery, filterTag, userToken]);
+
+    // fetch get all goals
+    fetch(`http://localhost:3010/v0/goal/count`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userToken}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('response was not ok in get goals count');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setGoalCount(data);
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+  }, [currentPage, filterTag, searchQuery, userToken]);
 
   // https://chat.openai.com/share/92235a8f-fdb7-4143-9674-69af74f89174
   return (
@@ -140,6 +170,8 @@ const GoalsListing = () => {
               <div style={{ display: 'flex', justifyContent: 'flex-end', width: '95%' }}>
                 <Badge
                   aria-label='filter-badge'
+                  variant='outline'
+                  style={{backgroundColor: 'white', color: '#228be6'}}
                   leftSection={<IconTag style={{width: 16, height: 16}}/>}
                   rightSection={ <IconX aria-label='remove-filter' className={styles.close} style={{width: 14, height: 14, }} onClick={() => setFilterTag('')}/>}
                 >
@@ -150,8 +182,8 @@ const GoalsListing = () => {
           />
           <Menu shadow="md" width={200} transitionProps={{ transition: 'scale-y', duration: 180}}>
             <Menu.Target >
-              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '9%'}}>
-                <IconTag style={{width: 20, height: 20}}/>
+              <Button aria-label='filter-menu-button' style={{marginLeft: '8px', width: '80px'}}>
+                <IconTag style={{width: 20, height: 20, minWidth: 20, minHeight: 20, flexShrink: 0}}/>
               </Button>
             </Menu.Target>
 
@@ -160,7 +192,10 @@ const GoalsListing = () => {
 
               {
                 tags.map((tag, index) => (
-                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => handleFilterTag(event.target.textContent)}>
+                  <Menu.Item aria-label={`menu-item-${tag}`} key={index} onClick={(event) => {
+                    handleTagSelect();
+                    handleFilterTag(event.target.textContent);
+                  }}>
                     <Badge
                       data-testid={"tag"}
                       style={{backgroundColor: 'white', color: '#228be6'}}
@@ -187,8 +222,14 @@ const GoalsListing = () => {
               <br/>
             </div>
               ))}
-          <Button disabled={currentPage === 1} onClick={handlePrevPage}>Previous Page</Button>
-          <Button disabled={false} onClick={handleNextPage} style={{marginLeft: '10px'}}>Next Page</Button>
+          <Button
+            aria-label={'Previous Page Button'}
+            disabled={currentPage === 1} onClick={handlePrevPage}>Previous Page</Button>
+          <Button
+            aria-label={'Next Page Button'}
+            disabled={
+              (currentPage * goalsPerPage) >= goalCount
+            } onClick={handleNextPage} style={{marginLeft: '10px'}}>Next Page</Button>
         </div>
       </div>
       <Sidebar sidebarOpened={sidebarOpened}/>
@@ -217,7 +258,7 @@ const Goal = ({ goal, onAddGoal }) => {
         <Text style={{color: 'grey'}}>Recurring every {goal.recurrence}</Text>
         <Text style={{color: 'grey'}}>Members: {goal.memberCount}</Text>
         <Divider my="sm"/>
-        <Button onClick={onAddGoal} style={{marginLeft: '10px'}}>Add Goal</Button>
+        <Button aria-label={'Add Goal'} onClick={onAddGoal} style={{marginLeft: '10px'}}>Add Goal</Button>
       </div>
     </Card>
   );

@@ -9,6 +9,7 @@ const auth = require('./auth');
 const goal = require('./goal.js');
 const user = require('./user.js');
 const comment = require('./comment.js');
+const profile = require('./profile.js');
 
 const app = express();
 app.use(cors());
@@ -34,6 +35,8 @@ app.use(
   }),
 );
 
+app.get('/v0/goal/count', auth.check, goal.getGoalCount);
+
 app.post('/v0/signup', auth.signup);
 
 app.post('/v0/login', auth.login);
@@ -48,9 +51,15 @@ app.get('/v0/goal/incompleted', auth.check, goal.getAllIncompleted);
 
 app.get('/v0/goal/:id', auth.check, goal.viewGoal);
 
+app.get('/v0/profile/:id', auth.check, profile.getUserInfo);
+
+app.post('/v0/profile/:id', auth.check, profile.editProfile);
+
 app.post('/v0/goal/:id/comment', auth.check, comment.addCommentToGoal);
 
 app.get('/v0/goal/:id/comment', auth.check, comment.getAllCommentsOnGoal);
+
+app.get('/v0/goal/:id/members', auth.check, goal.getAllMembersInGoal);
 
 app.get('/v0/user/:id', auth.check, user.getUserById);
 
@@ -58,12 +67,12 @@ app.delete('/v0/goal/:id', auth.check, goal.deleteGoal);
 
 app.post('/v0/goal/:id/leave', auth.check, goal.leaveGoal);
 
-app.get('/v0/goal', auth.check, goal.getPostsByPageAndSize);
+app.get('/v0/goal', auth.check, goal.getGoalsByPageAndSize);
 
 app.put('/v0/complete/:goal', auth.check, goal.completeGoal);
 
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  // console.error(err.stack);
   res.status(err.status).json({
     message: err.message,
     errors: err.errors,

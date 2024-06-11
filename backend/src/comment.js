@@ -8,9 +8,25 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD,
 });
 
-// https://chat.openai.com/share/9c8fe898-ae46-4b7a-8f68-3c01db7db9ed
+/**
+ * Adds a comment to a specific goal.
+ *
+ * @async
+ * @function addCommentToGoal
+ * @param {Object} req - The request object.
+ * @param {Object} req.user - The authenticated user object.
+ * @param {string} req.user.id - The ID of the authenticated user.
+ * @param {Object} req.body - The body of the request.
+ * @param {string} req.body.content - The content of the comment.
+ * @param {string} req.body.date - The date of the comment.
+ * @param {Object} req.params - The route parameters.
+ * @param {string} req.params.id - The ID of the goal.
+ * @param {Object} res - The response object.
+ * @return {Promise<void>} Sends a 404 status if the goal is not found,
+ * otherwise adds the comment and sends the newly created comment.
+ */
 exports.addCommentToGoal = async (req, res) => {
-  const {id} = req.user; 
+  const {id} = req.user;
   const {content, date} = req.body;
   const goalId = req.params.id;
 
@@ -40,10 +56,25 @@ exports.addCommentToGoal = async (req, res) => {
   res.status(200).json(rows[0]);
 };
 
+/**
+ * Retrieves all comments on a specific goal.
+ *
+ * @async
+ * @function getAllCommentsOnGoal
+ * @param {Object} req - The request object.
+ * @param {Object} req.params - The route parameters.
+ * @param {string} req.params.id - The ID of the goal.
+ * @param {Object} res - The response object.
+ * @return {Promise<void>} Sends a response with all comments
+ * on the specified goal.
+ */
 exports.getAllCommentsOnGoal = async (req, res) => {
   const goalId = req.params.id;
   const query = `
-        SELECT * FROM comment WHERE goal_id = $1;
+      SELECT c.goal_id, c.id, c.user_id, c.data, u.data AS user_data
+      FROM comment c
+        JOIN "user" u ON u.id = c.user_id
+        WHERE goal_id = $1;
   `;
   const {rows} = await pool.query(query, [goalId]);
   res.status(200).json(rows);

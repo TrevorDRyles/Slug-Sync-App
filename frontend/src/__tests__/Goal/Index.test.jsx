@@ -5,10 +5,15 @@ import { setupServer } from 'msw/node';
 import {BrowserRouter} from "react-router-dom";
 import { render } from "../render";
 import Index from "@/components/Goal/Index.jsx";
-import {indexHandlers, indexHandlers2} from "@/__tests__/Goal/Handlers.js";
+import {
+  errorInAddGoalHandler,
+  indexHandlers,
+  indexHandlers2,
+  viewGoalErrorHandlers
+} from "@/__tests__/Goal/Handlers.js";
 import userEvent from '@testing-library/user-event';
 import { indexErrorHandlers } from './Handlers';
-import { LoginProvider } from '../../contexts/Login';
+import {LoginContext} from '../../contexts/Login';
 
 const INDEX_URL = 'http://localhost:3010/v0/goal';
 
@@ -24,13 +29,20 @@ afterAll(() => {
   server.close()
 });
 
+const accessToken = '1234'
+const setAccessToken = () => {
+}
+const setUser = () => {
+}
+const user = {'name': 'test username'}
+
 const renderIndex = () => {
   return render(
-    <LoginProvider>
+    <LoginContext.Provider value={{accessToken, setAccessToken, user, setUser}}>
       <BrowserRouter>
         <Index />
       </BrowserRouter>
-    </LoginProvider>
+    </LoginContext.Provider>
   )
 }
 
@@ -47,6 +59,12 @@ it('Loads goal index page', async () => {
   const link = screen.getByText('Run a mile1');
   fireEvent.click(link);
   expect(screen.getAllByText('Members', {exact: false})).toBeDefined();
+  // click next page
+  const nextButton = screen.getByLabelText('Next Page Button');
+  fireEvent.click(nextButton);
+  const prevButton = screen.getByLabelText('Previous Page Button');
+  fireEvent.click(prevButton);
+
 });
 
 it('Loads goal index page with error', async () => {
@@ -75,6 +93,24 @@ it('Click previous and next', async () => {
 
 it('Click add goal', async () => {
   server.use(...indexHandlers)
+  renderIndex();
+  await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
+  await waitFor(() => screen.getAllByText('Add Goal', {exact: false})[0]);
+  const link = screen.getAllByText('Add Goal', {exact: false})[0];
+  fireEvent.click(link);
+});
+
+it('Click add goal with error in add goal', async () => {
+  server.use(...viewGoalErrorHandlers)
+  renderIndex();
+  await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
+  await waitFor(() => screen.getAllByText('Add Goal', {exact: false})[0]);
+  const link = screen.getAllByText('Add Goal', {exact: false})[0];
+  fireEvent.click(link);
+});
+
+it('Click add goal with error in add goal handler', async () => {
+  server.use(...errorInAddGoalHandler)
   renderIndex();
   await waitFor(() => screen.getByText('Run a mile1', {exact: false}));
   await waitFor(() => screen.getAllByText('Add Goal', {exact: false})[0]);
@@ -133,12 +169,11 @@ it('Ensure no tag if tag not selected', async () => {
 it('check that filter exists and allows selection', async () => {
   server.use(...indexHandlers);
   renderIndex();
-  //const user = userEvent.setup();
 
   const filterButton = screen.getByLabelText('filter-menu-button', {exact: false});
   fireEvent.click(filterButton)
   await waitFor(() => screen.getByText("Productivity", {exact: false}));
-  
+
   const getHealth = await waitFor(() => screen.getByLabelText('menu-item-Health', {exact: false}));
   fireEvent.click(getHealth);
 
@@ -154,25 +189,43 @@ it('check that filter exists and allows selection', async () => {
     expect(error).toBeDefined();
   }
 
+});
 
+it('check that filter resets pageNum to 1', async () => {
+  server.use(...indexHandlers);
+  renderIndex();
 
+  //get to page 2
+  fireEvent.click(screen.getByText('Next Page', {exact: false}));
 
-  // const sortButton = screen.getByLabelText('sort-button', {exact: false});
-  // expect(sortButton).toBeDefined();
-  // expect(screen.getByLabelText('asc-icon', {exact: false})).toBeDefined();
-  // try{
-  //   screen.getByLabelText('desc-icon', {exact: false});
-  // } catch (error){
-  //   expect(error).toBeDefined();
-  // }
-  
+  const filterButton = screen.getByLabelText('filter-menu-button', {exact: false});
+  fireEvent.click(filterButton)
+  await waitFor(() => screen.getByText("Productivity", {exact: false}));
 
-  // fireEvent.click(sortButton);
-  // expect(screen.getByLabelText('desc-icon', {exact: false})).toBeDefined();
-  // try{
-  //   screen.getByLabelText('asc-icon', {exact: false});
-  // } catch (error2){
-  //   expect(error2).toBeDefined();
-  // }
-  
+  const getHealth = await waitFor(() => screen.getByLabelText('menu-item-Health', {exact: false}));
+  fireEvent.click(getHealth);
+
+  const getBadge = await waitFor(() => screen.getByLabelText('filter-badge', {exact: false}));
+
+  const getFilterRemoval = await waitFor(() => screen.getByLabelText('remove-filter', {exact: false}));
+  expect(getFilterRemoval).toBeDefined();
+  fireEvent.click(getFilterRemoval);
+});
+
+it('ensure that tag selection does not have incorrect tags', async () => {
+  server.use(...indexHandlers);
+  renderIndex();
+
+  const filterButton = screen.getByLabelText('filter-menu-button', {exact: false});
+  fireEvent.click(filterButton)
+
+  const getHealth = await waitFor(() => screen.getByLabelText('menu-item-Health', {exact: false}));
+  fireEvent.click(getHealth);
+
+  try {
+    screen.getByText('Athletics', {exact: false});
+  } catch (error) {
+    expect(error).toBeDefined();
+  }
+
 });

@@ -207,6 +207,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /goal/{id}/members:
+    get:
+      tags:
+        - goal members
+      summary: Get all members associated with a goal
+      parameters:
+        - name: id
+          in: path
+          description: Id of the goal
+          required: true
+          schema:
+            type: string
+            format: uuid
+      security:
+        - bearerAuth: [ ]
+      responses:
+        200:
+          description: Successfully received members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetMembersResponse'
+        401:
+          description: Unauthorized
+        404:
+          description: Goal not found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /signup:
     post:
       description: User SignUp
@@ -387,6 +419,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/GoalWithId'
+  /goal/count:
+    get:
+      security:
+        - bearerAuth: [ ]
+      description: Get goal count
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                type: integer
 
   /complete/{goal}:
     put:
@@ -417,6 +461,68 @@ paths:
                 additionalProperties: false
 
 
+  /profile/{id}:
+    get:
+      tags:
+        - get profile
+      summary: get profile
+      parameters:
+        - name: id
+          in: path
+          description: Id of member
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileWithId'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - edit profile
+      summary: edit profile
+      parameters:
+        - name: id
+          in: path
+          description: Id of member
+          required: true
+          schema:
+            additionalProperties: false
+            type: string
+            format: uuid
+      requestBody:
+        description: Profile data to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileWithId'
+      responses:
+        200:
+          description: Successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileWithId'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Error:
@@ -553,6 +659,9 @@ components:
       required:
         - email
         - password
+      example:
+        email: "hunter@ucsc.edu"
+        password: "huntertratar"
 
     LoginResponse:
       type: object
@@ -603,6 +712,51 @@ components:
           description: Confirmation message for leaving the goal
       example:
         message: "Successfully left the goal"
+    GetMembersResponse:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+            description: member ID
+          username:
+            type: string
+            description: member username
+          role:
+            type: string
+            description: member role
+        example:
+          id: "123e4567-e89b-12d3-a456-426614174000"
+          username: "hunter"
+          role: "member"
+      properties:
+        message:
+          type: string
+          description: Confirmation message for getting members
+    ProfileWithId:
+      type: object
+      required:
+        - id
+        - name
+        - bio
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: id of member
+        name:
+          type: string
+          description: name of member
+        bio:
+          type: string
+          description: description of goal
+      example:
+        id: "1"
+        name: "John Doe"
+        bio: "bio"
+
   securitySchemes:
     bearerAuth:
       type: http

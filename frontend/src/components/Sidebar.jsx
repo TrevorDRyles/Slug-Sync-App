@@ -14,6 +14,8 @@ import classes from './Sidebar.module.css';
 import PropTypes from "prop-types";
 import { Collapse } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import {LoginContext} from '../contexts/Login';
+import * as React from 'react'
 
 function NavbarLink({ icon: Icon, label, active, onClick, aria }) {
   return (<Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
@@ -23,21 +25,26 @@ function NavbarLink({ icon: Icon, label, active, onClick, aria }) {
   </Tooltip>);
 }
 
-//CHANGE LINKS HERE
-const sidebarItems = [
-  { icon: IconHome2, label: 'Home', route: '/login', aria: 'HomeIcon1' },
-  { icon: IconUser, label: 'Profile', route: '/login', aria: 'UserIcon1' },
-  { icon: IconSettings, label: 'Settings', route: '/login', aria: 'SettingsIcon1'},
-];
-
 export default function Sidebar() {
   const [active, setActive] = useState(0);
   const navigate = useNavigate();
+  const {user} = React.useContext(LoginContext);
+
+  const sidebarItems = [
+    {icon: IconHome2, label: 'Home', route: '/', aria: 'HomeIcon1'},
+    {icon: IconUser, label: 'Profile', route: `/profile/${user.id}`, aria: 'UserIcon1'},
+    // { icon: IconSettings, label: 'Settings', route: '/login', aria: 'SettingsIcon1'},
+  ];
+
+
   const links = sidebarItems.map((link, index) => (
     <NavbarLink {...link}
-      key={link.label} 
-      active={index === active} 
-      onClick={() => setActive(index)} 
+                key={link.label}
+                active={index === active}
+                onClick={() => {
+                  navigate(link.route)
+                  setActive(index)
+                }}
     />
   ));
   return (
@@ -52,7 +59,7 @@ export default function Sidebar() {
         <Stack justify="center" gap={0}>
           <NavbarLink aria={'LogoutIcon'} icon={IconLogout} label="Logout" />
         </Stack>
-      </nav> 
+      </nav>
     // </Collapse>
   );
 }

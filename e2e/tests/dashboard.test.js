@@ -158,9 +158,9 @@ test('Deletes goal cleanup', async() => {
   searchInput.type("Learn React")
   await page.waitForSelector('aria/Goal Title Text')
   await page.click('aria/Goal Title Text')
-  await page.waitForSelector('aria/Delete Goal Button')
-  await page.click('aria/Delete Goal Button')
-  await page.click('aria/Confirm delete button')
+  await page.waitForSelector('aria/Delete Goal')
+  await page.click('aria/Delete Goal')
+  await page.click('aria/Delete Goal')
   await page.waitForFunction(
     'document.querySelector("body").innerText.includes("Goals")',
   )
