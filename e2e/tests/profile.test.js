@@ -18,88 +18,88 @@ let page;
  * on port 3000.
  */
 beforeAll(() => {
-    backend = http.createServer(app);
-    backend.listen(3010, () => {
-      // console.log('Backend Running at http://localhost:3010');
-    });
-    frontend = http.createServer(
-      express()
-        .use('/assets', express.static(
-          path.join(__dirname, '..', '..', 'frontend', 'dist', 'assets')))
-        .get('*', function(req, res) {
-          res.sendFile('index.html',
-            {root: path.join(__dirname, '..', '..', 'frontend', 'dist')});
-        }),
-    );
-    frontend.listen(3000, () => {
-      // console.log('Frontend Running at http://localhost:3000');
-    });
+  backend = http.createServer(app);
+  backend.listen(3010, () => {
+    // console.log('Backend Running at http://localhost:3010');
   });
+  frontend = http.createServer(
+    express()
+      .use('/assets', express.static(
+        path.join(__dirname, '..', '..', 'frontend', 'dist', 'assets')))
+      .get('*', function (req, res) {
+        res.sendFile('index.html',
+          {root: path.join(__dirname, '..', '..', 'frontend', 'dist')});
+      }),
+  );
+  frontend.listen(3000, () => {
+    // console.log('Frontend Running at http://localhost:3000');
+  });
+});
 
 /**
  * Shotdown the API server then the Web server.
  */
 afterAll((done) => {
-    backend.close(() => {
-      frontend.close(done);
-    });
+  backend.close(() => {
+    frontend.close(done);
   });
-  
+});
+
 /**
  * Create a headless (not visible) instance of Chrome for each test
  * and open a new page (tab).
  */
 beforeEach(async () => {
-    browser = await puppeteer.launch({
-      headless: false,
-    });
-    page = await browser.newPage();
-    page.on('console', (msg) => {
-      // console.log('Browser log:', msg.text());
-    });
-    await page.setViewport({
-      width: 1080,
-      height: 780,
-    });
-    await login(page);
+  browser = await puppeteer.launch({
+    headless: true,
   });
-  
-  /**
+  page = await browser.newPage();
+  page.on('console', (msg) => {
+    // console.log('Browser log:', msg.text());
+  });
+  await page.setViewport({
+    width: 1080,
+    height: 780,
+  });
+  await login(page);
+});
+
+/**
    * Close the headless instance of Chrome as we no longer need it.
    */
-  afterEach(async () => {
-    await browser.close();
-  });
+afterEach(async () => {
+  await browser.close();
+});
 
-  /**
+/**
  * verifyTextOnScreenBySelectorAndText
  * @param{string} selector
  * @param{string} text
  * @return {Promise<void>}
  */
 async function verifyTextOnScreenBySelectorAndText(selector, text) {
-    await page.waitForSelector(selector);
-    await page.waitForFunction(
-      (selector, text) => {
-        const element = document.querySelector(selector);
-        return element && element.innerText.includes(text);
-      },
-      {},
-      selector,
-      text,
-    );
-  }
+  await page.waitForSelector(selector);
+  await page.waitForFunction(
+    (selector, text) => {
+      const element = document.querySelector(selector);
+      return element && element.innerText.includes(text);
+    },
+    {},
+    selector,
+    text,
+  );
+}
 
-  test('profile page loads with no error', async () => {
-    const name = '[data-testid^="name"]';
-    const bio = '[data-testid^="bio"]';
+test('profile page loads with no error', async () => {
+  const name = '[data-testid^="name"]';
+  const bio = '[data-testid^="bio"]';
 
-    await page.waitForSelector('[aria-label="UserIcon1"]');
-    await page.click('[aria-label="UserIcon1"]');
+  await page.waitForSelector('[aria-label="UserIcon1"]');
+  await page.click('[aria-label="UserIcon1"]');
 
-    await verifyTextOnScreenBySelectorAndText(
-        name, 'Hunter');
-    await verifyTextOnScreenBySelectorAndText(
-        bio, 'Hello!');
-  });
-  
+  await verifyTextOnScreenBySelectorAndText(
+    name, 'Hunter');
+  await verifyTextOnScreenBySelectorAndText(
+    bio, 'Hello!');
+});
+
