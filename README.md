@@ -1,3 +1,8 @@
+# Demo
+https://github.com/TrevorDRyles/Slug-Sync-App/assets/44791579/64f6ed8d-db37-4911-90b3-275d49652055
+
+
+
 # Slug Sync
 
 https://gitlab.com/trevorryles02/slug-sync
